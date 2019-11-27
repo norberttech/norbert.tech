@@ -1,0 +1,23 @@
+<article class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <a target="_blank" href="{{ book_url }}">
+                <img src="{{ book_image_url }}" />
+            </a>
+        </div>
+        <div class="col-md-8">
+            <h5 class="mt-0">{{ book_title|raw }}</h5>
+            {% if book_subtitle is defined %}
+                <h6>{{ book_subtitle|raw }}</h6>
+            {% endif %}
+            <p>
+                {{ book_description }}
+            </p>
+            <p class="text-right">
+                <a target="_blank" class="btn btn-primary" href="{{ book_url }}">
+                    Buy it!
+                </a>
+            </p>
+        </div>
+    </div>
+</article>

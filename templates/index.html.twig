@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        .header {
+            padding-top: 1em;
+            padding-bottom: 1em;
+        }
+        .avatar {
+            max-width: 300px;
+            max-height: 300px;
+            margin-bottom: 1em;
+        }
+        .knowledge-base {
+            width: 20em;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="row header bg-light mb-3">
+    <div class="col-md-3 text-center">
+        ​<picture>
+            <img src="{{ asset('assets/img/avatar.jpg') }}" class="img-fluid rounded-circle avatar" alt="Norbert Orzechowicz">
+        </picture>
+        <h5 class="text-dark-50">I Code </h5>
+        <a href="mailto:contact@norbert.tech">contact@norbert.tech</a>
+    </div>
+    <div class="col-md-5">
+        <h4>Portfolio</h4>
+        <p>
+            My name is Norbert,<br/>
+            I'm software developer specialized in building high performance, large scale, web applications.<br/>
+            I live in Cracow, Poland - in case you would like to get in touch or grab a beer/coffee.<br/>
+            Since Nov 2015 I'm working as a software architect & team leader in <a href="https://mohawkgp.com/">Mohawk Group (NASDAQ: MWK)</a>
+            building fully automated Supply Chain Engine.<br/>
+            Most of the projects I worked on were written in PHP or NodeJS but I also did some in Scala or even C.
+            I believe that web application developer can become a full stack, because of that I'm actively designing, developing and maintaining
+            web infrastructure for projects I participate in, with tools like Terraform, Ansible and Packer.<br/>
+            At this point I'm more Azure Cloud oriented but using mostly Open Source stack to avoid vendor locking.
+        </p>
+        <p>
+            I also run a technical blog, mostly PHP oriented, if you can read in Polish or if you don't mind using <br/>
+            google translate check <a href="https://zawarstwaabstrakcji.pl">zawarstwaabstrakcji.pl</a> (<a href="https://translate.google.com/translate?hl=en&sl=pl&tl=en&u=http%3A%2F%2Fzawarstwaabstrakcji.pl">🇺🇸 translated version</a>).
+        </p>
+    </div>
+    <div class="col-md-4">
+        <h4>Latest blog posts</h4>
+        <ul>
+            <li><a href="https://zawarstwaabstrakcji.pl/20181005-testy-php-mock-czyli-test-double/">🇵🇱 Testy w PHP - Mock czyli Test Double</a></li>
+            <li><a href="https://zawarstwaabstrakcji.pl/20180925-testy-php-object-mother/">🇵🇱 Testy w PHP - Object Mother</a></li>
+            <li><a href="https://zawarstwaabstrakcji.pl/20180507-fp-oop-w-php/">🇵🇱 FP i OOP w PHP</a></li>
+        </ul>
+        <h4>Knowledge base</h4>
+        <div class="knowledge-base">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action" href="{{ url('knowledge_base_talks') }}">Talks</a>
+                    <a class="list-group-item list-group-item-action" href="{{ url('knowledge_base_books') }}">Books</a>
+                </ul>
+            </div>
+            <p class="text-right">
+                <small>* recommendations</small>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <h4>Recent Tweets</h4>
+        <a class="twitter-timeline" data-lang="en" data-width="350" data-height="1600" data-theme="light" href="https://twitter.com/norbert_tech?ref_src=twsrc%5Etfw">Tweets by norbert_tech</a>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+    <div class="col-md-5">
+        {{ render(controller('NorbertTech\\Portfolio\\Controller\\ProjectsController::list')) }}
+    </div>
+    <div class="col-md-4">
+        <h5>Quotes</h5>
+        <blockquote class="blockquote">
+            <p>
+                You only test the part of the application that you want to work.
+            </p>
+            <footer class="blockquote-footer">Robert C. Martin</footer>
+        </blockquote>
+    </div>
+</div>
+{% endblock %}

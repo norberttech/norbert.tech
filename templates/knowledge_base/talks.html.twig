@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<h2>Talks</h2>
+<div class="row">
+    <div class="col-md-6">
+        <p>
+            Looking for inspiration or maybe you are trying to solve a particular problem, it does not matter?
+            Talks listed below are in my opinion valuable source of knowledge, they are not listed in any particular order.
+            No need to watch one by one.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Do you feel like something is missing here? Great!<br/>
+            <a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fplatform.twitter.com%2F&ref_src=twsrc%5Etfw&screen_name=norbert_tech&tw_p=tweetbutton" target="_blank">Tweet to me about it</a>, or send me an email <a target="_blank" href="mailto:contact@norbert.tech">contact@norbert.tech</a>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <iframe src="https://player.vimeo.com/video/108441214" width="530" height="315" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        <p class="text-center">
+        Greg Young - The art of destroying software
+        </p>
+    </div>
+    <div class="col-md-4">
+        <iframe width="530" height="315" src="https://www.youtube.com/embed/R2IAgnpkBck" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <p class="text-center">
+            Eric Evans - Keynote: DDD Isn't Done: A Skeptical, Optimistic​, Pragmatic Look
+        </p>
+    </div>
+    <div class="col-md-4">
+        <iframe width="530" height="315" src="https://www.youtube.com/embed/STKCRSUsyP0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <p class="text-center">
+            Martin Fowler - The Many Meanings of Event-Driven Architecture
+        </p>
+    </div>
+    <div class="col-md-4">
+        <iframe width="530" height="315" src="https://www.youtube.com/embed/2dKZ-dWaCiU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <p class="text-center">
+            Robert C. Martin (Uncle Bob) - Clean Architecture and Design
+        </p>
+    </div>
+</div>
+{% endblock %}
