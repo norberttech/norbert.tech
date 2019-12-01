@@ -52,6 +52,7 @@
             <li><a href="https://zawarstwaabstrakcji.pl/20180925-testy-php-object-mother/">🇵🇱 Testy w PHP - Object Mother</a></li>
             <li><a href="https://zawarstwaabstrakcji.pl/20180507-fp-oop-w-php/">🇵🇱 FP i OOP w PHP</a></li>
         </ul>
+
         <h4>Knowledge base</h4>
         <div class="knowledge-base">
             <div class="card">
@@ -76,13 +77,70 @@
         {{ render(controller('NorbertTech\\Portfolio\\Controller\\ProjectsController::list')) }}
     </div>
     <div class="col-md-4">
-        <h5>Quotes</h5>
+        <h4>Technologies, Tools & Buzzwords</h4>
+        <p>
+            I tried & enjoyed
+        </p>
+        <div class="row">
+            <div class="col-md-2">
+                <ul>
+                    <li><span class="badge badge-secondary">PHP</span></li>
+                    <li><span class="badge badge-secondary">NodeJS</span></li>
+                    <li><span class="badge badge-secondary">C / C++</span></li>
+                    <li><span class="badge badge-secondary">Scala</span></li>
+                    <li><span class="badge badge-secondary">Java</span></li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <ul>
+                    <li><span class="badge badge-secondary">Terraform</span></li>
+                    <li><span class="badge badge-secondary">Packer</span></li>
+                    <li><span class="badge badge-secondary">Ansible</span></li>
+                    <li><span class="badge badge-secondary">Azure</span></li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <ul>
+                    <li><span class="badge badge-secondary">Linux</span></li>
+                    <li><span class="badge badge-secondary">macOS</span></li>
+                    <li><span class="badge badge-secondary">Vagrant</span></li>
+                    <li><span class="badge badge-secondary">Docker</span></li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        <h4>Quotes</h4>
         <blockquote class="blockquote">
             <p>
-                You only test the part of the application that you want to work.
+                <small>You only test the part of the application that you want to work.</small>
             </p>
             <footer class="blockquote-footer">Robert C. Martin</footer>
         </blockquote>
+        <h4>Currently Reading</h4>
+        <div class="row">
+            <div class="col-md-8">
+                {%
+                    include 'knowledge_base/_book.html.twig' with {
+                    'book_url': 'https://www.amazon.com/gp/product/0804176981/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0804176981&linkCode=as2&tag=norberttech-20&linkId=281c21c95066315204ba46ac58f7e7b1',
+                    'book_image_url': '//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=0804176981&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=norberttech-20',
+                    'book_title': 'The Culture Code: The Secrets of Highly Successful Groups',
+                    'book_description': 'The author of The Talent Code unlocks the secrets of highly successful groups and provides tomorrow\'s leaders with the tools to build a cohesive, motivated culture.'
+                }
+                %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                {%
+                    include 'knowledge_base/_book.html.twig' with {
+                    'book_url': 'https://leanpub.com/introducing_eventstorming',
+                    'book_image_url': 'https://d2sofvawe08yqg.cloudfront.net/introducing_eventstorming/hero2x?1566576861',
+                    'book_title': 'Introducing EventStorming',
+                    'book_description': 'At first look, EventStorming is deceptively simple: just have a long paper roll available, and a virtually unlimited stock of coloured sticky notes and start modelling problems that looked too big to be modelled. But the ability to visually mastering large scale complexity opens the way to many interesting outcomes.'
+                }
+                %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
