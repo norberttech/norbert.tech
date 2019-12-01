@@ -27,6 +27,15 @@
     {% endblock %}
 
     <title>{% block title %}Norbert Orzechowicz - Software Developer Portfolio{% endblock %}</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153657381-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '{{ google_analytics_tracking_id }}');
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-light bg-light">

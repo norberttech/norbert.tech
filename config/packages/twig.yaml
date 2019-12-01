@@ -3,3 +3,5 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes: ['bootstrap_4_layout.html.twig']
+    globals:
+        google_analytics_tracking_id: '%env(GOOGLE_ANALYTICS_TRACKING_ID)%'
