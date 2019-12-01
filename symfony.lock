@@ -1,4 +1,13 @@
 {
+    "doctrine/inflector": {
+        "version": "1.3.1"
+    },
+    "nikic/php-parser": {
+        "version": "v4.3.0"
+    },
+    "php": {
+        "version": "7.3"
+    },
     "symfony/asset": {
         "version": "v4.4.0"
     },
@@ -13,5 +22,26 @@
         "files": [
             ".env"
         ]
+    },
+    "symfony/maker-bundle": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
+        }
+    },
+    "symfony/process": {
+        "version": "v4.4.1"
+    },
+    "symfony/web-server-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "dae9b39fd6717970be7601101ce5aa960bf53d9a"
+        }
     }
 }
