@@ -1,0 +1,30 @@
+<div class="col-md-12">
+    <h5 id="php-matcher"><a href="#php-matcher"># MD Link Linter</a> <small><span class="badge badge-success">Open Source</span></small></h5>
+    <p>
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">CLI Tool</span></small>
+        <small><span class="badge badge-secondary">License: MIT</span></small>
+    </p>
+
+    <ul>
+        <li><a href="https://github.com/norberttech/md-link-linter" target="_blank"><i class="fab fa-github"></i> norberttech/md-link-linter</a></li>
+    </ul>
+    <p>
+        CLI app that iterates through all markdown files in given path checking if links used in them are always valid.
+        I become obsessed about improving developer experience in projects I'm working on. Most of my projects is documented in markdown syntax since
+        it's easy, can be easily converted to HTML but event without that it's still human readable. Keeping url's up to date
+        was always my biggest nightmare, that's how MD Link Linter was created.
+    </p>
+    <p>
+        In order to make it even more flexible I created <a href="https://hub.docker.com/r/norberttech/md-link-linter" target="_blank">docker image</a>
+        that can be used just like in example below:
+    </p>
+<pre><code>docker pull norberttech/md-link-linter</code></pre>
+<pre><code>docker run -t --rm -v $PWD:/app norberttech/md-link-linter --exclude=vendor --exclude=node_modules .</code></pre>
+
+    <p>
+        Those 2 simple CLI commands can be executed at any operating system with <a href="https://www.docker.com/" target="_blank">Docker</a> installed.
+        First one will download the image, second will execute it in the current folder, passing additional arguments to exclude `vendor` and `node_modules` folders from inspections.
+    </p>
+    <hr />
+</div>
