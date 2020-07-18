@@ -6,4 +6,5 @@ return [
     Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
+    NorbertTech\StaticContentGeneratorBundle\StaticContentGeneratorBundle::class => ['all' => true]
 ];

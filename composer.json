@@ -2,9 +2,10 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "norberttech/static-content-generator-bundle": "1.x-dev",
         "sensio/framework-extra-bundle": "^5.4",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "4.4.*",
@@ -16,6 +17,8 @@
         "symfony/twig-bundle": "4.4.*",
         "symfony/yaml": "4.4.*"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require-dev": {
         "symfony/maker-bundle": "^1.12",
         "symfony/web-server-bundle": "4.4.*"
