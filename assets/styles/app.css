@@ -19,3 +19,19 @@ code {
 .badge-success {
     @apply bg-green-200 text-green-800
 }
+
+.badge-info {
+    @apply bg-blue-200 text-blue-800
+}
+
+.badge-secondary {
+    @apply bg-gray-200 text-gray-800
+}
+
+article.blog-post p, ul, pre, img {
+    @apply mb-2
+}
+
+article.blog-post ul {
+    @apply list-disc pl-6;
+}

@@ -53,4 +53,10 @@ return [
     'highlight.js/lib/languages/json' => [
         'version' => '11.9.0',
     ],
+    'highlight.js/lib/languages/twig' => [
+        'version' => '11.9.0',
+    ],
+    'highlight.js/lib/languages/sql' => [
+        'version' => '11.9.0',
+    ],
 ];

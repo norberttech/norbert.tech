@@ -17,3 +17,7 @@ services:
     NorbertTech\Portfolio\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
+
+    NorbertTech\Portfolio\StaticSourceProvider\:
+        resource: '../src/StaticSourceProvider/'
+        tags: ['static_content_generator.source_provider']

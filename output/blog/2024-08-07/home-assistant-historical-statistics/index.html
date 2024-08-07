@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0">
+
+    <title>Home Assistant - Accessing Historical Statistics</title>
+    <meta property="og:title" content="Home Assistant - Accessing Historical Statistics" />
+    <meta name="twitter:title" content="Home Assistant - Accessing Historical Statistics" >
+
+    <meta name="description" content="Learn how to access historical statistics in Home Assistant using SQL Integration">
+    <meta property="og:description" content="Learn how to access historical statistics in Home Assistant using SQL Integration">
+    <meta name="twitter:description" content="Learn how to access historical statistics in Home Assistant using SQL Integration">
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://norbert.tech/blog/2024-08-07/home-assistant-historical-statistics" />
+    <meta property="og:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:alt" content="Norbert Orzechowicz - Personal Website" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://norbert.tech/blog/2024-08-07/home-assistant-historical-statistics" />
+    <meta name="twitter:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
+    <meta name="twitter:site" content="@norbert_tech" />
+    <meta name="twitter:creator" content="@norbert_tech" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://norbert.tech/assets/images/favicons/apple-touch-icon-9cae7ee880b4fe0bd755d300e1bca71e.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://norbert.tech/assets/images/favicons/favicon-32x32-b7a4ad4b584ab95534144e071f0e8587.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.tech/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
+    <link rel="shortcut icon" href="https://norbert.tech/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
+
+            <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-170b44042762e5a5e8203ffd666ed97b.css">
+    
+            
+<script type="importmap">
+{
+    "imports": {
+        "app": "https://norbert.tech/assets/app-f6b6b9453864ea635d158621b1bef659.js",
+        "@oddbird/popover-polyfill": "https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js",
+        "https://norbert.tech/assets/bootstrap.js": "https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
+        "htmx.org": "https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js",
+        "@symfony/stimulus-bundle": "https://norbert.tech/assets/@symfony/stimulus-bundle/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js",
+        "@hotwired/stimulus": "https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js",
+        "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers.js": "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
+        "https://norbert.tech/assets/controllers/hello_controller.js": "https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+        "https://norbert.tech/assets/controllers/syntax_highlight_controller.js": "https://norbert.tech/assets/controllers/syntax_highlight_controller-917659ae74be6d45a7faaefe4a9145b3.js",
+        "https://norbert.tech/assets/controllers/clipboard_controller.js": "https://norbert.tech/assets/controllers/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
+        "highlight.js/lib/core": "https://norbert.tech/assets/vendor/highlight.js/lib/core-760145ef158caabe84ca07686407d093.js",
+        "highlight.js/lib/languages/php": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/php-c0eb2105c14097e8a5a1e9a767e8ac95.js",
+        "highlight.js/styles/github-dark.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2Fhighlight.js%2Fstyles%2Fgithub-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css%22%7D%29%29",
+        "@fontsource-variable/cabin/index.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2F%40fontsource-variable%2Fcabin%2Findex.min-08e34691d22388e6974e6cb2bfbcbfd0.css%22%7D%29%29",
+        "clipboard": "https://norbert.tech/assets/vendor/clipboard/clipboard.index-925566f98181665b5a61fea1bcd9033d.js",
+        "highlight.js/lib/languages/shell": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/shell-664215791af27581e04813723523a355.js",
+        "highlight.js/lib/languages/json": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js",
+        "highlight.js/lib/languages/twig": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/twig-0f3c6d18c0368650898b432b7bcf672a.js",
+        "highlight.js/lib/languages/sql": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/sql-09f80640dd6fe9bed6ff4eb255b13f08.js"
+    }
+}
+</script>
+<!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support -->
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+<link rel="modulepreload" href="https://norbert.tech/assets/app-f6b6b9453864ea635d158621b1bef659.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js">
+<script type="module">import 'app';</script>
+    </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-153657381-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-153657381-1');
+</script>
+<body class="scroll-smooth text-black relative min-h-screen pb-16">
+
+    <header class="py-2 px-4 bg-sky-50">
+        <div class="grid grid-cols-2 gap-4 mx-auto max-w-screen-2xl mb-8">
+            <div class="text-left">
+                <a href="/" class="text-lg">
+                    norbert.tech
+                </a>
+            </div>
+            <div class="text-right">
+                <a href="/blog" class="text-lg inline">
+                    <img src="https://norbert.tech/assets/images/icons/article-bacfa7f9e1d45b29f94d004fbbbc0264.svg" alt="GitHub" width="32" height="32" class="inline"> Blog
+                </a>
+            </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mx-auto max-w-screen-2xl">
+            <div class="text-center">
+                <div class="mb-4">
+                    <img src="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" alt="Norbert Orzechowicz" class="rounded-full w-[250px] h-[250px] object-cover inline">
+                </div>
+            </div>
+            <div class="pt-16 px-6">
+                <h2 class="font-bold">My name is Norbert,</h2>
+                <p class="mb-2">
+                    I'm a software architect with a focus on designing and building highly scalable web applications and data processing systems.
+                </p>
+                <p class="mb-2">
+                    In my spare time, I maintain several open-source projects and enjoy automating and optimizing everything around me.
+                </p>
+            </div>
+            <div class="pl-24">
+                <h2 class="text-lg font-bold">Links</h2>
+                <ul class="list-disc pl-6">
+                    <li>
+                        <a href="https://twitter.com/norbert_tech" target="_blank">
+                            <img src="https://norbert.tech/assets/images/icons/brand/x-68d2e3a65c45553952073ad94cbf0d71.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> @norbert_tech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/norberttech" target="_blank">
+                            <img src="https://norbert.tech/assets/images/icons/brand/github-78d1b6b47cbdc8d2aae5db2c3c919541.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/in/norberttech/" target="_blank">
+                            <img src="https://norbert.tech/assets/images/icons/brand/linkedin-15580d4d0994922589dabacfadb6a3f8.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:contact@norbert.tech">
+                            <img src="https://norbert.tech/assets/images/icons/mail-a794445e07244fda2892b62471c4476c.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> contact@norbert.tech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://translate.google.com/translate?hl=en&sl=pl&tl=en&u=http%3A%2F%2Fzawarstwaabstrakcji.pl">
+                            <img src="https://norbert.tech/assets/images/icons/www-901c8e5a91fb3e9641662e78195d155e.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> https://zawarstwaabstrakcji.pl
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-screen-2xl mb-8 pt-4">
+            <article class="blog-post py-10 px-2 sm:px-4 mx-auto max-w-screen-xl">
+        <h1 class="font-bold text-4xl mb-2" id="title">Home Assistant - Accessing Historical Statistics</h1>
+        <div class="mb-4">
+            <small><span class="badge badge-info">home assistant</span></small>
+            <small><span class="badge badge-info">solar installation</span></small>
+        </div>
+        <p>
+            One of my favorite integrations in Home Assistant is the integration with the solar installation.
+        </p>
+        <p>
+            By monitoring electricity production/consumption statistics, I can increase self-consumption by utilizing periods of high production.
+        </p>
+        <p>
+            Recently, I wanted to build a simple dashboard showing how much net energy (the difference between energy drawn and sent to the grid) I produced on a given day, week, and month.
+        </p>
+        <p>
+            My inverter provides 2 entities:
+        </p>
+        <ul>
+            <li>the amount of energy sent to the grid on a given day</li>
+            <li>the amount of energy drawn from the grid on a given day</li>
+        </ul>
+
+        <p>
+            While daily production wasn't a problem, it was enough to add 2 helpers of the "template" type
+        </p>
+        <pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states("sensor.inverter_solarman_daily_energy_sold")) + (-float(states("sensor.inverter_solarman_daily_energy_bought"))) }}</code></pre>
+        <p>However, the problem arose when I wanted to access data from the last X days.</p>
+        <p>
+            Several solutions are floating around on the internet, but the simplest and most robust is the solution based on the <a href="https://www.home-assistant.io/integrations/sql/" target="_blank">SQL integration</a>.
+        </p>
+        <p>
+            Home Assistant uses SQLite as its default database, located at <code class="code-twig">/config/home-assistant_v2.db</code>
+        </p>
+        <p>
+            Essentially, there are two interesting tables in the database: <code>statistics</code> and <code>statistics_meta</code>.
+            Let's prepare a query that will extract the maximum value for each day from a specified date range.
+            (In this case, we're looking for the maximum value because the sensors provided by the integration record the energy consumed/returned cumulatively).
+        </p>
+        <pre><code class="code-sql" data-controller="syntax-highlight"">SELECT
+    ROUND(SUM(max_state), 2) as total
+FROM (
+    SELECT
+    date(statistics.start_ts, 'unixepoch') AS date,
+    MAX(statistics.state) AS max_state
+    FROM statistics_meta
+    LEFT JOIN statistics ON statistics_meta.id = statistics.metadata_id
+    WHERE statistics_meta.statistic_id = 'sensor.inverter_solarman_daily_energy_sold'
+    GROUP BY date(statistics.start_ts, 'unixepoch')
+    ORDER BY date DESC
+    LIMIT 7
+);</code></pre>
+
+        <p>
+            Then, all you need to do is search for "SQL" in the list of integrations and configure it accordingly.
+        </p>
+
+        <a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" target="_blank" rel="noopener noreferrer">
+            <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
+        </a>
+
+        <p>
+            Repeat this process twice for energy returned/consumed, changing the number of days each time.
+            In the end, the SQL integration should provide 4 entities as shown in the screenshot below.
+        </p>
+
+        <a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" target="_blank" rel="noopener noreferrer">
+            <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
+        </a>
+
+        <p>
+            Now all we have to do is create 2 helpers under "Settings -> Devices & services -> Helpers" for net energy from the last 7 and 30 days.
+        </p>
+
+        <pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_7_days')) + (-float(states('sensor.energy_taken_from_grid_last_7_days'))) }}</code></pre>
+        <pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_30_days')) + (-float(states('sensor.energy_taken_from_grid_last_30_days'))) }}</code></pre>
+
+        <p>
+            Done! From now on, we can use all 3 entities to display net energy from the last day/week/month on any chosen dashboard or in automations.
+        </p>
+
+        <a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" target="_blank" rel="noopener noreferrer">
+            <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
+        </a>
+    </article>
+    </main>
+
+    <footer class="p-4 bg-sky-50 absolute bottom-0 w-full">
+        <div class="mx-auto max-w-screen-2xl text-center">
+            <a href="/">by @norbert_tech</a>
+        </div>
+    </footer>
+</body>
+</html>

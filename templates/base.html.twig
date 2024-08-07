@@ -47,7 +47,7 @@
     gtag('config', '{{ google_analytics_id }}');
 </script>
 {% endif %}
-<body class="scroll-smooth text-black">
+<body class="scroll-smooth text-black relative min-h-screen pb-16">
 
     <header class="py-2 px-4 bg-sky-50">
         <div class="grid grid-cols-2 gap-4 mx-auto max-w-screen-2xl mb-8">
@@ -57,27 +57,27 @@
                 </a>
             </div>
             <div class="text-right">
-                <a href="http://github.com/norberttech" target="_blank" class="text-lg inline">
-                    <img src="{{ asset('images/icons/brand/github.svg') }}" alt="GitHub" width="32" height="32" class="inline"> GitHub
+                <a href="{{ path('blog') }}" class="text-lg inline">
+                    <img src="{{ asset('images/icons/article.svg') }}" alt="GitHub" width="32" height="32" class="inline"> Blog
                 </a>
             </div>
         </div>
-        <div class="grid grid-cols-6 gap-4 mx-auto max-w-screen-2xl">
+        <div class="grid grid-cols-3 gap-4 mx-auto max-w-screen-2xl">
             <div class="text-center">
                 <div class="mb-4">
                     <img src="{{ asset('images/avatar.jpeg') }}" alt="Norbert Orzechowicz" class="rounded-full w-[250px] h-[250px] object-cover inline">
                 </div>
             </div>
-            <div class="pt-16 px-6 col-span-4">
+            <div class="pt-16 px-6">
                 <h2 class="font-bold">My name is Norbert,</h2>
                 <p class="mb-2">
-                    I'm a software developer specializing in designing & building high-performance, large-scale web applications and data processing.
+                    I'm a software architect with a focus on designing and building highly scalable web applications and data processing systems.
                 </p>
                 <p class="mb-2">
-                    I also run a technical blog, mostly PHP-oriented. If you can read in Polish or don't mind using Google Translate, check <a href="https://zawarstwaabstrakcji.pl">zawarstwaabstrakcji.pl</a> (<a href="https://translate.google.com/translate?hl=en&amp;sl=pl&amp;tl=en&amp;u=http%3A%2F%2Fzawarstwaabstrakcji.pl">🇺🇸 translated version</a>).
+                    In my spare time, I maintain several open-source projects and enjoy automating and optimizing everything around me.
                 </p>
             </div>
-            <div>
+            <div class="pl-24">
                 <h2 class="text-lg font-bold">Links</h2>
                 <ul class="list-disc pl-6">
                     <li>
@@ -100,6 +100,11 @@
                             <img src="{{ asset('images/icons/mail.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> contact@norbert.tech
                         </a>
                     </li>
+                    <li>
+                        <a href="https://translate.google.com/translate?hl=en&sl=pl&tl=en&u=http%3A%2F%2Fzawarstwaabstrakcji.pl">
+                            <img src="{{ asset('images/icons/www.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> https://zawarstwaabstrakcji.pl
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -109,7 +114,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="p-4 bg-sky-50">
+    <footer class="p-4 bg-sky-50 absolute bottom-0 w-full">
         <div class="mx-auto max-w-screen-2xl text-center">
             <a href="{{ path('home') }}">by @norbert_tech</a>
         </div>
