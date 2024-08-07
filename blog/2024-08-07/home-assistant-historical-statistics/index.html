@@ -29,7 +29,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.tech/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
     <link rel="shortcut icon" href="https://norbert.tech/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
 
-            <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-a7e2b8ab994f450f81ee62805166bc8a.css">
+            <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-9f65def832c4672cee1d4486c607d7e0.css">
     
             
 <script type="importmap">
@@ -140,50 +140,50 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-screen-2xl mb-8 md:pt-4">
-            <article class="blog-post py-10 px-2 sm:px-4 mx-auto max-w-screen-xl">
-        <h1 class="font-bold text-4xl mb-2" id="title">Home Assistant - Accessing Historical Statistics</h1>
-        <div class="mb-2">
-            <small class="text-sm">Posted on August 7, 2024 00:00</small>
-        </div>
-        <div class="mb-4">
-                        <small><span class="badge badge-info">home assistant</span></small>
-                        <small><span class="badge badge-info">solar installation</span></small>
-                    </div>
-        <p>
-            One of my favorite integrations in Home Assistant is the integration with the solar installation.
-        </p>
-        <p>
-            By monitoring electricity production/consumption statistics, I can increase self-consumption by utilizing periods of high production.
-        </p>
-        <p>
-            Recently, I wanted to build a simple dashboard showing how much net energy (the difference between energy drawn and sent to the grid) I produced on a given day, week, and month.
-        </p>
-        <p>
-            My inverter provides 2 entities:
-        </p>
-        <ul>
-            <li>the amount of energy sent to the grid on a given day</li>
-            <li>the amount of energy drawn from the grid on a given day</li>
-        </ul>
+    <main class="mx-auto max-w-screen-2xl mb-4 md:pt-4">
+        <article class="blog-post py-10 px-2 sm:px-4 mx-auto max-w-screen-xl">
+    <h1 class="font-bold text-4xl mb-2" id="title">Home Assistant - Accessing Historical Statistics</h1>
+<div class="mb-2">
+    <small class="text-sm">Posted on August 7, 2024 00:00</small>
+</div>
+<div class="mb-4">
+        <small><span class="badge badge-info">home assistant</span></small>
+        <small><span class="badge badge-info">solar installation</span></small>
+    </div>
+<p>
+    One of my favorite integrations in Home Assistant is the integration with the solar installation.
+</p>
+<p>
+    By monitoring electricity production/consumption statistics, I can increase self-consumption by utilizing periods of high production.
+</p>
+<p>
+    Recently, I wanted to build a simple dashboard showing how much net energy (the difference between energy drawn and sent to the grid) I produced on a given day, week, and month.
+</p>
+<p>
+    My inverter provides 2 entities:
+</p>
+<ul>
+    <li>the amount of energy sent to the grid on a given day</li>
+    <li>the amount of energy drawn from the grid on a given day</li>
+</ul>
 
-        <p>
-            While daily production wasn't a problem, it was enough to add 2 helpers of the "template" type
-        </p>
-        <pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states("sensor.inverter_solarman_daily_energy_sold")) + (-float(states("sensor.inverter_solarman_daily_energy_bought"))) }}</code></pre>
-        <p>However, the problem arose when I wanted to access data from the last X days.</p>
-        <p>
-            Several solutions are floating around on the internet, but the simplest and most robust is the solution based on the <a href="https://www.home-assistant.io/integrations/sql/" target="_blank">SQL integration</a>.
-        </p>
-        <p>
-            Home Assistant uses SQLite as its default database, located at <code class="code-twig">/config/home-assistant_v2.db</code>
-        </p>
-        <p>
-            Essentially, there are two interesting tables in the database: <code>statistics</code> and <code>statistics_meta</code>.
-            Let's prepare a query that will extract the maximum value for each day from a specified date range.
-            (In this case, we're looking for the maximum value because the sensors provided by the integration record the energy consumed/returned cumulatively).
-        </p>
-        <pre><code class="code-sql" data-controller="syntax-highlight"">SELECT
+<p>
+    While daily production wasn't a problem, it was enough to add 2 helpers of the "template" type
+</p>
+<pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states("sensor.inverter_solarman_daily_energy_sold")) + (-float(states("sensor.inverter_solarman_daily_energy_bought"))) }}</code></pre>
+<p>However, the problem arose when I wanted to access data from the last X days.</p>
+<p>
+    Several solutions are floating around on the internet, but the simplest and most robust is the solution based on the <a href="https://www.home-assistant.io/integrations/sql/" target="_blank">SQL integration</a>.
+</p>
+<p>
+    Home Assistant uses SQLite as its default database, located at <code class="code-twig">/config/home-assistant_v2.db</code>
+</p>
+<p>
+    Essentially, there are two interesting tables in the database: <code>statistics</code> and <code>statistics_meta</code>.
+    Let's prepare a query that will extract the maximum value for each day from a specified date range.
+    (In this case, we're looking for the maximum value because the sensors provided by the integration record the energy consumed/returned cumulatively).
+</p>
+<pre><code class="code-sql" data-controller="syntax-highlight"">SELECT
     ROUND(SUM(max_state), 2) as total
 FROM (
     SELECT
@@ -197,38 +197,42 @@ FROM (
     LIMIT 7
 );</code></pre>
 
-        <p>
-            Then, all you need to do is search for "SQL" in the list of integrations and configure it accordingly.
-        </p>
+<p>
+    Then, all you need to do is search for "SQL" in the list of integrations and configure it accordingly.
+</p>
 
-        <a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" target="_blank" rel="noopener noreferrer">
-            <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
-        </a>
+<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" target="_blank" rel="noopener noreferrer">
+    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
+</a>
 
-        <p>
-            Repeat this process twice for energy returned/consumed, changing the number of days each time.
-            In the end, the SQL integration should provide 4 entities as shown in the screenshot below.
-        </p>
+<p>
+    Repeat this process twice for energy returned/consumed, changing the number of days each time.
+    In the end, the SQL integration should provide 4 entities as shown in the screenshot below.
+</p>
 
-        <a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" target="_blank" rel="noopener noreferrer">
-            <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
-        </a>
+<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" target="_blank" rel="noopener noreferrer">
+    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
+</a>
 
-        <p>
-            Now all we have to do is create 2 helpers under "Settings -> Devices & services -> Helpers" for net energy from the last 7 and 30 days.
-        </p>
+<p>
+    Now all we have to do is create 2 helpers under "Settings -> Devices & services -> Helpers" for net energy from the last 7 and 30 days.
+</p>
 
-        <pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_7_days')) + (-float(states('sensor.energy_taken_from_grid_last_7_days'))) }}</code></pre>
-        <pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_30_days')) + (-float(states('sensor.energy_taken_from_grid_last_30_days'))) }}</code></pre>
+<pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_7_days')) + (-float(states('sensor.energy_taken_from_grid_last_7_days'))) }}</code></pre>
+<pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_30_days')) + (-float(states('sensor.energy_taken_from_grid_last_30_days'))) }}</code></pre>
 
-        <p>
-            Done! From now on, we can use all 3 entities to display net energy from the last day/week/month on any chosen dashboard or in automations.
-        </p>
+<p>
+    Done! From now on, we can use all 3 entities to display net energy from the last day/week/month on any chosen dashboard or in automations.
+</p>
 
-        <a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" target="_blank" rel="noopener noreferrer">
-            <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
-        </a>
-    </article>
+<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" target="_blank" rel="noopener noreferrer">
+    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
+</a>
+
+</article>
+<div class="mb-2 mx-auto max-w-screen-xl text-center bg-emerald-50 p-4">
+    I hope you enjoyed this post! If you have any additional questions or comments, please open an issue on <a href="https://github.com/norberttech/norbert.tech/issues/new?title=[Question] Home%20Assistant%20-%20Accessing%20Historical%20Statistics" target="_blank">GitHub</a>.
+</div>
     </main>
 
     <footer class="p-4 bg-sky-50 absolute bottom-0 w-full">
