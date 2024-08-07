@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Home Assistant - Accessing Historical Statistics</title>
     <meta property="og:title" content="Home Assistant - Accessing Historical Statistics" />
     <meta name="twitter:title" content="Home Assistant - Accessing Historical Statistics" >
 
-    <meta name="description" content="Learn how to access historical statistics in Home Assistant using SQL Integration">
-    <meta property="og:description" content="Learn how to access historical statistics in Home Assistant using SQL Integration">
-    <meta name="twitter:description" content="Learn how to access historical statistics in Home Assistant using SQL Integration">
+    <meta name="description" content="How to access historical statistics in home assistant.">
+    <meta property="og:description" content="How to access historical statistics in home assistant.">
+    <meta name="twitter:description" content="How to access historical statistics in home assistant.">
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://norbert.tech/blog/2024-08-07/home-assistant-historical-statistics" />
@@ -29,7 +29,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.tech/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
     <link rel="shortcut icon" href="https://norbert.tech/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
 
-            <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-170b44042762e5a5e8203ffd666ed97b.css">
+            <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-a7e2b8ab994f450f81ee62805166bc8a.css">
     
             
 <script type="importmap">
@@ -80,7 +80,7 @@
 <body class="scroll-smooth text-black relative min-h-screen pb-16">
 
     <header class="py-2 px-4 bg-sky-50">
-        <div class="grid grid-cols-2 gap-4 mx-auto max-w-screen-2xl mb-8">
+        <div class="grid grid-cols-2 mb-8 sm:mx-auto sm:max-w-screen-2xl">
             <div class="text-left">
                 <a href="/" class="text-lg">
                     norbert.tech
@@ -92,13 +92,13 @@
                 </a>
             </div>
         </div>
-        <div class="grid grid-cols-3 gap-4 mx-auto max-w-screen-2xl">
+        <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4 sm:mx-auto sm:max-w-screen-2xl">
             <div class="text-center">
-                <div class="mb-4">
-                    <img src="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" alt="Norbert Orzechowicz" class="rounded-full w-[250px] h-[250px] object-cover inline">
+                <div class="mb-2">
+                    <img src="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" alt="Norbert Orzechowicz" class="rounded-full w-[64px] h-[64px] md:w-[250px] md:h-[250px] object-cover inline">
                 </div>
             </div>
-            <div class="pt-16 px-6">
+            <div class="sm:pt-16 px-2">
                 <h2 class="font-bold">My name is Norbert,</h2>
                 <p class="mb-2">
                     I'm a software architect with a focus on designing and building highly scalable web applications and data processing systems.
@@ -107,9 +107,9 @@
                     In my spare time, I maintain several open-source projects and enjoy automating and optimizing everything around me.
                 </p>
             </div>
-            <div class="pl-24">
+            <div class="sm:pl-24 text-left px-2">
                 <h2 class="text-lg font-bold">Links</h2>
-                <ul class="list-disc pl-6">
+                <ul class="lg:list-disc lg:pl-6">
                     <li>
                         <a href="https://twitter.com/norbert_tech" target="_blank">
                             <img src="https://norbert.tech/assets/images/icons/brand/x-68d2e3a65c45553952073ad94cbf0d71.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> @norbert_tech
@@ -140,13 +140,16 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-screen-2xl mb-8 pt-4">
+    <main class="mx-auto max-w-screen-2xl mb-8 md:pt-4">
             <article class="blog-post py-10 px-2 sm:px-4 mx-auto max-w-screen-xl">
         <h1 class="font-bold text-4xl mb-2" id="title">Home Assistant - Accessing Historical Statistics</h1>
-        <div class="mb-4">
-            <small><span class="badge badge-info">home assistant</span></small>
-            <small><span class="badge badge-info">solar installation</span></small>
+        <div class="mb-2">
+            <small class="text-sm">Posted on August 7, 2024 00:00</small>
         </div>
+        <div class="mb-4">
+                        <small><span class="badge badge-info">home assistant</span></small>
+                        <small><span class="badge badge-info">solar installation</span></small>
+                    </div>
         <p>
             One of my favorite integrations in Home Assistant is the integration with the solar installation.
         </p>
