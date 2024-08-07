@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<article class="blog-post py-10 px-2 sm:px-4 mx-auto max-w-screen-xl">
+    {{ block('article') }}
+</article>
+<div class="mb-2 mx-auto max-w-screen-xl text-center bg-emerald-50 p-4">
+    I hope you enjoyed this post! If you have any additional questions or comments, please open an issue on <a href="https://github.com/norberttech/norbert.tech/issues/new?title={{ "[Question] " ~ post.title | url_encode }}" target="_blank">GitHub</a>.
+</div>
+{% endblock %}

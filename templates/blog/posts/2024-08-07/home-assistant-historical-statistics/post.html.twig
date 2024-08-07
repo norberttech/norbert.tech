@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'blog/post.html.twig' %}
 
 {%- block title -%}
     {{ post.title }}
@@ -8,53 +8,52 @@
     {{ post.description }}
 {%- endblock -%}
 
-{% block content %}
-    <article class="blog-post py-10 px-2 sm:px-4 mx-auto max-w-screen-xl">
-        <h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
-        <div class="mb-2">
-            <small class="text-sm">Posted on {{ post.date | date }}</small>
-        </div>
-        <div class="mb-4">
-            {% for label in post.labels %}
-            <small><span class="badge badge-info">{{ label }}</span></small>
-            {% endfor %}
-        </div>
-        <p>
-            One of my favorite integrations in Home Assistant is the integration with the solar installation.
-        </p>
-        <p>
-            By monitoring electricity production/consumption statistics, I can increase self-consumption by utilizing periods of high production.
-        </p>
-        <p>
-            Recently, I wanted to build a simple dashboard showing how much net energy (the difference between energy drawn and sent to the grid) I produced on a given day, week, and month.
-        </p>
-        <p>
-            My inverter provides 2 entities:
-        </p>
-        <ul>
-            <li>the amount of energy sent to the grid on a given day</li>
-            <li>the amount of energy drawn from the grid on a given day</li>
-        </ul>
+{% block article %}
+<h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
+<div class="mb-2">
+    <small class="text-sm">Posted on {{ post.date | date }}</small>
+</div>
+<div class="mb-4">
+    {% for label in post.labels %}
+    <small><span class="badge badge-info">{{ label }}</span></small>
+    {% endfor %}
+</div>
+<p>
+    One of my favorite integrations in Home Assistant is the integration with the solar installation.
+</p>
+<p>
+    By monitoring electricity production/consumption statistics, I can increase self-consumption by utilizing periods of high production.
+</p>
+<p>
+    Recently, I wanted to build a simple dashboard showing how much net energy (the difference between energy drawn and sent to the grid) I produced on a given day, week, and month.
+</p>
+<p>
+    My inverter provides 2 entities:
+</p>
+<ul>
+    <li>the amount of energy sent to the grid on a given day</li>
+    <li>the amount of energy drawn from the grid on a given day</li>
+</ul>
 
-        <p>
-            While daily production wasn't a problem, it was enough to add 2 helpers of the "template" type
-        </p>
-        <pre><code class="code-twig" {{ stimulus_controller('syntax_highlight') }}">{{
-    '{{ float(states("sensor.inverter_solarman_daily_energy_sold")) + (-float(states("sensor.inverter_solarman_daily_energy_bought"))) }}'
-            | spaceless }}</code></pre>
-        <p>However, the problem arose when I wanted to access data from the last X days.</p>
-        <p>
-            Several solutions are floating around on the internet, but the simplest and most robust is the solution based on the <a href="https://www.home-assistant.io/integrations/sql/" target="_blank">SQL integration</a>.
-        </p>
-        <p>
-            Home Assistant uses SQLite as its default database, located at <code class="code-twig">/config/home-assistant_v2.db</code>
-        </p>
-        <p>
-            Essentially, there are two interesting tables in the database: <code>statistics</code> and <code>statistics_meta</code>.
-            Let's prepare a query that will extract the maximum value for each day from a specified date range.
-            (In this case, we're looking for the maximum value because the sensors provided by the integration record the energy consumed/returned cumulatively).
-        </p>
-        <pre><code class="code-sql" {{ stimulus_controller('syntax_highlight') }}">{{
+<p>
+    While daily production wasn't a problem, it was enough to add 2 helpers of the "template" type
+</p>
+<pre><code class="code-twig" {{ stimulus_controller('syntax_highlight') }}">{{
+'{{ float(states("sensor.inverter_solarman_daily_energy_sold")) + (-float(states("sensor.inverter_solarman_daily_energy_bought"))) }}'
+    | spaceless }}</code></pre>
+<p>However, the problem arose when I wanted to access data from the last X days.</p>
+<p>
+    Several solutions are floating around on the internet, but the simplest and most robust is the solution based on the <a href="https://www.home-assistant.io/integrations/sql/" target="_blank">SQL integration</a>.
+</p>
+<p>
+    Home Assistant uses SQLite as its default database, located at <code class="code-twig">/config/home-assistant_v2.db</code>
+</p>
+<p>
+    Essentially, there are two interesting tables in the database: <code>statistics</code> and <code>statistics_meta</code>.
+    Let's prepare a query that will extract the maximum value for each day from a specified date range.
+    (In this case, we're looking for the maximum value because the sensors provided by the integration record the energy consumed/returned cumulatively).
+</p>
+<pre><code class="code-sql" {{ stimulus_controller('syntax_highlight') }}">{{
 'SELECT
     ROUND(SUM(max_state), 2) as total
 FROM (
@@ -70,40 +69,39 @@ FROM (
 );'
             | spaceless }}</code></pre>
 
-        <p>
-            Then, all you need to do is search for "SQL" in the list of integrations and configure it accordingly.
-        </p>
+<p>
+    Then, all you need to do is search for "SQL" in the list of integrations and configure it accordingly.
+</p>
 
-        <a href="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-config-01.png') }}" target="_blank" rel="noopener noreferrer">
-            <img src="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-config-01.png') }}" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
-        </a>
+<a href="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-config-01.png') }}" target="_blank" rel="noopener noreferrer">
+    <img src="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-config-01.png') }}" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
+</a>
 
-        <p>
-            Repeat this process twice for energy returned/consumed, changing the number of days each time.
-            In the end, the SQL integration should provide 4 entities as shown in the screenshot below.
-        </p>
+<p>
+    Repeat this process twice for energy returned/consumed, changing the number of days each time.
+    In the end, the SQL integration should provide 4 entities as shown in the screenshot below.
+</p>
 
-        <a href="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-preview-01.png') }}" target="_blank" rel="noopener noreferrer">
-            <img src="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-preview-01.png') }}" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
-        </a>
+<a href="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-preview-01.png') }}" target="_blank" rel="noopener noreferrer">
+    <img src="{{ asset('images/blog/home-assistant-historical-statistics/sql-integration-preview-01.png') }}" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
+</a>
 
-        <p>
-            Now all we have to do is create 2 helpers under "Settings -> Devices & services -> Helpers" for net energy from the last 7 and 30 days.
-        </p>
+<p>
+    Now all we have to do is create 2 helpers under "Settings -> Devices & services -> Helpers" for net energy from the last 7 and 30 days.
+</p>
 
-        <pre><code class="code-twig" {{ stimulus_controller('syntax_highlight') }}">{{
-            '{{ float(states(\'sensor.energy_sent_to_grid_last_7_days\')) + (-float(states(\'sensor.energy_taken_from_grid_last_7_days\'))) }}'
-            | spaceless }}</code></pre>
-        <pre><code class="code-twig" {{ stimulus_controller('syntax_highlight') }}">{{
-            '{{ float(states(\'sensor.energy_sent_to_grid_last_30_days\')) + (-float(states(\'sensor.energy_taken_from_grid_last_30_days\'))) }}'
-            | spaceless }}</code></pre>
+<pre><code class="code-twig" {{ stimulus_controller('syntax_highlight') }}">{{
+    '{{ float(states(\'sensor.energy_sent_to_grid_last_7_days\')) + (-float(states(\'sensor.energy_taken_from_grid_last_7_days\'))) }}'
+    | spaceless }}</code></pre>
+<pre><code class="code-twig" {{ stimulus_controller('syntax_highlight') }}">{{
+    '{{ float(states(\'sensor.energy_sent_to_grid_last_30_days\')) + (-float(states(\'sensor.energy_taken_from_grid_last_30_days\'))) }}'
+    | spaceless }}</code></pre>
 
-        <p>
-            Done! From now on, we can use all 3 entities to display net energy from the last day/week/month on any chosen dashboard or in automations.
-        </p>
+<p>
+    Done! From now on, we can use all 3 entities to display net energy from the last day/week/month on any chosen dashboard or in automations.
+</p>
 
-        <a href="{{ asset('images/blog/home-assistant-historical-statistics/energy-dashboard.png') }}" target="_blank" rel="noopener noreferrer">
-            <img src="{{ asset('images/blog/home-assistant-historical-statistics/energy-dashboard.png') }}" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
-        </a>
-    </article>
+<a href="{{ asset('images/blog/home-assistant-historical-statistics/energy-dashboard.png') }}" target="_blank" rel="noopener noreferrer">
+    <img src="{{ asset('images/blog/home-assistant-historical-statistics/energy-dashboard.png') }}" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
+</a>
 {% endblock %}
