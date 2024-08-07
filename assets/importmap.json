@@ -16,7 +16,7 @@
         "type": "js"
     },
     "\/assets\/controllers\/syntax_highlight_controller.js": {
-        "path": "\/assets\/controllers\/syntax_highlight_controller-21214ceee6533e0aad7a15e1c17adc5c.js",
+        "path": "\/assets\/controllers\/syntax_highlight_controller-917659ae74be6d45a7faaefe4a9145b3.js",
         "type": "js"
     },
     "\/assets\/controllers\/clipboard_controller.js": {
@@ -65,6 +65,14 @@
     },
     "highlight.js\/lib\/languages\/json": {
         "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/languages\/twig": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/twig-0f3c6d18c0368650898b432b7bcf672a.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/languages\/sql": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/sql-09f80640dd6fe9bed6ff4eb255b13f08.js",
         "type": "js"
     }
 }
