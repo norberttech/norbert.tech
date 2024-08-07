@@ -1,0 +1,70 @@
+{
+    "app": {
+        "path": "\/assets\/app-f6b6b9453864ea635d158621b1bef659.js",
+        "type": "js"
+    },
+    "\/assets\/bootstrap.js": {
+        "path": "\/assets\/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
+        "type": "js"
+    },
+    "\/assets\/@symfony\/stimulus-bundle\/controllers.js": {
+        "path": "\/assets\/@symfony\/stimulus-bundle\/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
+        "type": "js"
+    },
+    "\/assets\/controllers\/hello_controller.js": {
+        "path": "\/assets\/controllers\/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+        "type": "js"
+    },
+    "\/assets\/controllers\/syntax_highlight_controller.js": {
+        "path": "\/assets\/controllers\/syntax_highlight_controller-21214ceee6533e0aad7a15e1c17adc5c.js",
+        "type": "js"
+    },
+    "\/assets\/controllers\/clipboard_controller.js": {
+        "path": "\/assets\/controllers\/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
+        "type": "js"
+    },
+    "@symfony\/stimulus-bundle": {
+        "path": "\/assets\/@symfony\/stimulus-bundle\/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js",
+        "type": "js"
+    },
+    "@hotwired\/stimulus": {
+        "path": "\/assets\/vendor\/@hotwired\/stimulus\/stimulus.index-304681764684182e6662e0931532ed91.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/core": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/core-760145ef158caabe84ca07686407d093.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/languages\/php": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/php-c0eb2105c14097e8a5a1e9a767e8ac95.js",
+        "type": "js"
+    },
+    "highlight.js\/styles\/github-dark.min.css": {
+        "path": "\/assets\/vendor\/highlight.js\/styles\/github-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css",
+        "type": "css"
+    },
+    "@fontsource-variable\/cabin\/index.min.css": {
+        "path": "\/assets\/vendor\/@fontsource-variable\/cabin\/index.min-08e34691d22388e6974e6cb2bfbcbfd0.css",
+        "type": "css"
+    },
+    "htmx.org": {
+        "path": "\/assets\/vendor\/htmx.org\/htmx.org.index-023ae86a082913526422a6063298f898.js",
+        "type": "js"
+    },
+    "clipboard": {
+        "path": "\/assets\/vendor\/clipboard\/clipboard.index-925566f98181665b5a61fea1bcd9033d.js",
+        "type": "js"
+    },
+    "@oddbird\/popover-polyfill": {
+        "path": "\/assets\/vendor\/@oddbird\/popover-polyfill\/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/languages\/shell": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/shell-664215791af27581e04813723523a355.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/languages\/json": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js",
+        "type": "js"
+    }
+}

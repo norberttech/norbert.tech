@@ -1,71 +1,118 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0">
+
+    <title>{{ block('title') | default("Norbert Orzechowicz") }}</title>
+    <meta property="og:title" content="{{ block('title') }}" />
+    <meta name="twitter:title" content="{{ block('title') }}" >
+
+    <meta name="description" content="{{ block('description')  }}">
+    <meta property="og:description" content="{{ block('description') }}">
+    <meta name="twitter:description" content="{{ block('description') }}">
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+    <meta property="og:image" content="{{ absolute_url(asset('images/avatar.jpeg')) }}" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:alt" content="Norbert Orzechowicz - Personal Website" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+    <meta name="twitter:image" content="{{ absolute_url(asset('images/avatar.jpeg')) }}">
+    <meta name="twitter:site" content="@norbert_tech" />
+    <meta name="twitter:creator" content="@norbert_tech" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicons/favicon-16x16.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/favicons/favicon.ico') }}">
+
     {% block stylesheets %}
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('assets/css/prism/prism.css') }}" />
-        <style type="text/css">
-            html {
-                position: relative;
-                min-height: 100%;
-            }
-            body {
-                margin-bottom: 60px; /* Margin bottom by footer height */
-            }
-            .book-cover {
-                max-width: 177px;
-                max-height: 250px;
-            }
-            .footer {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                height: 60px; /* Set the fixed height of the footer here */
-                line-height: 60px; /* Vertically center the text there */
-            }
-        </style>
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     {% endblock %}
 
-    <title>{% block title %}Norbert Orzechowicz - Software Developer Portfolio{% endblock %}</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153657381-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', '{{ google_analytics_tracking_id }}');
-    </script>
+    {% block javascripts %}
+        {{ importmap() }}
+    {% endblock %}
 </head>
-<body>
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="{{ path('home') }}">norbert.tech</a>
-    <a class="navbar-brand" href="https://github.com/norberttech"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z" fill="#000"></path></svg> GitHub</a>
-</nav>
-<div class="container-fluid">
-    {% block body %}{% endblock %}
-</div>
+{% if google_analytics_id %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}">{% if google_conversion_tag %}gtag('config', '{{ google_conversion_tag }}');{% endif %}</script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-<footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <span class="text-muted">by <a href="https://twitter.com/norbert_tech">@norbert_tech</a></span>
+    gtag('config', '{{ google_analytics_id }}');
+</script>
+{% endif %}
+<body class="scroll-smooth text-black">
+
+    <header class="py-2 px-4 bg-sky-50">
+        <div class="grid grid-cols-2 gap-4 mx-auto max-w-screen-2xl mb-8">
+            <div class="text-left">
+                <a href="{{ path('home') }}" class="text-lg">
+                    norbert.tech
+                </a>
+            </div>
+            <div class="text-right">
+                <a href="http://github.com/norberttech" target="_blank" class="text-lg inline">
+                    <img src="{{ asset('images/icons/brand/github.svg') }}" alt="GitHub" width="32" height="32" class="inline"> GitHub
+                </a>
             </div>
         </div>
-    </div>
-</footer>
+        <div class="grid grid-cols-6 gap-4 mx-auto max-w-screen-2xl">
+            <div class="text-center">
+                <div class="mb-4">
+                    <img src="{{ asset('images/avatar.jpeg') }}" alt="Norbert Orzechowicz" class="rounded-full w-[250px] h-[250px] object-cover inline">
+                </div>
+            </div>
+            <div class="pt-16 px-6 col-span-4">
+                <h2 class="font-bold">My name is Norbert,</h2>
+                <p class="mb-2">
+                    I'm a software developer specializing in designing & building high-performance, large-scale web applications and data processing.
+                </p>
+                <p class="mb-2">
+                    I also run a technical blog, mostly PHP-oriented. If you can read in Polish or don't mind using Google Translate, check <a href="https://zawarstwaabstrakcji.pl">zawarstwaabstrakcji.pl</a> (<a href="https://translate.google.com/translate?hl=en&amp;sl=pl&amp;tl=en&amp;u=http%3A%2F%2Fzawarstwaabstrakcji.pl">🇺🇸 translated version</a>).
+                </p>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold">Links</h2>
+                <ul class="list-disc pl-6">
+                    <li>
+                        <a href="https://twitter.com/norbert_tech" target="_blank">
+                            <img src="{{ asset('images/icons/brand/x.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> @norbert_tech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/norberttech" target="_blank">
+                            <img src="{{ asset('images/icons/brand/github.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/in/norberttech/" target="_blank">
+                            <img src="{{ asset('images/icons/brand/linkedin.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:contact@norbert.tech">
+                            <img src="{{ asset('images/icons/mail.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> contact@norbert.tech
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/134a4a1c71.js" crossorigin="anonymous"></script>
-<script src="{{ asset('assets/js/prism/prism.js') }}"></script>
+    <main class="mx-auto max-w-screen-2xl mb-8 pt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="p-4 bg-sky-50">
+        <div class="mx-auto max-w-screen-2xl text-center">
+            <a href="{{ path('home') }}">by @norbert_tech</a>
+        </div>
+    </footer>
 </body>
 </html>

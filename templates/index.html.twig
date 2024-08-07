@@ -1,120 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style type="text/css">
-        .header {
-            padding-top: 1em;
-            padding-bottom: 1em;
-        }
-        .avatar {
-            max-width: 300px;
-            max-height: 300px;
-            margin-bottom: 1em;
-        }
-        .knowledge-base {
-            width: 20em;
-        }
-    </style>
-{% endblock %}
+{% block title %}{% endblock %}
+{% block description %}{% endblock %}
 
-{% block body %}
-<div class="row header bg-light mb-3">
-    <div class="col-md-3 text-center">
-        <picture>
-            <img src="{{ asset('assets/img/avatar.jpg') }}" class="img-fluid rounded-circle avatar" alt="Norbert Orzechowicz">
-        </picture>
-        <h5 class="text-dark-50">I Code </h5>
-        <a href="mailto:contact@norbert.tech">contact@norbert.tech</a>
-    </div>
-    <div class="col-md-5">
-        <p>
-            My name is Norbert,<br/>
-            I'm a software developer specializing in designing & building high-performance, large-scale web applications.
-            All technologies related to web development and data processing fascinate me. <br />
-        </p>
-        <p>
-            I also run a technical blog, mostly PHP oriented, if you can read in Polish or don't mind using <br/>
-            google translate check <a href="https://zawarstwaabstrakcji.pl">zawarstwaabstrakcji.pl</a> (<a href="https://translate.google.com/translate?hl=en&sl=pl&tl=en&u=http%3A%2F%2Fzawarstwaabstrakcji.pl">🇺🇸 translated version</a>).
-        </p>
-        <p>
-            I spent a significant amount of my free time building and maintaining few
-            open-source projects that you can read about below.
-        </p>
-    </div>
-    <div class="col-md-2">
-        <h4>Latest blog posts</h4>
-        <ul>
-            <li><a href="https://zawarstwaabstrakcji.pl/20181005-testy-php-mock-czyli-test-double/">🇵🇱 Testy w PHP - Mock czyli Test Double</a></li>
-            <li><a href="https://zawarstwaabstrakcji.pl/20180925-testy-php-object-mother/">🇵🇱 Testy w PHP - Object Mother</a></li>
-            <li><a href="https://zawarstwaabstrakcji.pl/20180507-fp-oop-w-php/">🇵🇱 FP i OOP w PHP</a></li>
-        </ul>
-
-        <h4>Knowledge base</h4>
-        <div class="knowledge-base">
-            <div class="card">
-                <ul class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action" href="{{ path('knowledge_base_talks') }}">Talks</a>
-                    <a class="list-group-item list-group-item-action" href="{{ path('knowledge_base_books') }}">Books</a>
-                </ul>
-            </div>
-            <p class="text-right">
-                <small>* recommendations</small>
-            </p>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-3">
-        <h4>Recent Tweets</h4>
-        <a class="twitter-timeline" data-lang="en" data-theme="light" data-tweet-limit="6" href="https://twitter.com/norbert_tech">Tweets by norbert_tech</a>
+{% block content %}
+<div class="grid grid-cols-3 gap-4">
+    <div class="pr-4">
+        <h2 class="text-2xl mb-2">Recent Tweets</h2>
+        <a class="twitter-timeline" href="https://twitter.com/norbert_tech" data-height="680" data-tweet-limit="6">Loading Tweets by norbert_tech...</a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
-    <div class="col-md-5">
+
+    <div class="col-span-2">
         {{ render(controller('NorbertTech\\Portfolio\\Controller\\ProjectsController::list')) }}
-    </div>
-    <div class="col-md-4">
-        <h4>Technologies, Tools & Buzzwords</h4>
-        <p>
-            I tried & enjoyed
-        </p>
-        <div class="row">
-            <div class="col-md-2">
-                <ul>
-                    <li><span class="badge badge-secondary">PHP</span></li>
-                    <li><span class="badge badge-secondary">Scala</span></li>
-                    <li><span class="badge badge-secondary">C / C++</span></li>
-                    <li><span class="badge badge-secondary">NodeJS</span></li>
-                    <li><span class="badge badge-secondary">Java</span></li>
-                </ul>
-            </div>
-            <div class="col-md-2">
-                <ul>
-                    <li><span class="badge badge-secondary">Terraform</span></li>
-                    <li><span class="badge badge-secondary">Packer</span></li>
-                    <li><span class="badge badge-secondary">Ansible</span></li>
-                    <li><span class="badge badge-secondary">Azure</span></li>
-                    <li><span class="badge badge-secondary">Docker</span></li>
-                </ul>
-            </div>
-            <div class="col-md-2">
-                <ul>
-                    <li><span class="badge badge-secondary">Apache Spark</span></li>
-                    <li><span class="badge badge-secondary">Delta Lake</span></li>
-                    <li><span class="badge badge-secondary">Databricks</span></li>
-                    <li><span class="badge badge-secondary">Nix</span></li>
-                </ul>
-            </div>
-        </div>
-        <hr />
-        <h4>Quotes</h4>
-        <blockquote class="blockquote">
-            <p>
-                <small>You only test the part of the application that you want to work.</small>
-            </p>
-            <footer class="blockquote-footer">Robert C. Martin</footer>
-        </blockquote>
-        <hr />
     </div>
 </div>
 {% endblock %}

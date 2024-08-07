@@ -1,143 +1,175 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="/assets/css/prism/prism.css" />
-        <style type="text/css">
-            html {
-                position: relative;
-                min-height: 100%;
-            }
-            body {
-                margin-bottom: 60px; /* Margin bottom by footer height */
-            }
-            .book-cover {
-                max-width: 177px;
-                max-height: 250px;
-            }
-            .footer {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                height: 60px; /* Set the fixed height of the footer here */
-                line-height: 60px; /* Vertically center the text there */
-            }
-        </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0">
+
+    <title>Norbert Orzechowicz</title>
+    <meta property="og:title" content="" />
+    <meta name="twitter:title" content="" >
+
+    <meta name="description" content="">
+    <meta property="og:description" content="">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://norbert.wip/" />
+    <meta property="og:image" content="https://norbert.wip/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:alt" content="Norbert Orzechowicz - Personal Website" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://norbert.wip/" />
+    <meta name="twitter:image" content="https://norbert.wip/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
+    <meta name="twitter:site" content="@norbert_tech" />
+    <meta name="twitter:creator" content="@norbert_tech" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://norbert.wip/assets/images/favicons/apple-touch-icon-9cae7ee880b4fe0bd755d300e1bca71e.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://norbert.wip/assets/images/favicons/favicon-32x32-b7a4ad4b584ab95534144e071f0e8587.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.wip/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
+    <link rel="shortcut icon" href="https://norbert.wip/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
+
+            <link rel="stylesheet" href="https://norbert.wip/assets/styles/app-0f9e1b9e447815427ced59ae555f6930.css">
     
-    <style type="text/css">
-        .header {
-            padding-top: 1em;
-            padding-bottom: 1em;
-        }
-        .avatar {
-            max-width: 300px;
-            max-height: 300px;
-            margin-bottom: 1em;
-        }
-        .knowledge-base {
-            width: 20em;
-        }
-    </style>
+            
+<script type="importmap">
+{
+    "imports": {
+        "app": "https://norbert.wip/assets/app-f6b6b9453864ea635d158621b1bef659.js",
+        "@oddbird/popover-polyfill": "https://norbert.wip/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js",
+        "https://norbert.wip/assets/bootstrap.js": "https://norbert.wip/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
+        "htmx.org": "https://norbert.wip/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js",
+        "@symfony/stimulus-bundle": "https://norbert.wip/assets/@symfony/stimulus-bundle/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js",
+        "@hotwired/stimulus": "https://norbert.wip/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js",
+        "https://norbert.wip/assets/@symfony/stimulus-bundle/controllers.js": "https://norbert.wip/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
+        "https://norbert.wip/assets/controllers/hello_controller.js": "https://norbert.wip/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+        "https://norbert.wip/assets/controllers/syntax_highlight_controller.js": "https://norbert.wip/assets/controllers/syntax_highlight_controller-21214ceee6533e0aad7a15e1c17adc5c.js",
+        "https://norbert.wip/assets/controllers/clipboard_controller.js": "https://norbert.wip/assets/controllers/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
+        "highlight.js/lib/core": "https://norbert.wip/assets/vendor/highlight.js/lib/core-760145ef158caabe84ca07686407d093.js",
+        "highlight.js/lib/languages/php": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/php-c0eb2105c14097e8a5a1e9a767e8ac95.js",
+        "highlight.js/styles/github-dark.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.wip%2Fassets%2Fvendor%2Fhighlight.js%2Fstyles%2Fgithub-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css%22%7D%29%29",
+        "@fontsource-variable/cabin/index.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.wip%2Fassets%2Fvendor%2F%40fontsource-variable%2Fcabin%2Findex.min-08e34691d22388e6974e6cb2bfbcbfd0.css%22%7D%29%29",
+        "clipboard": "https://norbert.wip/assets/vendor/clipboard/clipboard.index-925566f98181665b5a61fea1bcd9033d.js",
+        "highlight.js/lib/languages/shell": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/shell-664215791af27581e04813723523a355.js",
+        "highlight.js/lib/languages/json": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js"
+    }
+}
+</script>
+<!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support -->
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+<link rel="modulepreload" href="https://norbert.wip/assets/app-f6b6b9453864ea635d158621b1bef659.js">
+<link rel="modulepreload" href="https://norbert.wip/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js">
+<link rel="modulepreload" href="https://norbert.wip/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js">
+<link rel="modulepreload" href="https://norbert.wip/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js">
+<link rel="modulepreload" href="https://norbert.wip/assets/@symfony/stimulus-bundle/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js">
+<link rel="modulepreload" href="https://norbert.wip/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js">
+<link rel="modulepreload" href="https://norbert.wip/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js">
+<link rel="modulepreload" href="https://norbert.wip/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js">
+<script type="module">import 'app';</script>
+    </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-153657381-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-    <title>Norbert Orzechowicz - Software Developer Portfolio</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153657381-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    gtag('config', 'UA-153657381-1');
+</script>
+<body class="scroll-smooth text-black">
 
-        gtag('config', 'UA-153657381-1');
-    </script>
-</head>
-<body>
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="/">norbert.tech</a>
-    <a class="navbar-brand" href="https://github.com/norberttech"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z" fill="#000"></path></svg> GitHub</a>
-</nav>
-<div class="container-fluid">
-    <div class="row header bg-light mb-3">
-    <div class="col-md-3 text-center">
-        <picture>
-            <img src="/assets/img/avatar.jpg" class="img-fluid rounded-circle avatar" alt="Norbert Orzechowicz">
-        </picture>
-        <h5 class="text-dark-50">I Code </h5>
-        <a href="mailto:contact@norbert.tech">contact@norbert.tech</a>
-    </div>
-    <div class="col-md-5">
-        <p>
-            My name is Norbert,<br/>
-            I'm a software developer specializing in designing & building high-performance, large-scale web applications.
-            All technologies related to web development and data processing fascinate me. <br />
-        </p>
-        <p>
-            I also run a technical blog, mostly PHP oriented, if you can read in Polish or don't mind using <br/>
-            google translate check <a href="https://zawarstwaabstrakcji.pl">zawarstwaabstrakcji.pl</a> (<a href="https://translate.google.com/translate?hl=en&sl=pl&tl=en&u=http%3A%2F%2Fzawarstwaabstrakcji.pl">🇺🇸 translated version</a>).
-        </p>
-        <p>
-            I spent a significant amount of my free time building and maintaining few
-            open-source projects that you can read about below.
-        </p>
-    </div>
-    <div class="col-md-2">
-        <h4>Latest blog posts</h4>
-        <ul>
-            <li><a href="https://zawarstwaabstrakcji.pl/20181005-testy-php-mock-czyli-test-double/">🇵🇱 Testy w PHP - Mock czyli Test Double</a></li>
-            <li><a href="https://zawarstwaabstrakcji.pl/20180925-testy-php-object-mother/">🇵🇱 Testy w PHP - Object Mother</a></li>
-            <li><a href="https://zawarstwaabstrakcji.pl/20180507-fp-oop-w-php/">🇵🇱 FP i OOP w PHP</a></li>
-        </ul>
-
-        <h4>Knowledge base</h4>
-        <div class="knowledge-base">
-            <div class="card">
-                <ul class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action" href="/knowledge-base/talks">Talks</a>
-                    <a class="list-group-item list-group-item-action" href="/knowledge-base/books">Books</a>
+    <header class="py-2 px-4 bg-sky-50">
+        <div class="grid grid-cols-2 gap-4 mx-auto max-w-screen-2xl mb-8">
+            <div class="text-left">
+                <a href="/" class="text-lg">
+                    norbert.tech
+                </a>
+            </div>
+            <div class="text-right">
+                <a href="http://github.com/norberttech" target="_blank" class="text-lg inline">
+                    <img src="https://norbert.wip/assets/images/icons/brand/github-78d1b6b47cbdc8d2aae5db2c3c919541.svg" alt="GitHub" width="32" height="32" class="inline"> GitHub
+                </a>
+            </div>
+        </div>
+        <div class="grid grid-cols-6 gap-4 mx-auto max-w-screen-2xl">
+            <div class="text-center">
+                <div class="mb-4">
+                    <img src="https://norbert.wip/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" alt="Norbert Orzechowicz" class="rounded-full w-[250px] h-[250px] object-cover inline">
+                </div>
+            </div>
+            <div class="pt-16 px-6 col-span-4">
+                <h2 class="font-bold">My name is Norbert,</h2>
+                <p class="mb-2">
+                    I'm a software developer specializing in designing & building high-performance, large-scale web applications and data processing.
+                </p>
+                <p class="mb-2">
+                    I also run a technical blog, mostly PHP-oriented. If you can read in Polish or don't mind using Google Translate, check <a href="https://zawarstwaabstrakcji.pl">zawarstwaabstrakcji.pl</a> (<a href="https://translate.google.com/translate?hl=en&amp;sl=pl&amp;tl=en&amp;u=http%3A%2F%2Fzawarstwaabstrakcji.pl">🇺🇸 translated version</a>).
+                </p>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold">Links</h2>
+                <ul class="list-disc pl-6">
+                    <li>
+                        <a href="https://twitter.com/norbert_tech" target="_blank">
+                            <img src="https://norbert.wip/assets/images/icons/brand/x-68d2e3a65c45553952073ad94cbf0d71.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> @norbert_tech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/norberttech" target="_blank">
+                            <img src="https://norbert.wip/assets/images/icons/brand/github-78d1b6b47cbdc8d2aae5db2c3c919541.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/in/norberttech/" target="_blank">
+                            <img src="https://norbert.wip/assets/images/icons/brand/linkedin-15580d4d0994922589dabacfadb6a3f8.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:contact@norbert.tech">
+                            <img src="https://norbert.wip/assets/images/icons/mail-a794445e07244fda2892b62471c4476c.svg" alt="Twitter" class="inline w-[18px] h-[18px]"> contact@norbert.tech
+                        </a>
+                    </li>
                 </ul>
             </div>
-            <p class="text-right">
-                <small>* recommendations</small>
-            </p>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-3">
-        <h4>Recent Tweets</h4>
-        <a class="twitter-timeline" data-lang="en" data-theme="light" data-tweet-limit="6" href="https://twitter.com/norbert_tech">Tweets by norbert_tech</a>
+    </header>
+
+    <main class="mx-auto max-w-screen-2xl mb-8 pt-4">
+        <div class="grid grid-cols-3 gap-4">
+    <div class="pr-4">
+        <h2 class="text-2xl mb-2">Recent Tweets</h2>
+        <a class="twitter-timeline" href="https://twitter.com/norbert_tech" data-height="680" data-tweet-limit="6">Loading Tweets by norbert_tech...</a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
-    <div class="col-md-5">
-        <h2>Projects</h2>
-<p>
+
+    <div class="col-span-2">
+        <h2 class="text-2xl mb-2">Projects</h2>
+<p class="mb-2">
     <small>
         Some are just small libraries, others are pet projects developed during research phase before building commercial
         project.
     </small>
 </p>
-<hr />
+<hr class="mb-4" />
 <div class="row">
-    <div class="col-md-12">
-    <h5 id="flow-php"><a href="#flow-php"># Flow PHP - ETL</a> <small><span class="badge badge-success">Open Source</span></small></h5>
-    <p>
+    <div class="mb-2">
+    <h5 id="flow-php" class="text-lg bold mb-2">
+        <a href="#flow-php" class="text-black"># Flow PHP - ETL</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
         <small><span class="badge badge-secondary">PHP</span></small>
         <small><span class="badge badge-secondary">Library</span></small>
         <small><span class="badge badge-secondary">License: MIT</span></small>
     </p>
 
-    <ul>
+    <ul class="list-disc mb-2 pl-8">
         <li><a href="https://github.com/flow-php" target="_blank"><i class="fab fa-github"></i> flow-php</a></li>
     </ul>
-    <p>
+    <p class="mb-2">
         <a href="https://github.com/flow-php" target="_blank">Flow</a> is a PHP based, strongly typed ETL (Extract Transform Load) data processing library.
     </p>
-    <section>
-        <h5>Adapters</h5>
-        <ul>
+    <section class="mb-2">
+        <h5 class="font-bold mb-2">Adapters</h5>
+        <ul class="list-disc mb-2 pl-8">
             <li>CSV</li>
             <li>JSON</li>
             <li>Elasticsearch</li>
@@ -147,33 +179,34 @@
             <li>PSR Logger</li>
             <li>Memory</li>
         </ul>
-        <p>
+        <p class="mb-2">
             Additionally Flow ETL comes with 30+ build in Transformers that can handle most of transformations.<br/>
         </p>
         <p>
-            Read more about <a href="https://github.com/flow-php" target="_blank">Flow</a>
+            Read more about <a href="https://flow-php.com" target="_blank">https://flow-php.com</a>
         </p>
     </section>
     <hr />
 </div>
-    <div class="col-md-12">
-    <h5 id="php-matcher"><a href="#php-matcher"># Aeon PHP</a> <small><span class="badge badge-success">Open Source</span></small></h5>
-    <p>
+    <div class="mb-2">
+    <h5 id="aeon-php" class="text-lg bold mb-2">
+        <a href="#aeon-php" class="text-black"># Aeon PHP</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
         <small><span class="badge badge-secondary">PHP</span></small>
         <small><span class="badge badge-secondary">Library</span></small>
         <small><span class="badge badge-secondary">License: MIT</span></small>
     </p>
 
-    <ul>
+    <ul class="list-disc mb-2 pl-8">
         <li><a href="https://github.com/aeon-php" target="_blank"><i class="fab fa-github"></i> aeon-php</a></li>
     </ul>
-    <p>
+    <p class="mb-2">
         <a href="https://aeon-php.org" target="_blank">Aeon</a> is a set of libraries that makes it easier to work with PHP Date & Time in an elegant Object Oriented way.
     </p>
-    <section>
-        <h5>Features</h5>
-        <hr/>
-        <ul>
+    <section class="mb-2">
+        <h5 class="font-bold mb-2">Adapters</h5>
+        <ul class="list-disc mb-2 pl-8">
             <li>Full immutability</li>
             <li>Elegant object oriented interface</li>
             <li>Mocking time in tests</li>
@@ -188,100 +221,110 @@
             <li>Many many more!</li>
         </ul>
 
-        <p>
+        <p class="mb-2">
             Visit project <a href="https://aeon-php.org/docs/" target="_blank">documentation</a> page to learn more
             and don't be worry about time anymore!
         </p>
     </section>
     <hr />
 </div>
-    <div class="col-md-12">
-    <h5 id="md-link-linter"><a href="#md-link-linter"># MD Link Linter</a> <small><span class="badge badge-success">Open Source</span></small></h5>
-    <p>
+    <div class="mb-2">
+    <h5 id="md-link-linter" class="text-lg bold mb-2">
+        <a href="#md-link-linter" class="text-black"># MD Link Linter</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
         <small><span class="badge badge-secondary">PHP</span></small>
         <small><span class="badge badge-secondary">CLI Tool</span></small>
         <small><span class="badge badge-secondary">License: MIT</span></small>
     </p>
 
-    <ul>
+    <ul class="list-disc mb-2 pl-8">
         <li><a href="https://github.com/norberttech/md-link-linter" target="_blank"><i class="fab fa-github"></i> norberttech/md-link-linter</a></li>
     </ul>
-    <p>
+    <p class="mb-2">
         CLI app that iterates through all markdown files in given path checking if links used in them are always valid.
         I become obsessed about improving developer experience in projects I'm working on. Most of my projects is documented in markdown syntax since
         it's easy, can be easily converted to HTML but event without that it's still human readable. Keeping url's up to date
         was always my biggest nightmare, that's how MD Link Linter was created.
     </p>
-    <p>
+    <p class="mb-2">
         In order to make it even more flexible I created <a href="https://hub.docker.com/r/norberttech/md-link-linter" target="_blank">docker image</a>
         that can be used just like in example below:
     </p>
-<pre><code>docker pull norberttech/md-link-linter</code></pre>
-<pre><code>docker run -t --rm -v $PWD:/app norberttech/md-link-linter --exclude=vendor --exclude=node_modules .</code></pre>
+<pre class="mb-2"><code class="code-shell p-0.5" data-controller="syntax-highlight"">docker pull norberttech/md-link-linter
+docker run -t --rm -v $PWD:/app norberttech/md-link-linter --exclude=vendor --exclude=node_modules .
+</code></pre>
 
-    <p>
+    <p class="mb-2">
         Those 2 simple CLI commands can be executed at any operating system with <a href="https://www.docker.com/" target="_blank">Docker</a> installed.
         First one will download the image, second will execute it in the current folder, passing additional arguments to exclude `vendor` and `node_modules` folders from inspections.
     </p>
-    <hr />
+    <hr class="mb-2" />
 </div>
-    <div class="col-md-12">
-    <h5 id="structurizr-php"><a href="#structurizr-php"># Structurizr PHP</a> <small><span class="badge badge-success">Open Source</span></small></h5>
-    <p>
+    <div class="mb-2">
+    <h5 id="structurizr-php" class="text-lg bold mb-2">
+        <a href="#structurizr-php" class="text-black"># Structurizr PHP</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
         <small><span class="badge badge-secondary">PHP</span></small>
         <small><span class="badge badge-secondary">Library</span></small>
         <small><span class="badge badge-secondary">License: MIT</span></small>
     </p>
 
-    <ul>
+    <ul class="mb-2 list-disc pl-8">
         <li><a href="https://github.com/structurizr-php/structurizr-php" target="_blank"><i class="fab fa-github"></i> structurizr-php/structurizr-php</a></li>
     </ul>
-    <p>
+    <p class="mb-2">
         If you are familiar with <a href="https://c4model.com/">C4 model</a> by Simon Brown then you already know what
         this library is for. In other case you should watch this talk:
     </p>
-    <p class="text-center">
+    <p class="text-center mb-2" >
         <iframe width="560" height="315" src="https://www.youtube.com/embed/x2-rSnhpw0g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </p>
+    <hr class="mb-2" />
 </div>
-    <div class="col-md-12">
-    <h5 id="php-matcher"><a href="#php-matcher"># PHPMatcher</a> <small><span class="badge badge-success">Open Source</span></small></h5>
-    <p>
+    <div class="mb-2">
+    <h5 id="php-matcher" class="text-lg bold mb-2">
+        <a href="#php-matcher" class="text-black"># PHPMatcher</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
         <small><span class="badge badge-secondary">PHP</span></small>
         <small><span class="badge badge-secondary">Library</span></small>
         <small><span class="badge badge-secondary">License: MIT</span></small>
     </p>
 
-    <ul>
+    <ul class="mb-2 list-disc pl-8">
         <li><a href="https://github.com/coduo/php-matcher" target="_blank"><i class="fab fa-github"></i> coduo/php-matcher</a></li>
     </ul>
-    <p>
+    <p class="mb-2">
         PHP library that only job is to match values against patterns, extremely useful when you need
         to check if API response matches expected pattern for example in functional tests.
         It also provides many useful placeholders like for example <code>@string@</code> or <code>@number@</code>
         that makes it even more powerful.
     </p>
-    <p>
+    <p class="mb-2">
         Still not convinced?<br/>
         You can test it before using at <a href="https://php-matcher.norbert.tech">https://php-matcher.norbert.tech</a>!<br />
     </p>
-    <p>
+    <p class="mb-2">
         <small>Sandbox source code is available at <a href="https://github.com/coduo/php-matcher-site" target="_blank"><i class="fab fa-github"></i> coduo/php-matcher-site</a></small>
     </p>
-    <hr />
+    <hr class="mb-2" />
 </div>
-    <div class="col-md-12">
-    <h5 id="assert-js"><a href="#assert-js"># AssertJS</a> <small><span class="badge badge-success">Open Source</span></small></h5>
-    <p>
+    <div class="mb-2">
+    <h5 id="assert-js" class="text-lg bold mb-2">
+        <a href="#assert-js" class="text-black"># AssertJS</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
         <small><span class="badge badge-secondary">JavaScript</span></small>
         <small><span class="badge badge-secondary">Library</span></small>
         <small><span class="badge badge-secondary">License: MIT</span></small>
     </p>
 
-    <ul>
+    <ul class="list-disc pl-8 mb-2">
         <li><a href="https://github.com/tiliqua/assert-js" target="_blank"><i class="fab fa-github"></i> tiliqua/assert-js</a></li>
     </ul>
-    <p>
+    <p class="mb-2">
         This is nothing more than another JavaScript Assertion Library, but it comes without any dependencies.
         It's strongly inspired by assertion libraries available in PHP. It was initially developed as a part of
         <a href="https://github.com/norberttech/no-game" target="_blank">No Game - JS 2D Multiplayer Game Engine</a> and
@@ -289,11 +332,11 @@
         Using assertion makes development much more offensive, with minimum tolerance for mistakes but maximum verbosity
         of errors.
     </p>
-    <p>
+    <p class="mb-2">
         Read more at <a href="https://assert-js.norbert.tech/" target="_blank">https://assert-js.norbert.tech/</a>
     </p>
     <blockquote class="blockquote text-right">
-        <p>
+        <p class="mb-2">
             <small>Tiliqua is a large terrestrial lizard measuring up to 40 centimetres long and 700 grams in mass.</small>
         </p>
         <footer class="blockquote-footer">Wikipedia</footer>
@@ -302,68 +345,13 @@
     <hr />
 </div>
     </div>
-    <div class="col-md-4">
-        <h4>Technologies, Tools & Buzzwords</h4>
-        <p>
-            I tried & enjoyed
-        </p>
-        <div class="row">
-            <div class="col-md-2">
-                <ul>
-                    <li><span class="badge badge-secondary">PHP</span></li>
-                    <li><span class="badge badge-secondary">Scala</span></li>
-                    <li><span class="badge badge-secondary">C / C++</span></li>
-                    <li><span class="badge badge-secondary">NodeJS</span></li>
-                    <li><span class="badge badge-secondary">Java</span></li>
-                </ul>
-            </div>
-            <div class="col-md-2">
-                <ul>
-                    <li><span class="badge badge-secondary">Terraform</span></li>
-                    <li><span class="badge badge-secondary">Packer</span></li>
-                    <li><span class="badge badge-secondary">Ansible</span></li>
-                    <li><span class="badge badge-secondary">Azure</span></li>
-                    <li><span class="badge badge-secondary">Docker</span></li>
-                </ul>
-            </div>
-            <div class="col-md-2">
-                <ul>
-                    <li><span class="badge badge-secondary">Apache Spark</span></li>
-                    <li><span class="badge badge-secondary">Delta Lake</span></li>
-                    <li><span class="badge badge-secondary">Databricks</span></li>
-                    <li><span class="badge badge-secondary">Nix</span></li>
-                </ul>
-            </div>
-        </div>
-        <hr />
-        <h4>Quotes</h4>
-        <blockquote class="blockquote">
-            <p>
-                <small>You only test the part of the application that you want to work.</small>
-            </p>
-            <footer class="blockquote-footer">Robert C. Martin</footer>
-        </blockquote>
-        <hr />
-    </div>
 </div>
-</div>
+    </main>
 
-<footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <span class="text-muted">by <a href="https://twitter.com/norbert_tech">@norbert_tech</a></span>
-            </div>
+    <footer class="p-4 bg-sky-50">
+        <div class="mx-auto max-w-screen-2xl text-center">
+            <a href="/">by @norbert_tech</a>
         </div>
-    </div>
-</footer>
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/134a4a1c71.js" crossorigin="anonymous"></script>
-<script src="/assets/js/prism/prism.js"></script>
+    </footer>
 </body>
 </html>
