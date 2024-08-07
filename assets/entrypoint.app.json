@@ -1,0 +1,9 @@
+[
+    "@oddbird\/popover-polyfill",
+    "\/assets\/bootstrap.js",
+    "htmx.org",
+    "@symfony\/stimulus-bundle",
+    "@hotwired\/stimulus",
+    "\/assets\/@symfony\/stimulus-bundle\/controllers.js",
+    "\/assets\/controllers\/hello_controller.js"
+]
