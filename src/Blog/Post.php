@@ -14,7 +14,7 @@ final class Post
         public readonly string $slug
     ) {}
 
-    public function fromArray(array $data) : self
+    public static function fromArray(array $data) : self
     {
         return new self(
             $data['title'],

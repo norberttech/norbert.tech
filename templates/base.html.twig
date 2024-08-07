@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ block('title') | default("Norbert Orzechowicz") }}</title>
     <meta property="og:title" content="{{ block('title') }}" />
@@ -50,7 +50,7 @@
 <body class="scroll-smooth text-black relative min-h-screen pb-16">
 
     <header class="py-2 px-4 bg-sky-50">
-        <div class="grid grid-cols-2 gap-4 mx-auto max-w-screen-2xl mb-8">
+        <div class="grid grid-cols-2 mb-8 sm:mx-auto sm:max-w-screen-2xl">
             <div class="text-left">
                 <a href="{{ path('home') }}" class="text-lg">
                     norbert.tech
@@ -62,13 +62,13 @@
                 </a>
             </div>
         </div>
-        <div class="grid grid-cols-3 gap-4 mx-auto max-w-screen-2xl">
+        <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4 sm:mx-auto sm:max-w-screen-2xl">
             <div class="text-center">
-                <div class="mb-4">
-                    <img src="{{ asset('images/avatar.jpeg') }}" alt="Norbert Orzechowicz" class="rounded-full w-[250px] h-[250px] object-cover inline">
+                <div class="mb-2">
+                    <img src="{{ asset('images/avatar.jpeg') }}" alt="Norbert Orzechowicz" class="rounded-full w-[64px] h-[64px] md:w-[250px] md:h-[250px] object-cover inline">
                 </div>
             </div>
-            <div class="pt-16 px-6">
+            <div class="sm:pt-16 px-2">
                 <h2 class="font-bold">My name is Norbert,</h2>
                 <p class="mb-2">
                     I'm a software architect with a focus on designing and building highly scalable web applications and data processing systems.
@@ -77,9 +77,9 @@
                     In my spare time, I maintain several open-source projects and enjoy automating and optimizing everything around me.
                 </p>
             </div>
-            <div class="pl-24">
+            <div class="sm:pl-24 text-left px-2">
                 <h2 class="text-lg font-bold">Links</h2>
-                <ul class="list-disc pl-6">
+                <ul class="lg:list-disc lg:pl-6">
                     <li>
                         <a href="https://twitter.com/norbert_tech" target="_blank">
                             <img src="{{ asset('images/icons/brand/x.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> @norbert_tech
@@ -110,7 +110,7 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-screen-2xl mb-8 pt-4">
+    <main class="mx-auto max-w-screen-2xl mb-8 md:pt-4">
         {% block content %}{% endblock %}
     </main>
 

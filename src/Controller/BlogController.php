@@ -22,7 +22,10 @@ class BlogController extends AbstractController
     #[Route('/blog/{date}/{slug}', name: 'blog_post')]
     public function post(string $date, string $slug) : Response
     {
+        $post = (new Posts())->findByDateAndSlug($date, $slug);
+
         return $this->render('blog/posts/' . $date . '/' . $slug . '/post.html.twig', [
+            'post' => $post,
             'template_folder' => 'blog/posts/' . $date . '/' . $slug,
         ]);
     }

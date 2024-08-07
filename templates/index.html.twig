@@ -4,15 +4,14 @@
 {% block description %}{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-3 gap-4">
-    <div class="pr-4">
+<div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+    <div class="col-span-2 p-2">
+        {{ render(controller('NorbertTech\\Portfolio\\Controller\\ProjectsController::list')) }}
+    </div>
+    <div class="md:pr-4 p-2">
         <h2 class="text-2xl mb-2">Recent Tweets</h2>
         <a class="twitter-timeline" href="https://twitter.com/norbert_tech" data-height="680" data-tweet-limit="6">Loading Tweets by norbert_tech...</a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    </div>
-
-    <div class="col-span-2">
-        {{ render(controller('NorbertTech\\Portfolio\\Controller\\ProjectsController::list')) }}
     </div>
 </div>
 {% endblock %}
