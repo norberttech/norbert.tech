@@ -48,9 +48,8 @@
 </script>
 {% endif %}
 <body class="scroll-smooth text-black relative min-h-screen pb-16">
-
-    <header class="py-2 px-4 bg-sky-50">
-        <div class="grid grid-cols-2 mb-8 sm:mx-auto sm:max-w-screen-2xl">
+    <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2">
+        <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl">
             <div class="text-left">
                 <a href="{{ path('home') }}" class="text-lg">
                     norbert.tech
@@ -62,51 +61,10 @@
                 </a>
             </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4 sm:mx-auto sm:max-w-screen-2xl">
-            <div class="text-center">
-                <div class="mb-2">
-                    <img src="{{ asset('images/avatar.jpeg') }}" alt="Norbert Orzechowicz" class="rounded-full w-[64px] h-[64px] md:w-[250px] md:h-[250px] object-cover inline">
-                </div>
-            </div>
-            <div class="sm:pt-16 px-2">
-                <h2 class="font-bold">My name is Norbert,</h2>
-                <p class="mb-2">
-                    I'm a software architect with a focus on designing and building highly scalable web applications and data processing systems.
-                </p>
-                <p class="mb-2">
-                    In my spare time, I maintain several open-source projects and enjoy automating and optimizing everything around me.
-                </p>
-            </div>
-            <div class="sm:pl-24 text-left px-2">
-                <h2 class="text-lg font-bold">Links</h2>
-                <ul class="lg:list-disc lg:pl-6">
-                    <li>
-                        <a href="https://twitter.com/norbert_tech" target="_blank">
-                            <img src="{{ asset('images/icons/brand/x.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> @norbert_tech
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/norberttech" target="_blank">
-                            <img src="{{ asset('images/icons/brand/github.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.linkedin.com/in/norberttech/" target="_blank">
-                            <img src="{{ asset('images/icons/brand/linkedin.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> @norberttech
-                        </a>
-                    </li>
-                    <li>
-                        <a href="mailto:contact@norbert.tech">
-                            <img src="{{ asset('images/icons/mail.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> contact@norbert.tech
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://translate.google.com/translate?hl=en&sl=pl&tl=en&u=http%3A%2F%2Fzawarstwaabstrakcji.pl">
-                            <img src="{{ asset('images/icons/www.svg') }}" alt="Twitter" class="inline w-[18px] h-[18px]"> https://zawarstwaabstrakcji.pl
-                        </a>
-                    </li>
-                </ul>
-            </div>
+    </div>
+    <header class="pb-2">
+        <div class="w-fulln bg-cover bg-center">
+            <img src="{{ asset('images/hero.jpeg') }}" alt="Norbert Orzechowicz - Hero Image" class="w-full h-[450px] object-cover">
         </div>
     </header>
 
