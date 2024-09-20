@@ -16,6 +16,14 @@ final class Posts
             'description' => 'How to access historical statistics in home assistant.',
             'date' => '2024-08-07',
             'slug' => 'home-assistant-historical-statistics'
+        ],
+        [
+            'id' => 2,
+            'title' => 'Testing Stimulus - minimalistic approach',
+            'labels' => ['stimulus', 'testing'],
+            'description' => 'Testing Stimulus controllers with absolute minimalistic approach. With only built in test runner, assert and JSDOM library',
+            'date' => '2024-09-20',
+            'slug' => 'testing-stimulus-minimalistic-approach'
         ]
     ];
 
@@ -46,9 +54,11 @@ final class Posts
      */
     public function all() : array
     {
-        return \array_map(
+        $posts = \array_map(
             static fn (array $data) : Post => Post::fromArray($data),
             $this->posts
         );
+
+        return \array_reverse($posts);
     }
 }

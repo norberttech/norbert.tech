@@ -48,7 +48,7 @@
 </script>
 {% endif %}
 <body class="scroll-smooth text-black relative min-h-screen pb-16">
-    <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2">
+    <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2 border-b border-gray-500">
         <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl">
             <div class="text-left">
                 <a href="{{ path('home') }}" class="text-lg">
@@ -62,11 +62,13 @@
             </div>
         </div>
     </div>
+    {% block header %}
     <header class="pb-2">
         <div class="w-fulln bg-cover bg-center">
             <img src="{{ asset('images/hero.jpeg') }}" alt="Norbert Orzechowicz - Hero Image" class="w-full h-[450px] object-cover">
         </div>
     </header>
+    {% endblock %}
 
     <main class="mx-auto max-w-screen-2xl mb-4 md:pt-4">
         {% block content %}{% endblock %}

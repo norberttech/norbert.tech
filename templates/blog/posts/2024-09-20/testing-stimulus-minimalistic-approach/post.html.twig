@@ -1,0 +1,180 @@
+{% extends 'blog/post.html.twig' %}
+
+{%- block title -%}
+    {{ post.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {{ post.description }}
+{%- endblock -%}
+
+{% block article %}
+<h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
+<div class="mb-2">
+    <small class="text-sm">Posted on {{ post.date | date }}</small>
+</div>
+<div class="mb-4">
+    {% for label in post.labels %}
+        <small><span class="badge badge-info">{{ label }}</span></small>
+    {% endfor %}
+</div>
+<p>
+    While writing this article, Stimulus did not yet provide clear documentation on testing Stimulus controllers.<br/>
+    The approach presented below is very minimalist and introduces almost no dependencies into our system. It does not require any dedicated test runner or transpiler.
+</p>
+<p>
+    Let’s start by outlining the problem. Assume we want to test the behavior of the following controller.
+</p>
+
+<pre><code class="code-html" {{ stimulus_controller('syntax_highlight') }}>{{
+'<div data-controller="test">
+    <a id="test-button" data-action="click->test#test" href="#">Open Modal</a>
+    <span data-test-target="output"></span>
+</div>
+' | escape }}</code></pre>
+
+<pre><code class="code-javascript" {{ stimulus_controller('syntax_highlight') }}>{{
+'
+class extends Controller {
+    static targets = ["output"];
+
+    test() {
+        this.outputTarget.textContent = "Hello World!";
+    }
+})'
+|spaceless }}</code></pre>
+<p>
+    The task of this controller is to place the text "Hello World!" inside a span element (marked as the output target).
+</p>
+<p>
+    Let’s start by preparing all the dependencies. We’re taking an absolutely minimalist approach,
+    and the only dependency we’ll introduce into our system (apart from <a href="https://nodejs.org/en/download/package-manager" target="_blank">NodeJS v20</a> and <a href="https://github.com/hotwired/stimulus" target="_blank">Stimulus</a>) is <a href="https://github.com/jsdom/jsdom" target="_blank">JSDOM</a>.
+</p>
+<p>
+    This is how the <code>package.json</code> file should look:
+</p>
+    <pre><code class="code-json" {{ stimulus_controller('syntax_highlight') }}>{{
+'{
+  "name": "stimulus-test",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "author": "",
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "jsdom": "^25.0.0"
+  }
+}
+' |spaceless }}</code></pre>
+
+<p>
+    Before we start writing the tests, we need to prepare the runtime environment.<br/>
+    Stimulus runs in the browser, which means the browser provides it with many global objects/functions that Stimulus internally uses.
+</p>
+<p>
+    To recreate this environment, we will prepare a simple <code>createWindow</code> function, whose task will be to globally expose the <code>Window</code> object and a few others,
+    which come directly from the <code>JSDOM</code> library.
+</p>
+<p>
+    This is how the <code>bootstrap.js</code> file might look.
+</p>
+<pre><code class="code-javascript" {{ stimulus_controller('syntax_highlight') }}>{{
+'
+const JSDOM = require("jsdom").JSDOM;
+
+/**
+ * Creates a global window object with the given HTML.
+ * Expose all global objects used by Stimulus.
+ *
+ * @param {string} html
+ */
+function createWindow(html) {
+    global.window = new JSDOM(html).window;
+    global.document = window.document;
+    global.MutationObserver = window.MutationObserver;
+    global.KeyboardEvent = window.KeyboardEvent;
+    global.MouseEvent = window.MouseEvent;
+    global.Element = window.Element;
+    global.Node = window.Node;
+}
+
+module.exports = createWindow;
+'
+|spaceless }}</code></pre>
+<p>
+    The <code>createWindow</code> function expects HTML code that will be placed in the virtual body object of the virtual
+    document object nested in the virtual window element, which is exposed to the runtime environment via <code>global.window</code>.
+</p>
+<p>
+    Okay, now we have all the necessary building blocks, and we can proceed with writing the actual test.
+</p>
+<pre><code class="code-javascript" {{ stimulus_controller('syntax_highlight') }}>{{
+'const { test }  = require(\'node:test\');
+const assert = require(\'node:assert\').strict;
+const { Application, Controller } = require(\'@hotwired/stimulus\');
+const createWindow = require(\'./bootstrap\');
+
+test(\'connecting modal controller\', async () => {
+
+    createWindow(\`
+        <div data-controller="test">
+            <a id="test-button" data-action="click->test#test" href="#">Open Modal</a>
+            <span data-test-target="output"></span>
+        </div>
+    \`);
+
+    const application = Application.start();
+    application.register("test", class extends Controller {
+        static targets = [\'output\'];
+
+        connect() {
+        }
+
+        test() {
+            this.outputTarget.textContent = "Hello World!";
+        }
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    document.getElementById(\'test-button\').dispatchEvent(new MouseEvent(\'click\'));
+
+    assert.equal(
+        document.querySelector(\'[data-test-target="output"]\').textContent,
+        "Hello World!"
+    );
+});
+'
+|escape }}</code></pre>
+<p>
+    Let’s take a look at the individual elements of this test.
+</p>
+<p>
+    Since Stimulus controllers are registered asynchronously, we need to wait a little while.
+    To do this, after registering the controller, we will introduce an artificial delay.
+</p>
+<pre><code class="code-javascript" {{ stimulus_controller('syntax_highlight') }}>{{
+'const application = Application.start();
+application.register("test", OurController);
+
+await new Promise(resolve => setTimeout(resolve, 0));
+'
+|escape }}</code></pre>
+<p>
+    To ensure that everything is working properly, we can add <code>console.log()</code> to the <code>connect()</code> method inside our controller.
+    If after running the test using <code>node --test ./test.js</code>, we see our message in the console,
+    it means that Stimulus and the controller have been correctly registered.
+</p>
+<p>
+    This essentially concludes the preparation phase. Everything beyond this point is just the logic of our test.
+</p>
+<p>
+    The logic involves simulating a click on the element and checking via assertions whether the content of the target element has changed.
+</p>
+<p>
+    In order to execute our test, please run following command in the cli:
+</p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{
+'node --test ./test.js'
+|escape }}</code></pre>
+{% endblock %}

@@ -16,7 +16,7 @@
         "type": "js"
     },
     "\/assets\/controllers\/syntax_highlight_controller.js": {
-        "path": "\/assets\/controllers\/syntax_highlight_controller-917659ae74be6d45a7faaefe4a9145b3.js",
+        "path": "\/assets\/controllers\/syntax_highlight_controller-ae10e4cee8b4dedbf232536d05654062.js",
         "type": "js"
     },
     "\/assets\/controllers\/clipboard_controller.js": {
@@ -73,6 +73,14 @@
     },
     "highlight.js\/lib\/languages\/sql": {
         "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/sql-09f80640dd6fe9bed6ff4eb255b13f08.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/languages\/javascript": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/javascript-100f963be02a503f0531e497103ff398.js",
+        "type": "js"
+    },
+    "highlight.js\/lib\/languages\/xml": {
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/xml-a2295112e12d4d01f257d59e1cfa676d.js",
         "type": "js"
     }
 }
