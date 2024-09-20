@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Home Assistant - Accessing Historical Statistics</title>
-    <meta property="og:title" content="Home Assistant - Accessing Historical Statistics" />
-    <meta name="twitter:title" content="Home Assistant - Accessing Historical Statistics" >
+    <title>Testing Stimulus - minimalistic approach</title>
+    <meta property="og:title" content="Testing Stimulus - minimalistic approach" />
+    <meta name="twitter:title" content="Testing Stimulus - minimalistic approach" >
 
-    <meta name="description" content="How to access historical statistics in home assistant.">
-    <meta property="og:description" content="How to access historical statistics in home assistant.">
-    <meta name="twitter:description" content="How to access historical statistics in home assistant.">
+    <meta name="description" content="Testing Stimulus controllers with absolute minimalistic approach. With only built in test runner, assert and JSDOM library">
+    <meta property="og:description" content="Testing Stimulus controllers with absolute minimalistic approach. With only built in test runner, assert and JSDOM library">
+    <meta name="twitter:description" content="Testing Stimulus controllers with absolute minimalistic approach. With only built in test runner, assert and JSDOM library">
 
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://norbert.tech/blog/2024-08-07/home-assistant-historical-statistics" />
+    <meta property="og:url" content="https://norbert.tech/blog/2024-09-20/testing-stimulus-minimalistic-approach" />
     <meta property="og:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" />
     <meta property="og:image:type" content="image/svg+xml" />
     <meta property="og:image:alt" content="Norbert Orzechowicz - Personal Website" />
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://norbert.tech/blog/2024-08-07/home-assistant-historical-statistics" />
+    <meta property="twitter:url" content="https://norbert.tech/blog/2024-09-20/testing-stimulus-minimalistic-approach" />
     <meta name="twitter:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
     <meta name="twitter:site" content="@norbert_tech" />
     <meta name="twitter:creator" content="@norbert_tech" />
@@ -100,92 +100,157 @@
     <a href="/blog" class="text-blue-500 hover:underline">Back to blog</a>
 </div>
 <article class="blog-post px-2 py-5 sm:px-4 mx-auto max-w-screen-xl">
-    <h1 class="font-bold text-4xl mb-2" id="title">Home Assistant - Accessing Historical Statistics</h1>
+    <h1 class="font-bold text-4xl mb-2" id="title">Testing Stimulus - minimalistic approach</h1>
 <div class="mb-2">
-    <small class="text-sm">Posted on August 7, 2024 00:00</small>
+    <small class="text-sm">Posted on September 20, 2024 00:00</small>
 </div>
 <div class="mb-4">
-        <small><span class="badge badge-info">home assistant</span></small>
-        <small><span class="badge badge-info">solar installation</span></small>
+            <small><span class="badge badge-info">stimulus</span></small>
+            <small><span class="badge badge-info">testing</span></small>
     </div>
 <p>
-    One of my favorite integrations in Home Assistant is the integration with the solar installation.
+    While writing this article, Stimulus did not yet provide clear documentation on testing Stimulus controllers.<br/>
+    The approach presented below is very minimalist and introduces almost no dependencies into our system. It does not require any dedicated test runner or transpiler.
 </p>
 <p>
-    By monitoring electricity production/consumption statistics, I can increase self-consumption by utilizing periods of high production.
-</p>
-<p>
-    Recently, I wanted to build a simple dashboard showing how much net energy (the difference between energy drawn and sent to the grid) I produced on a given day, week, and month.
-</p>
-<p>
-    My inverter provides 2 entities:
-</p>
-<ul>
-    <li>the amount of energy sent to the grid on a given day</li>
-    <li>the amount of energy drawn from the grid on a given day</li>
-</ul>
-
-<p>
-    While daily production wasn't a problem, it was enough to add 2 helpers of the "template" type
-</p>
-<pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states("sensor.inverter_solarman_daily_energy_sold")) + (-float(states("sensor.inverter_solarman_daily_energy_bought"))) }}</code></pre>
-<p>However, the problem arose when I wanted to access data from the last X days.</p>
-<p>
-    Several solutions are floating around on the internet, but the simplest and most robust is the solution based on the <a href="https://www.home-assistant.io/integrations/sql/" target="_blank">SQL integration</a>.
-</p>
-<p>
-    Home Assistant uses SQLite as its default database, located at <code class="code-twig">/config/home-assistant_v2.db</code>
-</p>
-<p>
-    Essentially, there are two interesting tables in the database: <code>statistics</code> and <code>statistics_meta</code>.
-    Let's prepare a query that will extract the maximum value for each day from a specified date range.
-    (In this case, we're looking for the maximum value because the sensors provided by the integration record the energy consumed/returned cumulatively).
-</p>
-<pre><code class="code-sql" data-controller="syntax-highlight"">SELECT
-    ROUND(SUM(max_state), 2) as total
-FROM (
-    SELECT
-    date(statistics.start_ts, 'unixepoch') AS date,
-    MAX(statistics.state) AS max_state
-    FROM statistics_meta
-    LEFT JOIN statistics ON statistics_meta.id = statistics.metadata_id
-    WHERE statistics_meta.statistic_id = 'sensor.inverter_solarman_daily_energy_sold'
-    GROUP BY date(statistics.start_ts, 'unixepoch')
-    ORDER BY date DESC
-    LIMIT 7
-);</code></pre>
-
-<p>
-    Then, all you need to do is search for "SQL" in the list of integrations and configure it accordingly.
+    Let’s start by outlining the problem. Assume we want to test the behavior of the following controller.
 </p>
 
-<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" target="_blank" rel="noopener noreferrer">
-    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
-</a>
+<pre><code class="code-html" data-controller="syntax-highlight">&lt;div data-controller=&quot;test&quot;&gt;
+    &lt;a id=&quot;test-button&quot; data-action=&quot;click-&gt;test#test&quot; href=&quot;#&quot;&gt;Open Modal&lt;/a&gt;
+    &lt;span data-test-target=&quot;output&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+
+<pre><code class="code-javascript" data-controller="syntax-highlight">class extends Controller {
+    static targets = ["output"];
+
+    test() {
+        this.outputTarget.textContent = "Hello World!";
+    }
+})</code></pre>
+<p>
+    The task of this controller is to place the text "Hello World!" inside a span element (marked as the output target).
+</p>
+<p>
+    Let’s start by preparing all the dependencies. We’re taking an absolutely minimalist approach,
+    and the only dependency we’ll introduce into our system (apart from <a href="https://nodejs.org/en/download/package-manager" target="_blank">NodeJS v20</a> and <a href="https://github.com/hotwired/stimulus" target="_blank">Stimulus</a>) is <a href="https://github.com/jsdom/jsdom" target="_blank">JSDOM</a>.
+</p>
+<p>
+    This is how the <code>package.json</code> file should look:
+</p>
+    <pre><code class="code-json" data-controller="syntax-highlight">{
+  "name": "stimulus-test",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "author": "",
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "jsdom": "^25.0.0"
+  }
+}</code></pre>
 
 <p>
-    Repeat this process twice for energy returned/consumed, changing the number of days each time.
-    In the end, the SQL integration should provide 4 entities as shown in the screenshot below.
+    Before we start writing the tests, we need to prepare the runtime environment.<br/>
+    Stimulus runs in the browser, which means the browser provides it with many global objects/functions that Stimulus internally uses.
 </p>
-
-<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" target="_blank" rel="noopener noreferrer">
-    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
-</a>
-
 <p>
-    Now all we have to do is create 2 helpers under "Settings -> Devices & services -> Helpers" for net energy from the last 7 and 30 days.
+    To recreate this environment, we will prepare a simple <code>createWindow</code> function, whose task will be to globally expose the <code>Window</code> object and a few others,
+    which come directly from the <code>JSDOM</code> library.
 </p>
-
-<pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_7_days')) + (-float(states('sensor.energy_taken_from_grid_last_7_days'))) }}</code></pre>
-<pre><code class="code-twig" data-controller="syntax-highlight"">{{ float(states('sensor.energy_sent_to_grid_last_30_days')) + (-float(states('sensor.energy_taken_from_grid_last_30_days'))) }}</code></pre>
-
 <p>
-    Done! From now on, we can use all 3 entities to display net energy from the last day/week/month on any chosen dashboard or in automations.
+    This is how the <code>bootstrap.js</code> file might look.
 </p>
+<pre><code class="code-javascript" data-controller="syntax-highlight">const JSDOM = require("jsdom").JSDOM;
 
-<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" target="_blank" rel="noopener noreferrer">
-    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
-</a>
+/**
+ * Creates a global window object with the given HTML.
+ * Expose all global objects used by Stimulus.
+ *
+ * @param {string} html
+ */
+function createWindow(html) {
+    global.window = new JSDOM(html).window;
+    global.document = window.document;
+    global.MutationObserver = window.MutationObserver;
+    global.KeyboardEvent = window.KeyboardEvent;
+    global.MouseEvent = window.MouseEvent;
+    global.Element = window.Element;
+    global.Node = window.Node;
+}
+
+module.exports = createWindow;</code></pre>
+<p>
+    The <code>createWindow</code> function expects HTML code that will be placed in the virtual body object of the virtual
+    document object nested in the virtual window element, which is exposed to the runtime environment via <code>global.window</code>.
+</p>
+<p>
+    Okay, now we have all the necessary building blocks, and we can proceed with writing the actual test.
+</p>
+<pre><code class="code-javascript" data-controller="syntax-highlight">const { test }  = require(&#039;node:test&#039;);
+const assert = require(&#039;node:assert&#039;).strict;
+const { Application, Controller } = require(&#039;@hotwired/stimulus&#039;);
+const createWindow = require(&#039;./bootstrap&#039;);
+
+test(&#039;connecting modal controller&#039;, async () =&gt; {
+
+    createWindow(`
+        &lt;div data-controller=&quot;test&quot;&gt;
+            &lt;a id=&quot;test-button&quot; data-action=&quot;click-&gt;test#test&quot; href=&quot;#&quot;&gt;Open Modal&lt;/a&gt;
+            &lt;span data-test-target=&quot;output&quot;&gt;&lt;/span&gt;
+        &lt;/div&gt;
+    `);
+
+    const application = Application.start();
+    application.register(&quot;test&quot;, class extends Controller {
+        static targets = [&#039;output&#039;];
+
+        connect() {
+        }
+
+        test() {
+            this.outputTarget.textContent = &quot;Hello World!&quot;;
+        }
+    });
+
+    await new Promise(resolve =&gt; setTimeout(resolve, 0));
+
+    document.getElementById(&#039;test-button&#039;).dispatchEvent(new MouseEvent(&#039;click&#039;));
+
+    assert.equal(
+        document.querySelector(&#039;[data-test-target=&quot;output&quot;]&#039;).textContent,
+        &quot;Hello World!&quot;
+    );
+});
+</code></pre>
+<p>
+    Let’s take a look at the individual elements of this test.
+</p>
+<p>
+    Since Stimulus controllers are registered asynchronously, we need to wait a little while.
+    To do this, after registering the controller, we will introduce an artificial delay.
+</p>
+<pre><code class="code-javascript" data-controller="syntax-highlight">const application = Application.start();
+application.register(&quot;test&quot;, OurController);
+
+await new Promise(resolve =&gt; setTimeout(resolve, 0));
+</code></pre>
+<p>
+    To ensure that everything is working properly, we can add <code>console.log()</code> to the <code>connect()</code> method inside our controller.
+    If after running the test using <code>node --test ./test.js</code>, we see our message in the console,
+    it means that Stimulus and the controller have been correctly registered.
+</p>
+<p>
+    This essentially concludes the preparation phase. Everything beyond this point is just the logic of our test.
+</p>
+<p>
+    The logic involves simulating a click on the element and checking via assertions whether the content of the target element has changed.
+</p>
+<p>
+    In order to execute our test, please run following command in the cli:
+</p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">node --test ./test.js</code></pre>
 
 </article>
 <div class="mb-2 mx-auto max-w-screen-xl text-center">
