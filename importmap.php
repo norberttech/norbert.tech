@@ -63,4 +63,7 @@ return [
     'highlight.js/lib/languages/xml' => [
         'version' => '11.10.0',
     ],
+    'iconify-icon' => [
+        'version' => '2.1.0',
+    ],
 ];

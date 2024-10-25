@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-family: "Cabin", system-ui;
+}
+
 a {
     font-weight: normal;
     @apply font-medium text-blue-600 dark:text-blue-500 hover:underline;
@@ -9,7 +13,19 @@ a {
 
 code {
     font-size: 0.9em;
-    @apply rounded !px-[4px] !py-[6px]
+    @apply rounded !px-[4px] !py-[6px] bg-gray-100 text-gray-800;
+}
+
+.btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-success {
+    @apply bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200;
+}
+
+.btn-primary {
+    @apply bg-sky-500 hover:bg-sky-600 focus:ring-sky-400 focus:ring-offset-sky-200;
 }
 
 .badge {
@@ -34,4 +50,8 @@ article.blog-post p, ul, pre, img {
 
 article.blog-post ul {
     @apply list-disc pl-6;
+}
+
+.backdrop-blur-blue {
+    backdrop-filter: blur(10px) hue-rotate(180deg);
 }
