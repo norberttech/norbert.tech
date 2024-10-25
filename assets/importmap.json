@@ -1,6 +1,6 @@
 {
     "app": {
-        "path": "\/assets\/app-f6b6b9453864ea635d158621b1bef659.js",
+        "path": "\/assets\/app-930adf3462cf9ab60908eb1b74cf7ca7.js",
         "type": "js"
     },
     "\/assets\/bootstrap.js": {
@@ -24,7 +24,7 @@
         "type": "js"
     },
     "@symfony\/stimulus-bundle": {
-        "path": "\/assets\/@symfony\/stimulus-bundle\/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js",
+        "path": "\/assets\/@symfony\/stimulus-bundle\/loader-870999a02e9fc147c034d522826ea70d.js",
         "type": "js"
     },
     "@hotwired\/stimulus": {
@@ -81,6 +81,10 @@
     },
     "highlight.js\/lib\/languages\/xml": {
         "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/xml-a2295112e12d4d01f257d59e1cfa676d.js",
+        "type": "js"
+    },
+    "iconify-icon": {
+        "path": "\/assets\/vendor\/iconify-icon\/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js",
         "type": "js"
     }
 }

@@ -1,7 +1,7 @@
 {
     "@symfony\/stimulus-bundle\/controllers.js": "\/assets\/@symfony\/stimulus-bundle\/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
-    "@symfony\/stimulus-bundle\/loader.js": "\/assets\/@symfony\/stimulus-bundle\/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js",
-    "app.js": "\/assets\/app-f6b6b9453864ea635d158621b1bef659.js",
+    "@symfony\/stimulus-bundle\/loader.js": "\/assets\/@symfony\/stimulus-bundle\/loader-870999a02e9fc147c034d522826ea70d.js",
+    "app.js": "\/assets\/app-930adf3462cf9ab60908eb1b74cf7ca7.js",
     "bootstrap.js": "\/assets\/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
     "controllers\/clipboard_controller.js": "\/assets\/controllers\/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
     "controllers\/hello_controller.js": "\/assets\/controllers\/hello_controller-55882fcad241d2bea50276ea485583bc.js",
@@ -14,7 +14,8 @@
     "images\/favicons\/favicon-16x16.png": "\/assets\/images\/favicons\/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png",
     "images\/favicons\/favicon-32x32.png": "\/assets\/images\/favicons\/favicon-32x32-b7a4ad4b584ab95534144e071f0e8587.png",
     "images\/favicons\/favicon.ico": "\/assets\/images\/favicons\/favicon-db409885df78dea389e6d0b036da382c.ico",
-    "images\/hero.jpeg": "\/assets\/images\/hero-e782768b2a678cec8fe2ea398d9a15e1.jpeg",
+    "images\/hero-consulting.jpeg": "\/assets\/images\/hero-consulting-775d71629830f4a258fd0ea4a091c0b9.jpeg",
+    "images\/hero.jpeg": "\/assets\/images\/hero-248317bdefea2a2cbb673cf238edb2e4.jpeg",
     "images\/icons\/article.svg": "\/assets\/images\/icons\/article-bacfa7f9e1d45b29f94d004fbbbc0264.svg",
     "images\/icons\/brand\/github.svg": "\/assets\/images\/icons\/brand\/github-78d1b6b47cbdc8d2aae5db2c3c919541.svg",
     "images\/icons\/brand\/linkedin.svg": "\/assets\/images\/icons\/brand\/linkedin-15580d4d0994922589dabacfadb6a3f8.svg",
@@ -22,7 +23,7 @@
     "images\/icons\/mail.svg": "\/assets\/images\/icons\/mail-a794445e07244fda2892b62471c4476c.svg",
     "images\/icons\/pencil.svg": "\/assets\/images\/icons\/pencil-bf3f98e1abeefcbd7a059db89a7b9575.svg",
     "images\/icons\/www.svg": "\/assets\/images\/icons\/www-901c8e5a91fb3e9641662e78195d155e.svg",
-    "styles\/app.css": "\/assets\/styles\/app-4ae53c4a790ff74d8cb5ca1611b0b175.css",
+    "styles\/app.css": "\/assets\/styles\/app-b90cf34dd73c3efb1dc04425a00bb1d6.css",
     "vendor\/@fontsource-variable\/cabin\/files\/cabin-latin-ext-wght-normal.woff2": "\/assets\/vendor\/@fontsource-variable\/cabin\/files\/cabin-latin-ext-wght-normal-2faa374eb2a80d6be629a356e68b73d7.woff2",
     "vendor\/@fontsource-variable\/cabin\/files\/cabin-latin-wght-normal.woff2": "\/assets\/vendor\/@fontsource-variable\/cabin\/files\/cabin-latin-wght-normal-866be39b45f5b5b8840cb93bc1069465.woff2",
     "vendor\/@fontsource-variable\/cabin\/files\/cabin-vietnamese-wght-normal.woff2": "\/assets\/vendor\/@fontsource-variable\/cabin\/files\/cabin-vietnamese-wght-normal-728366455e644228c0222e375fa14bb4.woff2",
@@ -41,5 +42,6 @@
     "vendor\/highlight.js\/lib\/languages\/twig.js": "\/assets\/vendor\/highlight.js\/lib\/languages\/twig-0f3c6d18c0368650898b432b7bcf672a.js",
     "vendor\/highlight.js\/lib\/languages\/xml.js": "\/assets\/vendor\/highlight.js\/lib\/languages\/xml-a2295112e12d4d01f257d59e1cfa676d.js",
     "vendor\/highlight.js\/styles\/github-dark.min.css": "\/assets\/vendor\/highlight.js\/styles\/github-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css",
-    "vendor\/htmx.org\/htmx.org.index.js": "\/assets\/vendor\/htmx.org\/htmx.org.index-023ae86a082913526422a6063298f898.js"
+    "vendor\/htmx.org\/htmx.org.index.js": "\/assets\/vendor\/htmx.org\/htmx.org.index-023ae86a082913526422a6063298f898.js",
+    "vendor\/iconify-icon\/iconify-icon.index.js": "\/assets\/vendor\/iconify-icon\/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js"
 }

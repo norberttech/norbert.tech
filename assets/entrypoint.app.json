@@ -2,6 +2,7 @@
     "@oddbird\/popover-polyfill",
     "\/assets\/bootstrap.js",
     "htmx.org",
+    "iconify-icon",
     "@symfony\/stimulus-bundle",
     "@hotwired\/stimulus",
     "\/assets\/@symfony\/stimulus-bundle\/controllers.js",
