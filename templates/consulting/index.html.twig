@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Data Engineering - Consulting Services{% endblock %}
+{% block description %}{% endblock %}
+{% block header %}
+    <header class="pb-2">
+        <div class="w-full bg-cover bg-center relative">
+            <img src="{{ asset('images/hero-consulting.jpeg') }}" alt="Norbert Orzechowicz - Consulting Services" class="w-full h-[450px] object-cover backdrop-blur-blue">
+            <div class="absolute inset-0 bg-blue-400 mix-blend-multiply opacity-60"></div>
+        </div>
+    </header>
+{% endblock %}
+
+{% set schedule_meeting_link = "https://calendar.app.google/TR5RDkjBz621UGuQA" %}
+
+{% block content %}
+<h1 class="text-4xl font-bold">Unlock the Power of Data with Expert Consulting Services</h1>
+
+<p class="mt-2">
+    Book a free 30-minute consultation today using this <a href="{{ schedule_meeting_link }}" target="_blank">link</a>. In this session, we'll discuss your challenges and how I can help you overcome them.<br/>
+    After the initial consultation, my rate is <strong>$150/hour</strong> for each started hour, billed monthly.
+</p>
+<p class="mt-2">
+    My consulting services include:
+</p>
+
+<ul class="mt-2 list-disc pl-8">
+    <li>
+        <strong>Comprehensive Presentation prior to Full-Scale Consulting</strong> (fixed price)
+    </li>
+    <li>
+        <strong>Data Processing Workshops & System Architecture Consultations</strong> (remote or on-site)
+    </li>
+    <li>
+        <strong>Pair Coding Sessions</strong>
+    </li>
+    <li>
+        <strong>Bootstrapping a Data Processing <a href="#data-processing-framework">Framework</a></strong>
+    </li>
+</ul>
+
+<h2 class="text-2xl font-bold mt-4">Comprehensive Presentation Before Full-Scale Consulting</h2>
+
+<p class="mt-2">
+    Before diving into full-scale consulting, I offer a detailed presentation, usually lasting between<br/>
+    one to two hours, that provides a big-picture view of how to build a company-wide data mesh.<br/>
+    This presentation covers various options, helping you understand which solution best fits your needs.<br/>
+    It can also serve as a valuable resource for business analysts, business intelligence teams,<br/>
+    data scientists, and reporting teams to align on the data strategy and infrastructure, ensuring a cohesive approach across departments.
+</p>
+
+<h2 class="text-2xl font-bold mt-4" id="data-processing-framework">Bootstrapping a Data Processing Framework</h2>
+
+<p class="mt-2">
+    I provide a comprehensive service to set up a fully automated data processing infrastructure using PHP, Scala, Java, or Python. This includes:
+</p>
+
+<ul class="mt-2 list-disc pl-8">
+    <li>Selecting and configuring the right tools and technologies</li>
+    <li>Preparing local and production environments</li>
+    <li>Setting up or adjusting CI/CD pipelines</li>
+    <li>Developing a codebase with a clear interface for developers, making it as simple as writing transformation jobs</li>
+    <li>Implementing monitoring and telemetry solutions</li>
+</ul>
+
+<p class="mt-4">
+With this framework in place, developers only need to focus on writing the transformation code, registering it in the application, and testing it locally.
+</p>
+<p class="mt-2">
+To provide an example, if a task involves moving orders from storage A to storage B within a given timeframe, the developer would:
+</p>
+
+<ul class="mt-2 list-disc pl-8">
+    <li>Implement the <code>JobInterface</code> for data processing</li>
+    <li>Register the job</li>
+    <li>Define input parameters such as <code>start-date</code> and <code>end-date</code></li>
+    <li>Write and test the job code locally, for example using the CLI command: <code>$ bin/data-mesh push:orders --start-date="2024-09-01" --end-date="2024-10-01</code></li>
+</ul>
+
+<p class="mt-4">
+    The framework provides developers, through the <code>JobInterface</code>, with:
+</p>
+
+<ul class="mt-2 list-disc pl-8">
+    <li>Access to data storages</li>
+    <li>Secrets access</li>
+    <li>Input parameters/arguments</li>
+    <li>Telemetry</li>
+    <li>Error handling</li>
+    <li>Job chaining</li>
+    <li>Log collection</li>
+</ul>
+
+<p class="mt-4">
+    This framework lowers the entry barrier, enabling developers unfamiliar with data engineering tools to work with Apache Spark.<br/>
+    The approachable syntax eases onboarding, allowing smooth integration into a company-wide data mesh.
+</p>
+<p class="mt-2">
+    The most daunting aspect of automating data processing is often setting up the infrastructure and configuring tools.<br/>
+    My goal is to remove that complexity, delivering a well-defined, plug-and-play solution that empowers your team to get started quickly and confidently.
+</p>
+<div class="my-8 text-center">
+    <a href="{{ schedule_meeting_link }}" class="btn btn-primary text-xl" target="_blank">Lets talk!</a>
+</div>
+{% endblock %}

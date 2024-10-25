@@ -54,9 +54,6 @@
             "@importmap:install",
             "@build:tailwind"
         ],
-        "test": [
-            "tools/phpunit/vendor/bin/phpunit"
-        ],
         "assets:clear": "rm -rf public/assets",
         "importmap:install": "bin/console importmap:install",
         "build:assets": [
