@@ -6,6 +6,17 @@
 
 {% block content %}
 <h1 class="font-bold text-4xl md:mb-6 p-2">Norbert - Personal Blog</h1>
+<p class="mb-2">
+    Welcome to my personal blog. Here you'll find articles on various topics, including software architecture, web development, and data processing.<br/>
+    I hope you find the content useful and informative.
+</p>
+<p class="mb-4">
+    Some of my other articles are available on the following websites:
+</p>
+<ul class="list list-disc pl-10 mb-5">
+    <li class="mb-2"><a href="https://zawarstwaabstrakcji.pl" target="_blank">Za Warstwą Abstrakcji</a> - Only in 🇵🇱 </li>
+    <li class="mb-2"><a href="https://flow-php.com/blog" target="_blank">Flow PHP - Blog</a> - Data Processing</li>
+</ul>
 {% for post in posts %}
     <article class="p-2 mb-6">
         <div class="mb-2">

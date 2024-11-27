@@ -6,4 +6,9 @@ module.exports = {
     "./templates/**/*.html.twig",
   ],
   plugins: [],
+  extend: {
+    screens: {
+      print: { raw: 'print' }
+    },
+  },
 }

@@ -1,0 +1,57 @@
+<div class="text-left sticky top-20">
+    <h2 class="text-4xl font-bold mb-2">Book a free consulting session!</h2>
+    <p class="mb-2">
+        I'm available to hire as a consultant for your next project. <br/>
+        Book a free 30-minute consultation today to discuss your needs and how I can help you.
+    </p>
+    <p class="mt-4 text-sm text-gray-600 mb-2">
+        <strong>Note:</strong> All services, including consulting, workshops, and presentations, are available in both English and Polish to suit your needs.
+    </p>
+    <p class="mt-4 text-sm text-gray-600">
+        <strong>Note:</strong> All my services, including consulting, workshops, and presentations, are highly flexible and can be tailored to address the specific challenges of your organization, team, or project. Additionally, they are available in both English and Polish to suit your needs.
+    </p>
+    <div class="mt-4 text-center print:hidden">
+        <!-- Google Calendar Appointment Scheduling begin -->
+        <link href="https://calendar.google.com/calendar/scheduling-button-script.css" rel="stylesheet">
+        <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
+        <script>
+            (function() {
+                var target = document.currentScript;
+                window.addEventListener('load', function() {
+                    calendar.schedulingButton.load({
+                        url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ3nKciKZw1PCk5hOz5dL-ULuzSX0wnwDkdU5PhU5qRuVsRgFpzELBSmFkHF5yFiNPR_PV08Yohw?gv=true',
+                        color: '#039BE5',
+                        label: "Find time",
+                        target,
+                    });
+                });
+            })();
+        </script>
+        <!-- end Google Calendar Appointment Scheduling -->
+    </div>
+    <div>
+        <h4 class="text-2xl font-bold mt-4">About Me</h4>
+        <p class="print:hidden">
+            <a href="{{ absolute_url(asset('pdf/consulting.pdf')) }}" target="_blank">Download <iconify-icon icon="vscode-icons:file-type-pdf2" class="ml-1 pt-2"></iconify-icon></a>
+        </p>
+        <p class="mt-2">
+            I'm a software engineer and architect with extensive experience in building high-scalability web applications and data processing systems.
+        </p>
+        <p class="mt-2">
+            For the last 16 years, I worked for various companies, from startups to large enterprises all over the world, helping them build and scale their systems.
+        </p>
+        <p class="mt-2">
+            Among all the projects I've worked on, one of the biggest was designing and implementing a dedicated logistic platform
+            for one of the largest Amazon FBM sellers in the US. <br/>
+            That system was processing orders worth over $250M annually.<br/>
+        </p>
+        <p class="mt-2">
+            With project of this scale, collecting, processing and exposing data was crucial for the business to operate efficiently.<br/>
+            One of the most critical requirements was to design and implement a flexible and scalable business intelligence solution that
+            would let analysts and business owners make data-driven decisions.
+        </p>
+        <p class="mt-2">
+            I'm also a maintainer of several open-source projects who enjoys automating and optimizing everything around.
+        </p>
+    </div>
+</div>

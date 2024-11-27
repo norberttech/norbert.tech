@@ -14,92 +14,204 @@
 {% set schedule_meeting_link = "https://calendar.app.google/TR5RDkjBz621UGuQA" %}
 
 {% block content %}
-<h1 class="text-4xl font-bold">Unlock the Power of Data with Expert Consulting Services</h1>
+<div class="grid grid-cols-12">
+    <div class="col-span-12 order-2 md-order-1 md:col-span-8 md:pr-4">
+        <h1 class="text-4xl font-bold">Unlock the Power of Data with Expert Consulting Services</h1>
 
-<p class="mt-2">
-    Book a free 30-minute consultation today using this <a href="{{ schedule_meeting_link }}" target="_blank">link</a>. In this session, we'll discuss your challenges and how I can help you overcome them.<br/>
-    After the initial consultation, my rate is <strong>$150/hour</strong> for each started hour, billed monthly.
-</p>
-<p class="mt-2">
-    My consulting services include:
-</p>
+        <p class="mt-2">
+            My consulting services include:
+        </p>
 
-<ul class="mt-2 list-disc pl-8">
-    <li>
-        <strong>Comprehensive Presentation prior to Full-Scale Consulting</strong> (fixed price)
-    </li>
-    <li>
-        <strong>Data Processing Workshops & System Architecture Consultations</strong> (remote or on-site)
-    </li>
-    <li>
-        <strong>Pair Coding Sessions</strong>
-    </li>
-    <li>
-        <strong>Bootstrapping a Data Processing <a href="#data-processing-framework">Framework</a></strong>
-    </li>
-</ul>
+        <ul class="mt-2 list-disc pl-8">
+            <li>
+                <strong><a href="#presentation">Comprehensive Presentation</a> prior to Full-Scale Consulting</strong> (fixed price)
+            </li>
+            <li>
+                <strong>Data Concierge</strong> (remote or on-site)
+            </li>
+            <li>
+                <strong>Fractional Architect</strong> (remote or on-site)
+            </li>
+            <li>
+                <strong><a href="#workshops">Data Processing Workshops</a> & System Architecture Consultations</strong> (remote or on-site)
+            </li>
+            <li>
+                <strong>Pair Coding Sessions</strong>
+            </li>
+            <li>
+                <strong>Bootstrapping a Data Processing <a href="#data-processing-framework">Framework</a></strong>
+            </li>
+        </ul>
 
-<h2 class="text-2xl font-bold mt-4">Comprehensive Presentation Before Full-Scale Consulting</h2>
+        <hr class="mt-4"/>
+        <h2 class="text-2xl font-bold pt-12" id="presentation">Comprehensive Presentation Before Full-Scale Consulting</h2>
 
-<p class="mt-2">
-    Before diving into full-scale consulting, I offer a detailed presentation, usually lasting between<br/>
-    one to two hours, that provides a big-picture view of how to build a company-wide data mesh.<br/>
-    This presentation covers various options, helping you understand which solution best fits your needs.<br/>
-    It can also serve as a valuable resource for business analysts, business intelligence teams,<br/>
-    data scientists, and reporting teams to align on the data strategy and infrastructure, ensuring a cohesive approach across departments.
-</p>
+        <p class="mt-2">
+            Before diving into full-scale consulting, I offer a detailed presentation, usually lasting between<br/>
+            one to two hours, that provides a big-picture view of how to build a company-wide data mesh.<br/>
+            This presentation covers various options, helping you understand which solution best fits your needs.<br/>
+            It can also serve as a valuable resource for business analysts, business intelligence teams,<br/>
+            data scientists, and reporting teams to align on the data strategy and infrastructure, ensuring a cohesive approach across departments.
+        </p>
 
-<h2 class="text-2xl font-bold mt-4" id="data-processing-framework">Bootstrapping a Data Processing Framework</h2>
+        <hr class="mt-8"/>
+        <h2 class="text-2xl font-bold pt-12" id="workshops">Workshops</h2>
 
-<p class="mt-2">
-    I provide a comprehensive service to set up a fully automated data processing infrastructure using PHP, Scala, Java, or Python. This includes:
-</p>
+        <p class="mt-2">
+            Empower your team with hands-on learning experiences tailored to your organization's needs. My workshops focus on
+            practical, real-world applications of data engineering, system architecture, and best practices in building scalable, efficient data solutions.
+        </p>
 
-<ul class="mt-2 list-disc pl-8">
-    <li>Selecting and configuring the right tools and technologies</li>
-    <li>Preparing local and production environments</li>
-    <li>Setting up or adjusting CI/CD pipelines</li>
-    <li>Developing a codebase with a clear interface for developers, making it as simple as writing transformation jobs</li>
-    <li>Implementing monitoring and telemetry solutions</li>
-</ul>
+        <p class="mt-2">
+            Key topics covered in the workshops include:
+        </p>
 
-<p class="mt-4">
-With this framework in place, developers only need to focus on writing the transformation code, registering it in the application, and testing it locally.
-</p>
-<p class="mt-2">
-To provide an example, if a task involves moving orders from storage A to storage B within a given timeframe, the developer would:
-</p>
+        <ul class="mt-2 list-disc pl-8">
+            <li><strong>Data Processing and Automation Frameworks:</strong> Learn how to set up and use automated data pipelines using industry-standard tools and best practices.</li>
+            <li><strong>Building a Company-Wide Data Mesh:</strong> Understand the principles, architecture, and operational aspects of implementing a robust data mesh tailored to your organization.</li>
+            <li><strong>Scalable System Architecture:</strong> Gain insights into designing and optimizing systems to handle large-scale data processing efficiently.</li>
+            <li><strong>Modern Data Engineering Tools:</strong> Hands-on sessions with tools like Apache Spark, Kafka, and cloud-based data processing services.</li>
+            <li><strong>Custom Topics:</strong> Workshops can be customized to include your specific challenges, tools, or frameworks.</li>
+        </ul>
 
-<ul class="mt-2 list-disc pl-8">
-    <li>Implement the <code>JobInterface</code> for data processing</li>
-    <li>Register the job</li>
-    <li>Define input parameters such as <code>start-date</code> and <code>end-date</code></li>
-    <li>Write and test the job code locally, for example using the CLI command: <code>$ bin/data-mesh push:orders --start-date="2024-09-01" --end-date="2024-10-01</code></li>
-</ul>
+        <p class="mt-4">
+            Workshops are designed to provide actionable knowledge and skills, enabling participants to immediately apply what they’ve learned to real-world problems. Depending on your needs, these sessions can include:
+        </p>
 
-<p class="mt-4">
-    The framework provides developers, through the <code>JobInterface</code>, with:
-</p>
+        <ul class="mt-2 list-disc pl-8">
+            <li>Instructor-led coding sessions</li>
+            <li>Breakout exercises for team collaboration</li>
+            <li>Problem-solving challenges specific to your domain</li>
+            <li>Interactive Q&A to address your unique concerns</li>
+        </ul>
 
-<ul class="mt-2 list-disc pl-8">
-    <li>Access to data storages</li>
-    <li>Secrets access</li>
-    <li>Input parameters/arguments</li>
-    <li>Telemetry</li>
-    <li>Error handling</li>
-    <li>Job chaining</li>
-    <li>Log collection</li>
-</ul>
+        <p class="mt-4">
+            Workshops are available in both remote and on-site formats, allowing flexibility in how your team participates and engages. Whether you’re looking to upskill your developers, align your team on a data strategy, or tackle a specific technical challenge, these workshops will equip your team with the knowledge and tools they need to succeed.
+        </p>
 
-<p class="mt-4">
-    This framework lowers the entry barrier, enabling developers unfamiliar with data engineering tools to work with Apache Spark.<br/>
-    The approachable syntax eases onboarding, allowing smooth integration into a company-wide data mesh.
-</p>
-<p class="mt-2">
-    The most daunting aspect of automating data processing is often setting up the infrastructure and configuring tools.<br/>
-    My goal is to remove that complexity, delivering a well-defined, plug-and-play solution that empowers your team to get started quickly and confidently.
-</p>
-<div class="my-8 text-center">
-    <a href="{{ schedule_meeting_link }}" class="btn btn-primary text-xl" target="_blank">Lets talk!</a>
+        <h2 class="text-2xl font-bold mt-4" id="workshops">Interactive, Hands-On Workshops Tailored for Maximum Impact</h2>
+
+        <p class="mt-2">
+            Each workshop is designed to provide a highly engaging, practical experience that empowers developers to tackle real-world data challenges with confidence.<br/>
+            Each session is meticulously crafted to combine structured learning with hands-on tasks, ensuring every participant walks away with actionable skills.
+        </p>
+
+        <h3 class="text-xl font-bold mt-4">Workshop Structure</h3>
+
+        <p class="mt-2">
+            <strong>1. Brief Introduction & Goal Setting (up to 15 minutes):</strong><br/>
+        </p>
+        <p class="pl-3">
+            We start with a concise introduction outlining the objectives and providing the context needed to ensure every participant is aligned with the session's goals.
+        </p>
+
+        <p class="mt-2">
+            <strong>2. Hands-On Problem-Solving in Pairs or Small Groups:</strong><br/>
+        </p>
+        <p class="pl-3">
+            Participants dive into practical tasks, starting with entry-level problems that build foundational understanding. Before each task, I provide clear explanations of the problem and its objectives, setting the stage for effective collaboration and focused learning.
+        </p>
+
+        <p class="mt-2">
+            <strong>3. Real-Time Guidance and Support:</strong><br/>
+        </p>
+        <p class="pl-3">
+            As participants work through the tasks (ranging from <strong>30 to 60 minutes</strong> each), I actively engage with the groups—jumping between rooms to answer questions, provide guidance, and ensure progress. This personalized approach guarantees that everyone receives the support they need.
+        </p>
+
+        <p class="mt-2">
+            <strong>4. Discussion, Feedback, and Iteration:</strong><br/>
+        </p>
+        <p class="pl-3">
+            After each task, we come together to discuss solutions, address questions, and gather feedback. This collaborative review solidifies understanding and enhances learning outcomes before moving to the next challenge.
+        </p>
+
+        <h3 class="text-xl font-bold mt-4">Example: Introduction to Data Processing</h3>
+
+        <p class="mt-2">Here’s what a typical data processing introduction workshop might look like:</p>
+
+        <ul class="mt-2 list-disc pl-8">
+            <li><strong>Introduction to iterating over large datasets:</strong> Learn strategies for handling datasets too large to fit into memory.</li>
+            <li><strong>Data curation and cleaning:</strong> Techniques for removing inconsistencies and preparing data for analysis.</li>
+            <li>Break (coffee)</li>
+            <li><strong>Schema management:</strong> Understand the importance of schemas and how to enforce them effectively.</li>
+            <li><strong>Data type conversion:</strong> Work with flat and nested structures while mastering advanced transformations.</li>
+            <li>Break (lunch)</li>
+            <li><strong>Data flattening:</strong> Simplify complex structures to make datasets usable.</li>
+            <li><strong>Data joining:</strong> Combine datasets efficiently and correctly.</li>
+            <li>Break (coffee)</li>
+            <li><strong>Data aggregation:</strong> Learn to group and summarize data for meaningful insights.</li>
+            <li><strong>Data partitioning:</strong> Optimize datasets for performance and scalability.</li>
+        </ul>
+
+        <p class="mt-4">
+            Each task is accompanied by detailed explanations, clear objectives, and helpful tips, ensuring that even developers with minimal background knowledge can confidently participate and succeed.
+        </p>
+
+        <h3 class="text-xl font-bold mt-4">Practical Focus, Tangible Outcomes</h3>
+
+        <p class="mt-2">
+            Every workshop is practice-first, theory-second. Participants actively apply what they learn in a supportive environment, with clear instructions and goals guiding them throughout the session. By the end of the workshop, your team will not only have mastered new concepts but also gained the confidence to apply these skills to real-world projects.
+        </p>
+
+        <p class="mt-4">
+            <strong>Ready to transform your team’s capabilities?</strong> Let’s discuss how a tailored workshop can address your unique needs and challenges..
+        </p>
+
+        <hr class="mt-4"/>
+        <h2 class="text-2xl font-bold pt-12" id="data-processing-framework">Bootstrapping a Data Processing Framework</h2>
+
+        <p class="mt-2">
+            I provide a comprehensive service to set up a fully automated data processing infrastructure using PHP, Scala, Java, or Python. This includes:
+        </p>
+
+        <ul class="mt-2 list-disc pl-8">
+            <li>Selecting and configuring the right tools and technologies</li>
+            <li>Preparing local and production environments</li>
+            <li>Setting up or adjusting CI/CD pipelines</li>
+            <li>Developing a codebase with a clear interface for developers, making it as simple as writing transformation jobs</li>
+            <li>Implementing monitoring and telemetry solutions</li>
+        </ul>
+
+        <p class="mt-4">
+        With this framework in place, developers only need to focus on writing the transformation code, registering it in the application, and testing it locally.
+        </p>
+        <p class="mt-2">
+        To provide an example, if a task involves moving orders from storage A to storage B within a given timeframe, the developer would:
+        </p>
+
+        <ul class="mt-2 list-disc pl-8">
+            <li>Implement the <code>JobInterface</code> for data processing</li>
+            <li>Register the job</li>
+            <li>Define input parameters such as <code>start-date</code> and <code>end-date</code></li>
+            <li>Write and test the job code locally, for example using the CLI command: <br/><code>$ ./data-mesh push:orders --start-date="2024-09-01" --end-date="2024-10-01</code></li>
+        </ul>
+
+        <p class="mt-4">
+            The framework provides developers, through the <code>JobInterface</code>, with:
+        </p>
+
+        <ul class="mt-2 list-disc pl-8">
+            <li>Access to data storages</li>
+            <li>Secrets access</li>
+            <li>Input parameters/arguments</li>
+            <li>Telemetry</li>
+            <li>Error handling</li>
+            <li>Job chaining</li>
+            <li>Log collection</li>
+        </ul>
+
+        <p class="mt-4">
+            This framework lowers the entry barrier, enabling developers unfamiliar with data engineering tools to work with Apache Spark.<br/>
+            The approachable syntax eases onboarding, allowing smooth integration into a company-wide data mesh.
+        </p>
+        <p class="mt-2">
+            The most daunting aspect of automating data processing is often setting up the infrastructure and configuring tools.<br/>
+            My goal is to remove that complexity, delivering a well-defined, plug-and-play solution that empowers your team to get started quickly and confidently.
+        </p>
+    </div>
+    <div class="col-span-12 order-1 md:order-2 md:col-span-4 mb-10">
+        {{ include('consulting/_about.html.twig') }}
+    </div>
 </div>
 {% endblock %}
