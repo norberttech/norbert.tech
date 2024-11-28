@@ -52,14 +52,14 @@
 {% endif %}
 <body class="scroll-smooth text-black relative min-h-screen pb-16">
     <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2 border-b border-gray-500 z-[9999] print:hidden">
-        <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl px-4">
+        <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl md:px-4">
             <div class="text-left">
                 <a href="{{ path('home') }}" class="text-lg">
                     norbert.tech
                 </a>
             </div>
             <div class="text-right">
-                <a href="{{ path('consulting') }}" class="text-lg inline-flex items-center space-x-1 mr-4">
+                <a href="{{ path('consulting') }}" class="text-lg inline-flex items-center space-x-1 md:mr-4 mr-2">
                     <iconify-icon icon="lineicons:consulting" class="mr-1"></iconify-icon> Consulting
                 </a>
                 <a href="{{ path('blog') }}" class="text-lg inline-flex items-center space-x-1">
