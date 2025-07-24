@@ -30,7 +30,7 @@ final class Posts
             'title' => 'How I use AI to automate boring coding tasks',
             'labels' => ['AI', 'automation', 'PHP', 'development', 'claude'],
             'description' => 'A practical walkthrough of using Claude Code Agent to implement 27+ Symfony String functions in Flow PHP, breaking down complex tasks into manageable automated workflows.',
-            'date' => '2025-01-22',
+            'date' => '2025-07-22',
             'slug' => 'ai-automate-boring-coding-tasks'
         ]
     ];

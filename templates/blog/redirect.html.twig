@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting - {{ post_title }}</title>
+    <meta http-equiv="refresh" content="0; url={{ new_url }}">
+    <link rel="canonical" href="{{ new_url }}">
+</head>
+<body>
+    <p>This page has moved. You should be automatically redirected to <a href="{{ new_url }}">{{ new_url }}</a>.</p>
+    <script>
+        window.location.href = "{{ new_url }}";
+    </script>
+</body>
+</html>

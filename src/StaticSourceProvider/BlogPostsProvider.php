@@ -22,6 +22,9 @@ final class BlogPostsProvider implements SourceProvider
             $sources[] = new Source('blog_post', ['date' => $post->date->format('Y-m-d'), 'slug' => $post->slug]);
         }
 
+        // Add redirect for the old blog post URL
+        $sources[] = new Source('blog_post_old_redirect', []);
+
         return $sources;
     }
 }

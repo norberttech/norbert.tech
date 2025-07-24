@@ -19,6 +19,15 @@ class BlogController extends AbstractController
         ]);
     }
 
+    #[Route('/blog/2025-01-22/ai-automate-boring-coding-tasks', name: 'blog_post_old_redirect')]
+    public function redirectOldPost(): Response
+    {
+        return $this->render('blog/redirect.html.twig', [
+            'new_url' => '/blog/2025-07-22/ai-automate-boring-coding-tasks',
+            'post_title' => 'How I use AI to automate boring coding tasks'
+        ]);
+    }
+
     #[Route('/blog/{date}/{slug}', name: 'blog_post')]
     public function post(string $date, string $slug) : Response
     {
