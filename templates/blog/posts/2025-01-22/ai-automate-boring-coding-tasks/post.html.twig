@@ -1,0 +1,437 @@
+{% extends 'blog/post.html.twig' %}
+
+{%- block title -%}
+    {{ post.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {{ post.description }}
+{%- endblock -%}
+
+{% block article %}
+    <h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
+    <div class="mb-2">
+        <small class="text-sm">Posted on {{ post.date | date }}</small>
+    </div>
+    <div class="mb-4">
+        {% for label in post.labels %}
+            <small><span class="badge badge-info">{{ label }}</span></small>
+        {% endfor %}
+    </div>
+    <p>
+        I just finished something that I would normally probably not even start - implementing 27 Symfony String
+        functions in Flow PHP.
+    </p>
+
+    <p>
+        I let <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank">Claude Code</a> handle
+        it while I focused on other important tasks (house cleaning, to be more specific).
+        The result? 68 files changed, over 3,000 lines of code added, comprehensive test coverage, and zero regressions.
+        All done systematically.
+    </p>
+
+    <h2>The Problem That Made Me Try Something Different</h2>
+
+    <p>
+        It all started with <a href="https://github.com/flow-php/flow/issues/1316" target="_blank">issue #1316</a> in
+        the Flow PHP repository.
+        Flow PHP needed integration with Symfony's string manipulation library. Sounds simple, right?
+    </p>
+
+    <p>
+        Well, yes and no. Here's what I was looking at:
+    </p>
+
+    <ul>
+        <li>27 different string functions to implement</li>
+        <li>Each one needed its own ScalarFunction class and a dedicated method in the ScalarFunctionChain integration
+        </li>
+        <li>Unit tests for edge cases, but focused on integration only, not Symfony String behavior</li>
+        <li>Integration tests to make sure everything works in real scenarios</li>
+        <li>Static analysis and coding standards compliance</li>
+    </ul>
+
+    <p>
+        Doing this manually would have been soul-crushing. Copy-paste-modify-test, repeat 27 times.
+        What a nightmare...
+    </p>
+
+    <h2>So I Tried Something Else</h2>
+
+    <p>
+        Instead of going through this manually, I decided to let Claude Code Agent handle it.
+    </p>
+
+    <p>
+        The trick wasn't just telling Claude "implement these 27 functions." That would have been a disaster.
+        Instead, I broke it down into 29 separate, laser-focused tasks in a <code class="code-twig">.claude/tasks/gh-1316</code>
+        folder.
+    </p>
+
+    <p>
+        Each task file was like a mini specification:
+    </p>
+
+    <ul>
+        <li>What exactly needs to be built</li>
+        <li>Step-by-step implementation plan</li>
+        <li>Clear success criteria</li>
+        <li>Quality checks that must pass</li>
+    </ul>
+
+    <h2>How It Actually Worked Out</h2>
+
+    <h3>First, Figure Out What's Actually Needed</h3>
+    <p>
+        I started by having Claude do the analysis:
+    </p>
+
+    <pre><code class="code-bash" {{ stimulus_controller('syntax_highlight') }}>{{ 'Task 01: Integration analysis - mapped existing functions
+Task 02: Gap analysis - identified what needed implementation'
+            |spaceless }}</code></pre>
+
+    <p>
+        Since Flow PHP already had some string functions, we didn't need to implement everything from scratch.
+    </p>
+
+    <h3>Then, Assembly Line Programming</h3>
+    <p>
+        This is where things got interesting. I created a template that Claude would follow for every single function:
+    </p>
+
+    <ol>
+        <li><strong>Write the ScalarFunction class</strong> - core logic</li>
+        <li><strong>Add it to ScalarFunctionChain</strong> - so it works with Flow's column reference fluent API</li>
+        <li><strong>Unit tests for edge cases</strong> - but focused on the integration itself</li>
+        <li><strong>Integration tests</strong> - does it actually work in a real DataFrame?</li>
+        <li><strong>Make PHPStan happy</strong> - because we need our code to be strict and precise</li>
+    </ol>
+    <p class="mt-6">
+        Here's what one of these functions looks like.
+    </p>
+
+    <pre><code class="code-php" {{ stimulus_controller('syntax_highlight') }}>{{ '
+final class Reverse extends ScalarFunctionChain
+{
+    public function __construct(
+        private readonly ScalarFunction|string $value,
+    ) {
+    }
+
+    public function eval(Row $row) : ?string
+    {
+        $value = (new Parameter($this->value))->asString($row);
+
+        if ($value === null) {
+            return null;
+        }
+
+        return s($value)->reverse()->toString();
+    }
+}'
+            |spaceless }}</code></pre>
+
+    <p>
+        Null handling, type checking, then just wrapping Symfony's <code class="code-twig">s()</code> function.
+        Simple and consistent across all 27 functions.
+    </p>
+
+    <h3>Finally, Polish and Cleanup</h3>
+    <p>
+        The last couple of tasks were about making everything consistent:
+    </p>
+
+    <ul>
+        <li>Renaming functions that didn't follow our conventions</li>
+        <li>Cleaning up tests (following the "don't test what you don't own" rule)</li>
+        <li>Making sure everything still passes all quality checks</li>
+    </ul>
+
+    <h2>The Final Result</h2>
+
+    <p>
+        In <a href="https://github.com/flow-php/flow/pull/1782" target="_blank">PR #1782</a>, here's what we ended up
+        with:
+    </p>
+
+    <ul>
+        <li><strong>27 new string functions</strong> - complete Symfony String coverage</li>
+        <li><strong>68 files touched</strong> - 3,322 lines added, only 16 deleted</li>
+        <li><strong>Comprehensive tests</strong> - both unit and integration coverage</li>
+        <li><strong>PHPStan level 9 clean</strong> - no shortcuts taken</li>
+        <li><strong>Zero breaking changes</strong> - all existing tests still pass</li>
+    </ul>
+
+    <p>
+        The functions cover pretty much everything you'd want to do with strings:
+    </p>
+
+    <ul>
+        <li><strong>Basic manipulation:</strong> <code class="code-twig">reverse()</code>, <code class="code-twig">truncate()</code>,
+            <code class="code-twig">repeat()</code></li>
+        <li><strong>Building strings:</strong> <code class="code-twig">append()</code>, <code class="code-twig">prepend()</code>,
+            <code class="code-twig">ensureStart()</code>, <code class="code-twig">ensureEnd()</code></li>
+        <li><strong>Checking things:</strong> <code class="code-twig">isEmpty()</code>,
+            <code class="code-twig">length()</code>, <code class="code-twig">width()</code>, <code class="code-twig">equalsTo()</code>
+        </li>
+        <li><strong>Finding stuff:</strong> <code class="code-twig">indexOfLast()</code>, <code class="code-twig">containsAny()</code>,
+            <code class="code-twig">match()</code>, <code class="code-twig">matchAll()</code></li>
+        <li><strong>Cleaning up:</strong> <code class="code-twig">collapseWhitespace()</code>, <code class="code-twig">wordwrap()</code>,
+            <code class="code-twig">normalize()</code></li>
+    </ul>
+
+    <h2>What tools did I use</h2>
+
+    <p>
+        Alright, let's talk about the tools that actually made this possible.
+        Claude Code Agent doesn't work in isolation. It uses these things called
+        <a href="https://modelcontextprotocol.io/introduction" target="_blank">MCP servers</a> to connect with other
+        tools and use them.
+    </p>
+
+    <p>
+        Here's what I had set up:
+    </p>
+
+    <h3>IDE Integration</h3>
+    <pre><code class="code-bash" {{ stimulus_controller('syntax_highlight') }}>{{ 'claude mcp add jetbrains -s user -- npx -y @jetbrains/mcp-proxy'
+            |spaceless }}</code></pre>
+    <p>
+        This connects Claude directly to my IDE. Super handy because Claude can use IDE features for
+        searching existing code, understanding the project structure, and modifying files.
+    </p>
+
+    <h3>GitHub Integration</h3>
+    <pre><code class="code-bash" {{ stimulus_controller('syntax_highlight') }}>{{ 'claude mcp add --transport http -s user github https://api.githubcopilot.com/mcp/ -H "Authorization: Bearer xxx"'
+            |spaceless }}</code></pre>
+    <p>
+        This server connects Claude directly to GitHub APIs, allowing it to read the repository, pull requests, and
+        issues.
+    </p>
+
+    <p>
+        <strong>Pro tip:</strong> Even though this can create PRs and push code, I usually follow Murphy's law:
+        not letting AI push code directly or make any changes to remote services.
+    </p>
+
+    <h3>Web Content Fetching</h3>
+    <pre><code class="code-bash" {{ stimulus_controller('syntax_highlight') }}>{{ 'claude mcp add fetch -s user -- npx -y @kazuph/mcp-fetch'
+            |spaceless }}</code></pre>
+    <p>
+        This server allows Claude to fetch and analyze web content, which was useful for:
+    </p>
+    <ul>
+        <li>Reading documentation from Symfony String library</li>
+        <li>Analyzing external resources and examples</li>
+        <li>Gathering context from web-based documentation</li>
+        <li>Researching best practices and implementation patterns</li>
+    </ul>
+
+    <p>
+        The combination of these MCP servers created a development environment where Claude could work
+        across multiple tools and platforms seamlessly. This integration was crucial for maintaining the systematic
+        approach throughout all 29 tasks. It also allowed me to reduce the number of tokens used since the agent was
+        delegating some of the tasks to the servers rather than doing everything itself.
+    </p>
+
+    <h2>Some Safety Rules</h2>
+
+    <p>
+        Working with AI on your codebase can go sideways fast if you're not careful. Here's what kept me sane:
+    </p>
+
+    <h3>Version Control</h3>
+    <p>
+        Rule #1: <strong>commit after every single task</strong>. I'm serious about this.
+        After Claude finished implementing each function, I'd review it, apply patches if needed, run static analysis,
+        and then commit it immediately with a clear message.
+    </p>
+
+    <h3>Usually It's Faster to Start Over</h3>
+    <p>
+        If the agent generates code that's working but not following the pattern you defined,
+        don't try to fix it manually. Just toss it and ask for a new version with better instructions.
+    </p>
+
+    <p>
+        Why this works:
+    </p>
+    <ul>
+        <li><strong>Speed</strong> - Claude can regenerate in 30 seconds what might take you 30 minutes to debug</li>
+        <li><strong>No weird edge cases</strong> - fresh code doesn't inherit previous mistakes</li>
+        <li><strong>Git has your back</strong> - worst case, you revert to the last good commit</li>
+        <li><strong>Better instructions = better results</strong> - each attempt helps you clarify what you actually
+            want
+        </li>
+    </ul>
+
+    <h3>Start Easy With Permissions</h3>
+    <p>
+        MCP servers can do a lot, but I always give them readonly permissions only.
+        When attempting to use any MCP server features, Claude will ask for permission to use them.
+        Just say no to anything that poses a risk of breaking something outside of your local development environment.
+    </p>
+
+    <p>
+        The problem with LLMs is that they are, by nature, not deterministic.
+        Understanding this helps avoid situations where AI might try to do something unexpected.
+        It's as simple as that: if something comes with a risk of breaking, don't let AI do it.
+        Just follow Murphy's law: "If something can go wrong, it will go wrong."
+    </p>
+
+    <h2>Why This Actually Worked</h2>
+
+    <h3>One Function, One Task</h3>
+    <p>
+        The trick was to keep each task stupidly simple. One function per task, nothing more.
+        No context switching, no distractions.
+    </p>
+
+    <h3>Same Checklist Every Time</h3>
+    <p>
+        I made Claude follow the exact same checklist for every single function:
+    </p>
+
+    <ul>
+        <li>Unit tests pass (including all the weird edge cases)</li>
+        <li>Integration tests pass (does it work in practice?)</li>
+        <li>PHPStan level 9 is happy</li>
+        <li>Code formatting is perfect</li>
+        <li>Nothing else breaks</li>
+    </ul>
+
+    <h3>AI Is Good at Boring, Repetitive Work</h3>
+    <p>
+        This wasn't about creative problem-solving. It was about following the same pattern 27 times without screwing
+        up.
+        AI is decent at this kind of work—it doesn't get bored like I would after the 5th function.
+    </p>
+
+    <h2>What I Learned From This Experiment</h2>
+
+    <h3>What Worked (With Heavy Supervision)</h3>
+    <ul>
+        <li><strong>Detailed specs are crucial</strong>—AI needs extremely clear instructions or it goes off the rails
+        </li>
+        <li><strong>Review everything</strong>—the code looked fine but had subtle issues I caught during review</li>
+        <li><strong>Keep tasks simple</strong>—anything complex and AI starts making questionable decisions</li>
+    </ul>
+
+    <h3>What I'd Do Differently</h3>
+    <ul>
+        <li>Spend even more time on upfront architectural planning</li>
+        <li>Build in more review checkpoints (I caught a few issues too late)</li>
+    </ul>
+
+    <h2>Want to Try This Yourself?</h2>
+
+    <p>
+        If you want to experiment with this approach, be prepared for a lot of upfront work defining patterns and
+        reviewing output.
+        This isn't a "set it and forget it" solution—it's more like having a junior developer who needs detailed
+        instructions and constant code review.
+    </p>
+
+    <blockquote>
+        I would much more prefer to have a junior developer who can learn and grow, rather than an AI that needs
+        constant supervision.
+        But since I'm the only "full time" developer on this project, it's better than nothing.
+    </blockquote>
+
+    <h3>The Basic Setup</h3>
+    <p>
+        These three will give you a solid foundation to start generating code:
+    </p>
+
+    <pre><code class="code-bash" {{ stimulus_controller('syntax_highlight') }}>{{ '
+claude mcp add jetbrains -s user -- npx -y @jetbrains/mcp-proxy
+claude mcp add --transport http -s user github https://api.githubcopilot.com/mcp/ -H "Authorization: Bearer YOUR_TOKEN"
+claude mcp add fetch -s user -- npx -y @kazuph/mcp-fetch'
+            |spaceless }}</code></pre>
+
+    <h3>The Task Template</h3>
+
+    <p>
+        Here's the task template I use. There are probably better ones out there, but this one works for me.
+        It's easy to copy-paste and modify for each new function.
+    </p>
+
+    <pre><code class="code-markdown" {{ stimulus_controller('syntax_highlight') }}>{{ '# Task Template
+## Context
+[What exactly needs to be built and why]
+
+## Implementation Steps
+1. [Be stupidly specific here]
+2. [Like, embarrassingly detailed]
+3. [Trust me, more detail = better results]
+
+## Definition of Done
+- [ ] Code works as expected
+- [ ] Tests pass (unit + integration)
+- [ ] Static analysis is clean
+- [ ] Nothing else broke
+- [ ] Update docs if needed'
+            |spaceless }}</code></pre>
+
+    <p>
+        The secret is to be ridiculously specific in your tasks.
+        Don't make Claude guess what you want—spell it out like you're talking to someone who's never seen your code
+        before.
+    </p>
+
+    <p>
+        But how do you make Claude Code actually work on the given task? For that, I created something called a
+        <a href="https://docs.anthropic.com/en/docs/claude-code/slash-commands#custom-slash-commands" target="_blank">Slash
+            Command</a>.
+        Here's the <code>/work-on-task</code> command I use:
+    </p>
+
+    <pre><code class="code-markdown" {{ stimulus_controller('syntax_highlight') }}>{{ '# Your task
+You are going to work on a task described in #$ARGUMENTS path.
+All tasks are in `.claude/tasks/{task-slug}` folder.
+Inside the folder, tasks are saved as `{task-number}-{task-name}.md`.
+Once you are done, summarize what you did in a new file (the same name as the task with suffix `-summary`).
+
+# Task Summary Rules
+- The Summary MUST be short and to the point.
+- When everything is done and the Definition of Done is met, just write "Task completed." in the summary—don\'t repeat the task description.
+- Always add to the summary how many tokens were used to complete the task.
+- When the definition of done is not met, write what is missing so any other agent/human can take it from there.'
+            |spaceless }}</code></pre>
+
+    <p>
+        What's interesting about this command is that it allows me to keep track of what Claude is working on, but it
+        also shows approximately how many tokens were used to complete the task.
+    </p>
+
+    <p>
+        When a given task consumes too many tokens, it might be a good idea to look for a dedicated MCP server.
+    </p>
+
+    <h2>The Summary</h2>
+
+    <p>
+        I think AI hasn't changed the way I approach problems since I remember always trying to automate the boring
+        parts of my work.
+        AI can handle repetitive, boring tasks pretty well if you supervise it properly.
+    </p>
+
+    <p>
+        AI can execute well-defined, repetitive tasks, but if you don't make those tasks small and precise, it's
+        likely to cut corners or misunderstand your intent. After all, it's all based on probabilities, not true
+        understanding.
+    </p>
+
+    <p>
+        If anything, this reinforced how important architectural thinking and code review skills are.
+    </p>
+
+    <blockquote>
+        This blog post was written with help from Claude Code.<br/>
+        I came up with the idea, wrote the initial draft, and edited the final version.
+        The AI Agent was used for rephrasing and polishing the text, fixing grammar, and ensuring the content was clear
+        and concise.
+        It was a collaborative effort, which I hope will let me blog more often and make sharing my thoughts easier and
+        faster.
+    </blockquote>
+{% endblock %}

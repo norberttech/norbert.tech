@@ -1,14 +1,15 @@
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 body {
     font-family: "Cabin", system-ui;
 }
 
 a {
-    font-weight: normal;
-    @apply font-medium text-blue-600 dark:text-blue-500 hover:underline;
+    @apply text-blue-600 dark:text-blue-500 hover:underline;
 }
 
 code {
@@ -48,8 +49,28 @@ article.blog-post p, ul, pre, img {
     @apply mb-2
 }
 
+article.blog-post h1 {
+    @apply text-3xl font-bold mb-4;
+}
+
+article.blog-post h2 {
+    @apply text-2xl font-semibold mb-3;
+}
+
+article.blog-post h3 {
+    @apply text-xl font-semibold mb-2;
+}
+
+article.blog-post h4 {
+    @apply text-lg font-semibold mb-2;
+}
+
 article.blog-post ul {
     @apply list-disc pl-6;
+}
+
+article.blog-post blockquote {
+    @apply border-l-4 pl-4 italic text-gray-600 my-4;
 }
 
 .backdrop-blur-blue {
