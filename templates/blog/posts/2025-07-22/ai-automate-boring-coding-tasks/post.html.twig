@@ -214,24 +214,18 @@ final class Reverse extends ScalarFunctionChain
         not letting AI push code directly or make any changes to remote services.
     </p>
 
-    <h3>Web Content Fetching</h3>
+    <h3>Web Content (Images) Fetching</h3>
     <pre><code class="code-bash" {{ stimulus_controller('syntax_highlight') }}>{{ 'claude mcp add fetch -s user -- npx -y @kazuph/mcp-fetch'
             |spaceless }}</code></pre>
     <p>
-        This server allows Claude to fetch and analyze web content, which was useful for:
+        This server allows Claude to fetch and analyze web content, images in particular.
     </p>
-    <ul>
-        <li>Reading documentation from Symfony String library</li>
-        <li>Analyzing external resources and examples</li>
-        <li>Gathering context from web-based documentation</li>
-        <li>Researching best practices and implementation patterns</li>
-    </ul>
 
     <p>
         The combination of these MCP servers created a development environment where Claude could work
         across multiple tools and platforms seamlessly. This integration was crucial for maintaining the systematic
         approach throughout all 29 tasks. It also allowed me to reduce the number of tokens used since the agent was
-        delegating some of the tasks to the servers rather than doing everything itself.
+        delegating some tasks to the servers rather than doing everything itself.
     </p>
 
     <h2>Some Safety Rules</h2>
