@@ -316,6 +316,15 @@ Task 02: Gap analysis - identified what needed implementation</code></pre>
         This server allows Claude to fetch and analyze web content, images in particular.
     </p>
 
+    <h3>Sequential Thinking</h3>
+    <pre><code class="code-bash" data-controller="syntax-highlight">claude mcp add sequential-thinking -s user -- npx -y @modelcontextprotocol/server-sequential-thinking</code></pre>
+
+    <p>
+        This one is crucial for handling tasks that require multiple steps or sequential thinking.
+        It allows Claude to break down complex tasks into smaller, manageable parts and execute them in order.
+        It also helps agent to not go off the rails when it comes to implementing the tasks one after another.
+    </p>
+
     <p>
         The combination of these MCP servers created a development environment where Claude could work
         across multiple tools and platforms seamlessly. This integration was crucial for maintaining the systematic
@@ -434,7 +443,8 @@ Task 02: Gap analysis - identified what needed implementation</code></pre>
 
     <pre><code class="code-bash" data-controller="syntax-highlight">claude mcp add jetbrains -s user -- npx -y @jetbrains/mcp-proxy
 claude mcp add --transport http -s user github https://api.githubcopilot.com/mcp/ -H "Authorization: Bearer YOUR_TOKEN"
-claude mcp add fetch -s user -- npx -y @kazuph/mcp-fetch</code></pre>
+claude mcp add fetch -s user -- npx -y @kazuph/mcp-fetch
+claude mcp add sequential-thinking -s user -- npx -y @modelcontextprotocol/server-sequential-thinking</code></pre>
 
     <h3>The Task Template</h3>
 
