@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ConsultingController extends AbstractController
 {
     #[Route('/consulting', name: 'consulting')]
-    public function index(Request $request) : Response
+    public function index(Request $request): Response
     {
         return $this->render('consulting/index.html.twig', []);
     }

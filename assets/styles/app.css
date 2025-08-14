@@ -6,6 +6,7 @@
 
 body {
     font-family: "Cabin", system-ui;
+    font-size: 18px;
 }
 
 a {
@@ -50,23 +51,27 @@ article.blog-post p, ul, pre, img {
 }
 
 article.blog-post h1 {
-    @apply text-3xl font-bold mb-4;
+    @apply text-3xl font-bold mb-4 mt-4;
 }
 
 article.blog-post h2 {
-    @apply text-2xl font-semibold mb-3;
+    @apply text-2xl font-semibold mb-3 mt-3;
 }
 
 article.blog-post h3 {
-    @apply text-xl font-semibold mb-2;
+    @apply text-xl font-semibold mb-2 mt-2;
 }
 
 article.blog-post h4 {
-    @apply text-lg font-semibold mb-2;
+    @apply text-lg font-semibold mb-2 mt-2;
 }
 
 article.blog-post ul {
     @apply list-disc pl-6;
+}
+
+article.blog-post ol {
+    @apply list-decimal pl-6;
 }
 
 article.blog-post blockquote {

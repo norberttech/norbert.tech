@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProjectsController extends AbstractController
 {
-    public function list() : Response
+    public function list(): Response
     {
         return $this->render('projects/list.html.twig', []);
     }

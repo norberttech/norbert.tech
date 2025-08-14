@@ -11,17 +11,19 @@ final class Post
         public readonly string $description,
         public readonly \DateTimeImmutable $date,
         public readonly array $labels,
-        public readonly string $slug
+        public readonly string $slug,
+        public readonly string $language = 'en',
     ) {}
 
-    public static function fromArray(array $data) : self
+    public static function fromArray(array $data): self
     {
         return new self(
             $data['title'],
             $data['description'],
             new \DateTimeImmutable($data['date']),
             $data['labels'],
-            $data['slug']
+            $data['slug'],
+            $data['language'] ?? 'en',
         );
     }
 }

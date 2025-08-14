@@ -5,24 +5,30 @@ declare(strict_types=1);
 namespace NorbertTech\Portfolio\StaticSourceProvider;
 
 use NorbertTech\Portfolio\Blog\Posts;
-use NorbertTech\StaticContentGeneratorBundle\Content\{Source, SourceProvider};
+use NorbertTech\StaticContentGeneratorBundle\Content\Source;
+use NorbertTech\StaticContentGeneratorBundle\Content\SourceProvider;
 
 final class BlogPostsProvider implements SourceProvider
 {
-    public function __construct()
-    {
+    public function __construct() {}
 
-    }
-
-    public function all() : array
+    public function all(): array
     {
         $sources = [];
+        $posts = new Posts();
 
-        foreach ((new Posts())->all() as $post) {
+        foreach ($posts->all('en') as $post) {
             $sources[] = new Source('blog_post', ['date' => $post->date->format('Y-m-d'), 'slug' => $post->slug]);
         }
 
-        // Add redirect for the old blog post URL
+        foreach ($posts->all('pl') as $post) {
+            $sources[] = new Source('blog_post_language', [
+                'date' => $post->date->format('Y-m-d'),
+                'language' => 'pl',
+                'slug' => $post->slug,
+            ]);
+        }
+
         $sources[] = new Source('blog_post_old_redirect', []);
 
         return $sources;

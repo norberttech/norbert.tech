@@ -22,6 +22,8 @@
         "norberttech/static-content-generator-bundle": "1.x-dev"
     },
     "require-dev": {
+        "carthage-software/mago": "^0.26.1",
+        "phpunit/phpunit": "^11.5",
         "symfony/web-profiler-bundle": "^6.4"
     },
     "minimum-stability": "dev",
@@ -32,8 +34,9 @@
         },
         "sort-packages": true,
         "allow-plugins": {
-            "symfony/runtime": true,
-            "symfony/flex": true
+            "carthage-software/mago": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
         }
     },
     "autoload": {
@@ -54,6 +57,12 @@
         "post-update-cmd": [
             "@importmap:install",
             "@build:tailwind"
+        ],
+        "cs:php:fix": [
+            "vendor/bin/mago fmt"
+        ],
+        "static:analysis": [
+            "vendor/bin/mago fmt --dry-run"
         ],
         "assets:clear": "rm -rf public/assets",
         "importmap:install": "bin/console importmap:install",
