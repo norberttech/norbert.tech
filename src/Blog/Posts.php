@@ -44,7 +44,7 @@ final class Posts
             'date' => '2025-08-12',
             'slug' => 'analiza-danych-w-systemach-transakcyjnych',
             'language' => 'pl',
-        ]
+        ],
     ];
 
     public function findByDateAndSlug(string $date, string $slug, string $language = 'en'): Post

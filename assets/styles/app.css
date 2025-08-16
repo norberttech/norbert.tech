@@ -18,6 +18,10 @@ code {
     @apply rounded !px-[4px] !py-[6px] bg-gray-100 text-gray-800;
 }
 
+pre code.hljs {
+    @apply !p-4;
+}
+
 .btn {
     @apply inline-flex items-center justify-center px-4 py-2 rounded-xl shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2;
 }
@@ -48,6 +52,10 @@ code {
 
 article.blog-post p, ul, pre, img {
     @apply mb-2
+}
+
+article.blog-post pre {
+    @apply overflow-x-auto
 }
 
 article.blog-post h1 {
