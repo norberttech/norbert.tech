@@ -8,19 +8,19 @@
         "type": "js"
     },
     "\/assets\/@symfony\/stimulus-bundle\/controllers.js": {
-        "path": "\/assets\/@symfony\/stimulus-bundle\/controllers-30e149621baab8220e8ae00cc40a4a23.js",
+        "path": "\/assets\/@symfony\/stimulus-bundle\/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
         "type": "js"
     },
     "\/assets\/controllers\/hello_controller.js": {
         "path": "\/assets\/controllers\/hello_controller-55882fcad241d2bea50276ea485583bc.js",
         "type": "js"
     },
-    "\/assets\/controllers\/clipboard_controller.js": {
-        "path": "\/assets\/controllers\/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
-        "type": "js"
-    },
     "\/assets\/controllers\/syntax_highlight_controller.js": {
         "path": "\/assets\/controllers\/syntax_highlight_controller-ae10e4cee8b4dedbf232536d05654062.js",
+        "type": "js"
+    },
+    "\/assets\/controllers\/clipboard_controller.js": {
+        "path": "\/assets\/controllers\/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
         "type": "js"
     },
     "@symfony\/stimulus-bundle": {
@@ -28,15 +28,15 @@
         "type": "js"
     },
     "@hotwired\/stimulus": {
-        "path": "\/assets\/vendor\/@hotwired\/stimulus\/stimulus.index-6f73d85e0fa2bcb3802562288e3f3042.js",
+        "path": "\/assets\/vendor\/@hotwired\/stimulus\/stimulus.index-304681764684182e6662e0931532ed91.js",
         "type": "js"
     },
     "highlight.js\/lib\/core": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/core-a4e70e8d9019e717dfd018057650e566.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/core-760145ef158caabe84ca07686407d093.js",
         "type": "js"
     },
     "highlight.js\/lib\/languages\/php": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/php-3082801e8bbfa191b25e190b817c8690.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/php-c0eb2105c14097e8a5a1e9a767e8ac95.js",
         "type": "js"
     },
     "highlight.js\/styles\/github-dark.min.css": {
@@ -44,47 +44,47 @@
         "type": "css"
     },
     "@fontsource-variable\/cabin\/index.min.css": {
-        "path": "\/assets\/vendor\/@fontsource-variable\/cabin\/index.min-9c7d0ada22af1e85cec470dbedd33409.css",
+        "path": "\/assets\/vendor\/@fontsource-variable\/cabin\/index.min-08e34691d22388e6974e6cb2bfbcbfd0.css",
         "type": "css"
     },
     "htmx.org": {
-        "path": "\/assets\/vendor\/htmx.org\/htmx.org.index-9c972342e01d7cc4830a1976259158c7.js",
+        "path": "\/assets\/vendor\/htmx.org\/htmx.org.index-023ae86a082913526422a6063298f898.js",
         "type": "js"
     },
     "clipboard": {
-        "path": "\/assets\/vendor\/clipboard\/clipboard.index-dcdefe2499a3b69abd4ab17006bfd09b.js",
+        "path": "\/assets\/vendor\/clipboard\/clipboard.index-925566f98181665b5a61fea1bcd9033d.js",
         "type": "js"
     },
     "@oddbird\/popover-polyfill": {
-        "path": "\/assets\/vendor\/@oddbird\/popover-polyfill\/popover-polyfill.index-8f1adf02d2fe31ba0e133b65d1faeece.js",
+        "path": "\/assets\/vendor\/@oddbird\/popover-polyfill\/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js",
         "type": "js"
     },
     "highlight.js\/lib\/languages\/shell": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/shell-82883b411c0363fd67d4b2a65c9191cd.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/shell-664215791af27581e04813723523a355.js",
         "type": "js"
     },
     "highlight.js\/lib\/languages\/json": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/json-9d4f6cc2ef6373562a0ebc9b0e6fe3c3.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js",
         "type": "js"
     },
     "highlight.js\/lib\/languages\/twig": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/twig-68d52b8a7230c15fca667a4297a37ca5.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/twig-0f3c6d18c0368650898b432b7bcf672a.js",
         "type": "js"
     },
     "highlight.js\/lib\/languages\/sql": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/sql-ba78665514b9cfeb1e8435f38f0e8ab5.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/sql-09f80640dd6fe9bed6ff4eb255b13f08.js",
         "type": "js"
     },
     "highlight.js\/lib\/languages\/javascript": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/javascript-ad36fcdcd285bf2c1bee1fef5dbc226f.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/javascript-100f963be02a503f0531e497103ff398.js",
         "type": "js"
     },
     "highlight.js\/lib\/languages\/xml": {
-        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/xml-283bc16436bf56d2e1178a8f0b733523.js",
+        "path": "\/assets\/vendor\/highlight.js\/lib\/languages\/xml-a2295112e12d4d01f257d59e1cfa676d.js",
         "type": "js"
     },
     "iconify-icon": {
-        "path": "\/assets\/vendor\/iconify-icon\/iconify-icon.index-4471e3c6a0bda14753f1327106be2b63.js",
+        "path": "\/assets\/vendor\/iconify-icon\/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js",
         "type": "js"
     }
 }

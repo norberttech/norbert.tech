@@ -13,69 +13,77 @@
     <meta name="twitter:description" content="How to access historical statistics in home assistant.">
 
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://norbert.wip/blog/2024-08-07/home-assistant-historical-statistics" />
-    <meta property="og:image" content="https://norbert.wip/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" />
+    <meta property="og:url" content="https://norbert.tech/blog/2024-08-07/home-assistant-historical-statistics" />
+    <meta property="og:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" />
     <meta property="og:image:type" content="image/svg+xml" />
     <meta property="og:image:alt" content="Norbert Orzechowicz - Personal Website" />
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://norbert.wip/blog/2024-08-07/home-assistant-historical-statistics" />
-    <meta name="twitter:image" content="https://norbert.wip/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
+    <meta property="twitter:url" content="https://norbert.tech/blog/2024-08-07/home-assistant-historical-statistics" />
+    <meta name="twitter:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
     <meta name="twitter:site" content="@norbert_tech" />
     <meta name="twitter:creator" content="@norbert_tech" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="https://norbert.wip/assets/images/favicons/apple-touch-icon-9cae7ee880b4fe0bd755d300e1bca71e.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://norbert.wip/assets/images/favicons/favicon-32x32-b7a4ad4b584ab95534144e071f0e8587.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.wip/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
-    <link rel="shortcut icon" href="https://norbert.wip/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://norbert.tech/assets/images/favicons/apple-touch-icon-9cae7ee880b4fe0bd755d300e1bca71e.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://norbert.tech/assets/images/favicons/favicon-32x32-b7a4ad4b584ab95534144e071f0e8587.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.tech/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
+    <link rel="shortcut icon" href="https://norbert.tech/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
 
             <style>
             @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
         </style>
-        <link rel="stylesheet" href="https://norbert.wip/assets/styles/app-d8bbfe3b548fa62e5c68c3766d2745ab.css">
+        <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-fd0d81d3947e3327c2c1db5004444a86.css">
     
             
 <script type="importmap">
 {
     "imports": {
-        "app": "https://norbert.wip/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js",
-        "@oddbird/popover-polyfill": "https://norbert.wip/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-8f1adf02d2fe31ba0e133b65d1faeece.js",
-        "https://norbert.wip/assets/bootstrap.js": "https://norbert.wip/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
-        "htmx.org": "https://norbert.wip/assets/vendor/htmx.org/htmx.org.index-9c972342e01d7cc4830a1976259158c7.js",
-        "iconify-icon": "https://norbert.wip/assets/vendor/iconify-icon/iconify-icon.index-4471e3c6a0bda14753f1327106be2b63.js",
-        "@symfony/stimulus-bundle": "https://norbert.wip/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js",
-        "@hotwired/stimulus": "https://norbert.wip/assets/vendor/@hotwired/stimulus/stimulus.index-6f73d85e0fa2bcb3802562288e3f3042.js",
-        "https://norbert.wip/assets/@symfony/stimulus-bundle/controllers.js": "https://norbert.wip/assets/@symfony/stimulus-bundle/controllers-30e149621baab8220e8ae00cc40a4a23.js",
-        "https://norbert.wip/assets/controllers/hello_controller.js": "https://norbert.wip/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js",
-        "https://norbert.wip/assets/controllers/clipboard_controller.js": "https://norbert.wip/assets/controllers/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
-        "https://norbert.wip/assets/controllers/syntax_highlight_controller.js": "https://norbert.wip/assets/controllers/syntax_highlight_controller-ae10e4cee8b4dedbf232536d05654062.js",
-        "highlight.js/lib/core": "https://norbert.wip/assets/vendor/highlight.js/lib/core-a4e70e8d9019e717dfd018057650e566.js",
-        "highlight.js/lib/languages/php": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/php-3082801e8bbfa191b25e190b817c8690.js",
-        "highlight.js/styles/github-dark.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.wip%2Fassets%2Fvendor%2Fhighlight.js%2Fstyles%2Fgithub-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css%22%7D%29%29",
-        "@fontsource-variable/cabin/index.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.wip%2Fassets%2Fvendor%2F%40fontsource-variable%2Fcabin%2Findex.min-9c7d0ada22af1e85cec470dbedd33409.css%22%7D%29%29",
-        "clipboard": "https://norbert.wip/assets/vendor/clipboard/clipboard.index-dcdefe2499a3b69abd4ab17006bfd09b.js",
-        "highlight.js/lib/languages/shell": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/shell-82883b411c0363fd67d4b2a65c9191cd.js",
-        "highlight.js/lib/languages/json": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/json-9d4f6cc2ef6373562a0ebc9b0e6fe3c3.js",
-        "highlight.js/lib/languages/twig": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/twig-68d52b8a7230c15fca667a4297a37ca5.js",
-        "highlight.js/lib/languages/sql": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/sql-ba78665514b9cfeb1e8435f38f0e8ab5.js",
-        "highlight.js/lib/languages/javascript": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/javascript-ad36fcdcd285bf2c1bee1fef5dbc226f.js",
-        "highlight.js/lib/languages/xml": "https://norbert.wip/assets/vendor/highlight.js/lib/languages/xml-283bc16436bf56d2e1178a8f0b733523.js"
+        "app": "https://norbert.tech/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js",
+        "@oddbird/popover-polyfill": "https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js",
+        "https://norbert.tech/assets/bootstrap.js": "https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
+        "htmx.org": "https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js",
+        "iconify-icon": "https://norbert.tech/assets/vendor/iconify-icon/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js",
+        "@symfony/stimulus-bundle": "https://norbert.tech/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js",
+        "@hotwired/stimulus": "https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js",
+        "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers.js": "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
+        "https://norbert.tech/assets/controllers/hello_controller.js": "https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+        "https://norbert.tech/assets/controllers/syntax_highlight_controller.js": "https://norbert.tech/assets/controllers/syntax_highlight_controller-ae10e4cee8b4dedbf232536d05654062.js",
+        "https://norbert.tech/assets/controllers/clipboard_controller.js": "https://norbert.tech/assets/controllers/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
+        "highlight.js/lib/core": "https://norbert.tech/assets/vendor/highlight.js/lib/core-760145ef158caabe84ca07686407d093.js",
+        "highlight.js/lib/languages/php": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/php-c0eb2105c14097e8a5a1e9a767e8ac95.js",
+        "highlight.js/styles/github-dark.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2Fhighlight.js%2Fstyles%2Fgithub-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css%22%7D%29%29",
+        "@fontsource-variable/cabin/index.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2F%40fontsource-variable%2Fcabin%2Findex.min-08e34691d22388e6974e6cb2bfbcbfd0.css%22%7D%29%29",
+        "clipboard": "https://norbert.tech/assets/vendor/clipboard/clipboard.index-925566f98181665b5a61fea1bcd9033d.js",
+        "highlight.js/lib/languages/shell": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/shell-664215791af27581e04813723523a355.js",
+        "highlight.js/lib/languages/json": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js",
+        "highlight.js/lib/languages/twig": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/twig-0f3c6d18c0368650898b432b7bcf672a.js",
+        "highlight.js/lib/languages/sql": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/sql-09f80640dd6fe9bed6ff4eb255b13f08.js",
+        "highlight.js/lib/languages/javascript": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/javascript-100f963be02a503f0531e497103ff398.js",
+        "highlight.js/lib/languages/xml": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/xml-a2295112e12d4d01f257d59e1cfa676d.js"
     }
 }
 </script>
 <!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support -->
 <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
-<link rel="modulepreload" href="https://norbert.wip/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-8f1adf02d2fe31ba0e133b65d1faeece.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/vendor/htmx.org/htmx.org.index-9c972342e01d7cc4830a1976259158c7.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/vendor/iconify-icon/iconify-icon.index-4471e3c6a0bda14753f1327106be2b63.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/vendor/@hotwired/stimulus/stimulus.index-6f73d85e0fa2bcb3802562288e3f3042.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/@symfony/stimulus-bundle/controllers-30e149621baab8220e8ae00cc40a4a23.js">
-<link rel="modulepreload" href="https://norbert.wip/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/iconify-icon/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js">
 <script type="module">import 'app';</script>
     </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-153657381-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-153657381-1');
+</script>
 <body class="scroll-smooth text-black relative min-h-screen pb-16">
     <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2 border-b border-gray-500 z-[9999] print:hidden">
         <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl md:px-4">
@@ -164,8 +172,8 @@ FROM (
     Then, all you need to do is search for "SQL" in the list of integrations and configure it accordingly.
 </p>
 
-<a href="https://norbert.wip/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" target="_blank" rel="noopener noreferrer">
-    <img src="https://norbert.wip/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
+<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" target="_blank" rel="noopener noreferrer">
+    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-config-01-04c6b2d8a62824c3c827c60b1401c01a.png" alt="Home Assistant SQL Integration" class="w-[460px] rounded-lg shadow-lg my-4">
 </a>
 
 <p>
@@ -173,8 +181,8 @@ FROM (
     In the end, the SQL integration should provide 4 entities as shown in the screenshot below.
 </p>
 
-<a href="https://norbert.wip/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" target="_blank" rel="noopener noreferrer">
-    <img src="https://norbert.wip/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
+<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" target="_blank" rel="noopener noreferrer">
+    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/sql-integration-preview-01-728e735dab114667f21b701e5a839c6b.png" alt="Home Assistant SQL Integration Preview" class="w-[460px] rounded-lg shadow-lg my-4">
 </a>
 
 <p>
@@ -188,8 +196,8 @@ FROM (
     Done! From now on, we can use all 3 entities to display net energy from the last day/week/month on any chosen dashboard or in automations.
 </p>
 
-<a href="https://norbert.wip/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" target="_blank" rel="noopener noreferrer">
-    <img src="https://norbert.wip/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
+<a href="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" target="_blank" rel="noopener noreferrer">
+    <img src="https://norbert.tech/assets/images/blog/home-assistant-historical-statistics/energy-dashboard-a55db25e9d49a473b89a2ad3305b8853.png" alt="Home Assistant Net Energy Dashboard" class="w-[460px] rounded-lg shadow-lg my-4">
 </a>
 
     </article>
