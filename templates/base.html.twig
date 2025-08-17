@@ -39,17 +39,10 @@
     {% block javascripts %}
         {{ importmap() }}
     {% endblock %}
+    {% if umami_id %}
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="{{ umami_id }}"></script>
+    {% endif %}
 </head>
-{% if google_analytics_id %}
-<script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}">{% if google_conversion_tag %}gtag('config', '{{ google_conversion_tag }}');{% endif %}</script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', '{{ google_analytics_id }}');
-</script>
-{% endif %}
 <body class="scroll-smooth text-black relative min-h-screen pb-16">
     <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2 border-b border-gray-500 z-[9999] print:hidden">
         <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl md:px-4">

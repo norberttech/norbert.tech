@@ -3,5 +3,4 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        google_analytics_id: '%env(GOOGLE_ANALYTICS_ID)%'
-        google_conversion_tag: '%env(GOOGLE_CONVERSION_TAG)%'
+        umami_id: '%env(UMAMI_ID)%'
