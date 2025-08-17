@@ -30,20 +30,34 @@ final class SitemapSubscriber implements EventSubscriberInterface
 
     private function populateBlogPosts(SitemapPopulateEvent $event): void
     {
-        $posts = $this->posts->all();
-
-        foreach ($posts as $post) {
+        foreach ($this->posts->all('en') as $post) {
             $event->getUrlContainer()->addUrl(
                 new UrlConcrete(
                     $event->getUrlGenerator()->generate(
                         'blog_post',
-                        ['date' => $post->date->format('Y-m-d'), 'slug' => $post->slug, 'language' => $post->language],
+                        ['date' => $post->date->format('Y-m-d'), 'slug' => $post->slug],
                         UrlGeneratorInterface::ABSOLUTE_URL,
                     ),
                     changefreq: 'weekly',
                 ),
                 'blog',
             );
+        }
+
+        foreach (['pl', 'de', 'fr', 'es'] as $language) {
+            foreach ($this->posts->all('pl') as $post) {
+                $event->getUrlContainer()->addUrl(
+                    new UrlConcrete(
+                        $event->getUrlGenerator()->generate(
+                            'blog_post_language',
+                            ['date' => $post->date->format('Y-m-d'), 'slug' => $post->slug, 'language' => $language],
+                            UrlGeneratorInterface::ABSOLUTE_URL,
+                        ),
+                        changefreq: 'weekly',
+                    ),
+                    'blog-' . $language,
+                );
+            }
         }
     }
 }

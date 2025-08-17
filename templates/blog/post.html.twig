@@ -14,7 +14,7 @@
                 {% set translatedPost = posts.get(translationId) %}
                 {% if translatedPost.language == 'en' %}
                     <li>
-                        <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
+                        <a href="{{ path('blog_post', {date: translatedPost.date | date('Y-m-d'), slug: translatedPost.slug}) }}"
                            class="text-lg hover:opacity-80"
                            title="English">🇺🇸 English</a>
                     </li>
