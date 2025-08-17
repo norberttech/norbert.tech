@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analiza danych w rozproszonych systemach transakcyjnych</title>
+    <meta property="og:title" content="Analiza danych w rozproszonych systemach transakcyjnych" />
+    <meta name="twitter:title" content="Analiza danych w rozproszonych systemach transakcyjnych" >
+
+    <meta name="description" content="Czy Twój system transakcyjny pada pod naporem raportów? Szukasz sposobu na zbudowanie jednolitego źródła danych dla rozproszonego systemu? Dowiedz się, w jaki sposób zacząć zbudować wydajny magazyn danych analitycznych oraz jak uniknąć podstawowych.">
+    <meta property="og:description" content="Czy Twój system transakcyjny pada pod naporem raportów? Szukasz sposobu na zbudowanie jednolitego źródła danych dla rozproszonego systemu? Dowiedz się, w jaki sposób zacząć zbudować wydajny magazyn danych analitycznych oraz jak uniknąć podstawowych.">
+    <meta name="twitter:description" content="Czy Twój system transakcyjny pada pod naporem raportów? Szukasz sposobu na zbudowanie jednolitego źródła danych dla rozproszonego systemu? Dowiedz się, w jaki sposób zacząć zbudować wydajny magazyn danych analitycznych oraz jak uniknąć podstawowych.">
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://norbert.tech/blog/2025-08-12/pl/analiza-danych-w-rozproszonych-systemach-transakcyjnych" />
+    <meta property="og:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:alt" content="Norbert Orzechowicz - Personal Website" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://norbert.tech/blog/2025-08-12/pl/analiza-danych-w-rozproszonych-systemach-transakcyjnych" />
+    <meta name="twitter:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
+    <meta name="twitter:site" content="@norbert_tech" />
+    <meta name="twitter:creator" content="@norbert_tech" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://norbert.tech/assets/images/favicons/apple-touch-icon-9cae7ee880b4fe0bd755d300e1bca71e.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://norbert.tech/assets/images/favicons/favicon-32x32-b7a4ad4b584ab95534144e071f0e8587.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.tech/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
+    <link rel="shortcut icon" href="https://norbert.tech/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
+
+            <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
+        </style>
+        <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-794f0a8f3bd146a99a3a847c57b80cc4.css">
+    
+            
+<script type="importmap">
+{
+    "imports": {
+        "app": "https://norbert.tech/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js",
+        "@oddbird/popover-polyfill": "https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js",
+        "https://norbert.tech/assets/bootstrap.js": "https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
+        "htmx.org": "https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js",
+        "iconify-icon": "https://norbert.tech/assets/vendor/iconify-icon/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js",
+        "@symfony/stimulus-bundle": "https://norbert.tech/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js",
+        "@hotwired/stimulus": "https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js",
+        "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers.js": "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
+        "https://norbert.tech/assets/controllers/hello_controller.js": "https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+        "https://norbert.tech/assets/controllers/syntax_highlight_controller.js": "https://norbert.tech/assets/controllers/syntax_highlight_controller-ae10e4cee8b4dedbf232536d05654062.js",
+        "https://norbert.tech/assets/controllers/clipboard_controller.js": "https://norbert.tech/assets/controllers/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
+        "highlight.js/lib/core": "https://norbert.tech/assets/vendor/highlight.js/lib/core-760145ef158caabe84ca07686407d093.js",
+        "highlight.js/lib/languages/php": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/php-c0eb2105c14097e8a5a1e9a767e8ac95.js",
+        "highlight.js/styles/github-dark.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2Fhighlight.js%2Fstyles%2Fgithub-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css%22%7D%29%29",
+        "@fontsource-variable/cabin/index.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2F%40fontsource-variable%2Fcabin%2Findex.min-08e34691d22388e6974e6cb2bfbcbfd0.css%22%7D%29%29",
+        "clipboard": "https://norbert.tech/assets/vendor/clipboard/clipboard.index-925566f98181665b5a61fea1bcd9033d.js",
+        "highlight.js/lib/languages/shell": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/shell-664215791af27581e04813723523a355.js",
+        "highlight.js/lib/languages/json": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js",
+        "highlight.js/lib/languages/twig": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/twig-0f3c6d18c0368650898b432b7bcf672a.js",
+        "highlight.js/lib/languages/sql": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/sql-09f80640dd6fe9bed6ff4eb255b13f08.js",
+        "highlight.js/lib/languages/javascript": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/javascript-100f963be02a503f0531e497103ff398.js",
+        "highlight.js/lib/languages/xml": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/xml-a2295112e12d4d01f257d59e1cfa676d.js"
+    }
+}
+</script>
+<!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support -->
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+<link rel="modulepreload" href="https://norbert.tech/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/iconify-icon/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js">
+<script type="module">import 'app';</script>
+    </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-153657381-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-153657381-1');
+</script>
+<body class="scroll-smooth text-black relative min-h-screen pb-16">
+    <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2 border-b border-gray-500 z-[9999] print:hidden">
+        <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl md:px-4">
+            <div class="text-left">
+                <a href="/" class="text-lg">
+                    norbert.tech
+                </a>
+            </div>
+            <div class="text-right">
+                <a href="/consulting" class="text-lg inline-flex items-center space-x-1 md:mr-4 mr-2">
+                    <iconify-icon icon="lineicons:consulting" class="mr-1"></iconify-icon> Consulting
+                </a>
+                <a href="/blog" class="text-lg inline-flex items-center space-x-1">
+                    <iconify-icon icon="ooui:articles-ltr" class="mr-1"></iconify-icon> Blog
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <main class="mx-auto max-w-screen-2xl mb-4 md:pt-4 px-4 lg:px-0">
+            <div class="mx-auto max-w-screen-lg px-2">
+        <ul class="mt-2 pl-[20px] flex gap-4">
+            <li>
+                <a href="/blog" class="text-blue-500 hover:underline">Go Back</a>
+            </li>
+                                                                <li>
+                        <a href="/blog/2025-08-12/en/data-analytics-in-distributed-transactional-systems"
+                           class="text-lg hover:opacity-80"
+                           title="English">🇺🇸 English</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-08-12/fr/analyse-donnees-systemes-transactionnels-distribues"
+                           class="text-lg hover:opacity-80"
+                           title="French">🇫🇷 French</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-08-12/de/datenanalyse-in-verteilten-transaktionssystemen"
+                           class="text-lg hover:opacity-80"
+                           title="Deutsch">🇩🇪 Deutsch</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-08-12/es/analisis-datos-sistemas-transaccionales-distribuidos"
+                           class="text-lg hover:opacity-80"
+                           title="Spanish">🇪🇸 Spanish</a>
+                    </li>
+                                    </ul>
+
+            </div>
+    <article class="blog-post px-2 py-5 sm:px-4 mx-auto max-w-screen-lg">
+            <div class="img-wide">
+        <img src="https://norbert.tech/assets/images/blog/analytics-in-transactional-distributed-systems/analytics_01-b27f8a842f645a9c7d9901f3fd11fde8.jpg" alt="Analiza danych w rozproszonych systemach transakcyjnych" />
+    </div>
+
+    <h1 class="font-bold text-4xl mb-2" id="title">Analiza danych w rozproszonych systemach transakcyjnych</h1>
+    <div class="mb-2">
+        <small class="text-sm">Data Publikacji August 12, 2025 00:00</small>
+    </div>
+    <div class="mb-4">
+                    <small><span class="badge badge-info">analiza danych</span></small>
+                    <small><span class="badge badge-info">magazyn danych</span></small>
+                    <small><span class="badge badge-info">ETL</span></small>
+                    <small><span class="badge badge-info">przetwarzanie danych</span></small>
+                    <small><span class="badge badge-info">systemy transakcyjne</span></small>
+            </div>
+    <p>
+        W tym wpisie postaram się poruszyć problem analizy danych w rozproszonych systemach transakcyjnych.<br/>
+        Jeżeli szukasz pomysłów na zbudowanie centralnego magazynu danych, który pozwoli zebrać dane z całego systemu,
+        niezależnie od jego fragmentacji a przy okazji nie utonąć w kosztach operacyjnych, to ten wpis jest dla Ciebie.
+    </p>
+
+    <h2>Wszystko zaczyna się niewinnie</h2>
+    <p>
+        Większość systemów, które na co dzień tworzymy, przechowuje dane w jakiejś relacyjnej bazie danych.
+        Bardzo popularnym, a przy okazji dobrym wyborem jest PostgreSQL, który w ostatnich latach stał się niemalże
+        standardem w branży.
+    </p>
+    <p>
+        Historia większości projektów wygląda przeważnie bardzo podobnie: zaczynamy od weryfikacji pomysłu, zdobywamy
+        pierwszych użytkowników, system zaczyna zarabiać, biznes kombinuje jak zwiększyć zyski, powstają nowe
+        funkcjonalności. Każda nowa funkcjonalność to kilka nowych tabelek w bazie danych.
+    </p>
+    <p>
+        W celu przyśpieszenia developmentu korzystamy z ORM-a, automatycznie generujemy migracje, które tworzą i
+        aktualizują schemat bazy danych.
+    </p>
+    <p>
+        Początkowo wszystko idzie gładko, nowe funkcjonalności przynoszą spodziewane zyski, biznes zaczyna się skalować.
+        Zatrudniamy więcej programistów, aby tworzyć więcej funkcjonalności równolegle.
+    </p>
+    <p>
+        Od czasu do czasu ktoś zgłasza, że system w niektórych miejscach zaczyna "zamulać", szybki rekonesans, jeszcze
+        szybsza
+        diagnoza, brakuje indeksu w jakiejś tabelce.
+    </p>
+    <p>
+        W konfiguracji mapowań ORM-a dokładamy indeks na pole, po którym system bardzo często wyszukuje dane.
+        Problem rozwiązany.
+    </p>
+    <p>
+        Powiększający się zespół programistów przykłada dużą wagę do jakości, być może nawet posługuje się
+        zaawansowanymi technikami wytwarzania oprogramowania, jak Event Storming czy Domain-Driven Design.<br/>
+        CI/CD wykonuje niezliczone ilości testów, upewniając się, że zmiany nie wprowadzają regresji.
+    </p>
+    <p>
+        Idylla trwa, zespół lub być może wiele zespołów zaczyna dokładać nowe moduły do systemu. Moduły odpowiednio
+        odizolowane, odpowiedzialne za konkretne zadania, nigdy nie przekraczające swoich granic i nie wchodzące
+        w kompetencje innych modułów.
+    </p>
+    <p>
+        Do komunikacji wykorzystywane są oczywiście kolejki, implementujemy
+        <a href="https://event-driven.io/en/outbox_inbox_patterns_and_delivery_guarantees_explained/" target="_blank">Outbox/Inbox
+            Pattern</a>
+    </p>
+    <p>
+        Aby zapewnić odpowiednią izolację, ustalamy reguły mówiące o tym, że każdy moduł ma dostęp jedynie
+        do tych tabelek w bazie danych, które do niego należą. W celu uzyskania danych z innego modułu należy
+        udać się do tego modułu, czy to za pośrednictwem jakiegoś wewnętrznego API, czy w jakikolwiek inny sposób.
+    </p>
+    <p>
+        Co jakiś czas biznes przychodzi do nas z pytaniem <strong>czy możecie na szybko wygenerować dla nas ten
+            raport?</strong>.
+        Oczywiście, kilka linijek w SQL'u, być może kilkadziesiąt i raport gotowy.
+    </p>
+    <p>
+        Biznes zadowolony, raport w postaci CSV leci do Excela (najbardziej popularnego narzędzia BI), biznes wyciąga
+        wnioski,
+        planuje nowe funkcjonalności i zmiany.
+    </p>
+    <div class="img-wide">
+        <img src="https://norbert.tech/assets/images/blog/analytics-in-transactional-distributed-systems/happy_business_01-4fb1ffd438d7889256901278c0d60981.jpg" alt="Business Intelligence" />
+    </div>
+
+    <h2>Czas płynie, nowe tabelki wyrastają jak grzyby po deszczu</h2>
+    <p>
+        W takim stanie rzeczy możemy trwać bardzo długo, nawet kilka dobrych lat.
+    </p>
+    <p>
+        W międzyczasie ktoś gdzieś na pewno wpadnie na pomysł, żeby dodać do systemu możliwość generowania raportów.
+        To tylko i wyłącznie kwestia czasu.
+    </p>
+    <p>
+        Raporty o stanie systemu to dla biznesu jedno z bardziej kluczowych narzędzi dających wgląd w zachowania,
+        preferencje
+        czy trendy użytkowników. Pozwalają nie tylko zrozumieć, co się dzieje, ale też odpowiednio zaplanować to, co się
+        ma dopiero wydarzyć.
+    </p>
+    <p>
+        Im lepsze i bardziej szczegółowe raporty, tym lepsze decyzje można na ich podstawie podejmować. Dobre
+        decyzje biznesowe przekładają się na większe zyski, większe zyski przekładają się na większy budżet.
+        Większy budżet przekłada się na lepsze narzędzia, większe zespoły, lepsze wynagrodzenia czy premie.
+    </p>
+    <p>
+        W interesie każdego programisty powinno być więc dostarczanie biznesowi możliwie jak najlepszych i jak
+        najbardziej precyzyjnych danych, w końcu lepsze wyniki przekładają się bezpośrednio na lepsze zyski.
+    </p>
+    <h2>Pierwsze objawy</h2>
+    <p>
+        System działa, przynosi zyski. Składa się z około 5, może nawet 10 modułów, każdy moduł składa się z 20-50
+        tabelek w
+        bazie danych. Każdy moduł dostarcza swoje własne raporty.
+    </p>
+    <ul>
+        <li>Sprzedaż</li>
+        <li>Marketing</li>
+        <li>Logistyka</li>
+        <li>Stany Magazynowe</li>
+        <li>Użytkownicy</li>
+    </ul>
+    <p>
+        Każdy moduł udostępnia tylko część danych, cząstkę większego obrazu, żaden jednak nie daje podglądu na całość.
+    </p>
+    <p>
+        Zespoły wprawdzie zaimplementowały klucze referencyjne do danych pochodzących z innych modułów, udało się nawet
+        w interfejsie użytkownika stworzyć jedno miejsce z którego można wygenerować raporty.
+    </p>
+    <p>
+        To jednak dalej za mało...
+    </p>
+    <p>
+        Bardzo szybko okazuje się, że raporty generowane w różnych modułach, napisane przez różnych programistów, być
+        może nawet w różnych technologiach mają różne formaty danych, różne standardy nazewnictwa.
+    </p>
+    <p>
+        Inaczej interpretowane są zakresy dat, jeden moduł uwzględnia daty końca i początku, drugi je wyklucza,
+        a jeszcze inny robi przedział prawostronnie otwarty w celu ułatwienia paginacji, bo akurat mają
+        też API i to API wykorzystuje ten sam kawałek kodu.
+    </p>
+    <p>
+        Ponieważ każdy moduł jest niezależny, posiada swoje granice, swóją nomenklaturę, w pewnym momencie orientujemy
+        się,
+        że to, co w jednym module nazywamy w jakiś sposób, inny moduł eksponuje pod zupełnie inną nazwą.
+        Ponieważ w kontekście tego modułu ma to sens.
+    </p>
+    <p>
+        Po czasie pewnie też się zorientujemy, że każdy zespół inaczej zdefiniował sobie politykę retencji i
+        przechowywania danych.
+        Pomimo posiadania w kluczowym module danych z ostatnich 5 lat, nie możemy nic z nimi zrobić, bo moduły, które
+        dostarczały
+        dane potrzebne do wzbogacenia podstawowego raportu, posiadają dane jedynie z ostatnich 2 lat.
+    </p>
+    <p>
+        Nie są to jednak problemy, których odrobina magii w Excelu nie byłaby w stanie rozwiązać (być może poza brakami
+        w danych).
+        Tym kolumnom zmienimy nazwy, te usuniemy, dodamy szybkie filtrowanko i wystarczy.
+    </p>
+    <p>
+        Stworzymy sobie jeden wielki plik, w którym będziemy mieli jeden arkusz o nazwie "Dashboard", a wszystkie
+        inne będą tylko do odczytu, będą zasilały dashboard.
+    </p>
+    <p>
+        Być może to podejście będzie nawet chwilę działać. Być może nawet dłużej niż chwilę, ale nie miejmy złudzeń.
+        To wszystko w końcu padnie, i to zgodnie z prawami
+        <a href="https://en.wikipedia.org/wiki/Murphy%27s_law" target="_blank">Murphiego</a>
+        padnie w najgorszym możliwym momencie.
+    </p>
+    <h2>Co złego jest w Excelu?</h2>
+    <p>
+        Nic! Excel to rewelacyjne narzędzie. Problem nie leży w Excelu, ale w jego wykorzystaniu.
+    </p>
+    <p>
+        Ta cała magia polegająca na oczyszczeniu i przygotowaniu danych nie powinna mieć miejsca w Excelu, nie
+        na większą skalę. Jeżeli mówimy o jednorazowym szybkim raporcie, nie ma problemu. Robimy co musimy,
+        klepiemy formułki, analizujemy dane i zapominamy.
+    </p>
+    <p>
+        Jeżeli jednak ma to być część naszej codziennej rutyny, jeżeli cyklicznie musimy przechodzić przez ten sam
+        proces, podążając za nieustannymi zmianami i ewolucją systemu, prędzej czy później okaże się, że te arkusze są
+        nieaktualne.
+    </p>
+    <p>
+        Kolumny przestały istnieć lub zmieniły nazwy, powstały nowe kolumny, format danych uległ zmianie albo
+        co gorsza, jeden z zespołów opiekujący się jednym z modułów usunął jakieś dane bez świadomości, że były one
+        wykorzystywane
+        przez jakiegoś użytkownika biznesowego gdzieś w jednym z jego raportów, które otwiera raz na kwartał.
+    </p>
+    <p>
+        Na dłuższą metę, bardziej złożone arkusze kalkulacyjne, które czerpią dane z automatycznie generowanych przez
+        system raportów, które są następnie sklejane na podstawie niejawnych reguł, są nie do utrzymania.
+    </p>
+    <h2>To może podepniemy jakieś narzędzie BI?</h2>
+    <p>
+        Pomyślało wielu programistów, którzy wielokrotnie zetknęli się z problemem generowania raportów.
+    </p>
+    <p>
+        Weźmy na przykład taki <a href="https://www.metabase.com/" target="_blank">Metabase</a>. Darmowe narzędzie,
+        które
+        możemy postawić w kilka minut za pomocą Dockera.
+    </p>
+    <p>
+        Dać mu dostęp do naszej bazy i kilku lub wszystkich tabelek, i za pomocą bardzo przyjaznego interfejsu
+        użytkownika biznes będzie mógł w bardzo łatwy i przyjemny sposób wygenerować najbardziej skomplikowane raporty.
+    </p>
+    <p>
+        Raporty, które będą mogły zawierać dane z wielu modułów jednocześnie!
+    </p>
+    <p>
+        Możemy nawet zatrudnić analityka danych z podstawami SQL'a, który wszystko to, czego nie będzie
+        się dało wyklikać, osiągnie za pomocą odpowiednio przygotowanego zapytania.
+    </p>
+    <h2>Tylko, że to nie rozwiązuje problemu</h2>
+    <p>
+        Jedynie odsuwa go w czasie.
+    </p>
+    <p>
+        Jeżeli przyjrzymy się dokładnie, co się zmieniło, to zmieniła się tylko jedna rzecz. Narzędzie...
+        Przenieśliśmy problem oczyszczania i łączenia danych z Excela do Metabase.
+    </p>
+    <p>
+        Excel wprawdzie wrócił do swojej pierwotnej roli, możemy teraz raporty pobrane z Metabase wrzucić do Excela.
+    </p>
+    <p>
+        Jednak nasza niejawna logika łączenia/oczyszczania danych przeniosła się z arkusza kalkulacyjnego do zapytań
+        SQL.
+    </p>
+    <p>
+        Poza tym, wszystkie problemy zostały takie same:
+    </p>
+    <ul>
+        <li>niespójność danych</li>
+        <li>niespójność nazewnictwa</li>
+        <li>brak jednolitej polityki wstecznej kompatybilności</li>
+        <li>brak jednolitej polityki retencji danych</li>
+    </ul>
+    <h2>To może ustanowimy procesy i reguły?</h2>
+    <p>
+        Większość z powyższych problemów da się rozwiązać implementując odpowiednie procesy oraz reguły.
+    </p>
+    <p>
+        Możemy ustalić standardy nazewnictwa mówiące, że każda tabelka w bazie musi zawierać w nazwie prefix modułu, a
+        kolumny nazywane są małymi literami i odseparowane podkreśleniami.
+    </p>
+    <p>
+        Możemy ustalić, że każdy moduł przechowuje dane z ostatnich 5 lat (hot storage), wszystko co starsze jest
+        archiwizowane. (cold storage)
+    </p>
+    <p>
+        Możemy ustalić, że zakresy dat zawsze traktowane są jako przedziały prawostronnie otwarte.
+    </p>
+    <p>
+        Możemy ustalić, że nie usuwamy żadnych kolumn z bazy danych, albo że przed usunięciem czegokolwiek najpierw
+        wchodzimy w okres przejściowy, podczas którego pokazujemy każdemu użytkownikowi systemu,
+        które kolumny zmienią się i w jaki sposób.
+    </p>
+    <p>
+        Nawet jeżeli przyjmiemy na potrzeby dyskusji, że uda się te procesy globalnie zaimplementować pomiędzy kilkoma
+        zespołami,
+        oraz że te zespoły będą ich bezwzględnie i bardzo dokładnie przestrzegać, <strong>to nie wystarczy...</strong>
+    </p>
+    <h2>Skalowanie bazy danych nie jest tanie</h2>
+    <p>
+        Szczególnie jeżeli opieramy się o rozwiązania chmurowe.
+    </p>
+    <p>
+        Wyobraźmy sobie sytuację, w której w szczytowych godzinach pracy systemu (kiedy użytkownicy generują najwięcej
+        transakcji)
+        analityk biznesowy, który pracuje według własnego planu musi wygenerować raport w oparciu o taki typowy, SQLowy
+        kilkutysięcznik?
+    </p>
+    <p>
+        Analityk odpala zapytanie, baza danych zaczyna mielić. Zapytanie trwa, 5, 10, 15 minut.
+        Baza danych zaczyna się pocić.
+    </p>
+    <p>
+        Użytkownicy bombardują system nowymi zamówieniami (lub jakimikolwiek innymi operacjami, które generują sporo
+        zapisów)
+        w czasie kiedy analityk czeka na wyniki.
+    </p>
+    <p>
+        W tym samym momencie ktoś z biznesu potrzebuje na szybko sprawdzić kilka raportów, każdy z nich zawiera
+        "całkowitą liczbę wierszy w tabelce".
+        Takich osób jest kilka.
+    </p>
+    <p>
+        Wszystkie te operacje nakładają się na siebie, nasza już i tak bardzo obciążona baza danych nie wyrabia.
+    </p>
+    <p>
+        Niektóre transakcje użytkowników nie dochodzą do skutku. <br/>
+        System ledwo dyszy. Czas oczekiwania na najbardziej podstawowe operacje mierzony jest w sekundach.
+    </p>
+    <p>
+        A teraz wisienka na torcie, kiedy te wszystkie dantejskie sceny mają miejsce, kiedy Pager Duty jest rozgrzany do
+        czerwoności od wszelkiego typu i rodzaju incydentów, kiedy zespoły w panice próbują przywrócić system do życia,
+        devopsi kombinują jak na szybko przeskalować bazę danych...
+    </p>
+    <div class="img-wide">
+        <img class="mt-[-150px]" src="https://norbert.tech/assets/images/blog/analytics-in-transactional-distributed-systems/construction_01-59e51f16aa79ecadc241f490217f29a0.jpg" alt="Prace remontowe" />
+    </div>
+    <p>
+        CEO zaczyna prezentację dla potencjalnego partnera biznesowego, z którym współpraca
+        ma okazać się kluczowa w strategii rozwoju firmy...
+    </p>
+    <h2>To może po prostu postawmy replikę?</h2>
+    <p>
+        W końcu raporty nie będą przeciążać naszej bazy transakcyjnej.
+    </p>
+    <p>
+        Podwoimy wprawdzie koszty utrzymania bazy danych, ale zredukujemy ryzyko przeciążenia systemu i będziemy
+        mogli podpiąć ulubione narzędzie business intelligence wprost na replikę, co da nam dane real time.
+    </p>
+    <p>
+        Brzmi rewelacyjnie, ale w praktyce nie jest to tak proste.
+    </p>
+    <p>
+        Pomijając już nawet potencjalne problemy wynikające z samej natury replikacji, głównym i podstawowym problemem
+        na który najczęściej trafiam, jest <strong>percepcja</strong>.
+    </p>
+    <p>
+        Zupełnie inaczej na tabele w bazie danych będzie patrzył programista, który te tabele wygenerował za pomocą
+        mapowań ORM-a, niż analityk danych.
+    </p>
+    <p>
+        Programista będzie wiedział, które tabele należy połączyć razem, aby otrzymać obraz całości.
+        Będzie rozumiał ograniczenia i warunki zaszyte gdzieś w kodzie aplikacji.
+        Przede wszystkim programista zna lub chociaż powinien się orientować jak wygląda cykl życia systemu (jego
+        danych).
+    </p>
+    <p>
+        Ta cała wiedza najczęściej nie jest dostępna dla analityków.
+    </p>
+    <p>
+        To tak jakby powiedzieć komuś, żeby spojrzał na coś przez dziurkę od klucza. Coś na pewno da się zobaczyć.
+        Jakieś wnioski da się wyciągnąć, ale bardzo ciężko będzie odbudować całość.
+    </p>
+    <p>
+        Wystarczy, że mamy w bazie danych kolumnę typu JSONB w której przechowujemy jakieś struktury danych.
+        Załóżmy, że system dopuszcza 3 poprawne kombinacje tej samej struktury, ale jedna jest super rzadka, na tyle
+        rzadka, że jeszcze w systemie nie wystąpiła. Patrząc na dane, nawet całościowo, analityk po prostu nie może wiedzieć,
+        że istnieją 3 kombinacje jednej struktury. Podczas normalizacji uwzględni 2 przypadki, podczas gdy trzeci
+        stanie się tykającą bombą zegarową, która wybuchnie jak zawsze w najmniej oczekiwanym momencie.
+    </p>
+    <p>
+        Inaczej mówiąc, jeżeli mamy w systemie kilka niezależnych modułów. Każdy z swoją bazą danych, albo przynajmniej
+        swoimi tabelami w bazie. Co sumarycznie daje nam 200-300 tabelek, oczekiwanie, że analityk to bez problemu
+        ogarnie, nie popełni błędów i raporty nie będą odbiegały od oczekiwań, jest delikatnie mówiąc naiwne.
+    </p>
+    <p>
+        Mimo wszystko wystawienie kopii/repliki bazy danych dla analityków i nadanie jej 4-literowej nazwy pochodzącej
+        od słowa "analytics" dalej jest powszechnie stosowane.
+    </p>
+    <p>
+        Narzędzia BI prześcigają się w tym, kto stworzy lepszy interfejs użytkownika, dzięki któremu raporty da się
+        wyklikać.
+        Obiecują, że będziemy mogli analizować dane bez SQL.
+    </p>
+    <p>
+        Tak, to może działać, w wielu miejscach właśnie tak to działa. O czym jednak głośno nie mówimy to:
+    </p>
+    <ul>
+        <li>Problemy z wsteczną kompatybilnością oraz zmianami struktury danych</li>
+        <li>Problemy z odpowiednim utrzymaniem / wersjonowaniem / testowaniem gigantycznych zapytań SQL/skryptów
+            normalizujących dane w locie
+        </li>
+        <li>Repliki/Kopie generują dodatkowe koszty</li>
+        <li>Redukcja zasobów replik jest albo niemożliwa, albo uniemożliwia generowanie raportów w akceptowalnych
+            czasach
+        </li>
+    </ul>
+    <p>
+        Co w rezultacie odbija się na jakości danych i skuteczności podejmowania decyzji biznesowych.
+    </p>
+    <h2>Co nam pozostaje?</h2>
+    <p>
+        Może najpierw ustalmy jakie problemy w pierwszej kolejności chcemy rozwiązać:
+    </p>
+    <div class="img-wide">
+        <img src="https://norbert.tech/assets/images/blog/analytics-in-transactional-distributed-systems/strategy_01-f82682bfa13643ba5b8957e806e0d823.jpg" alt="Strategia i analiza" />
+    </div>
+    <ol>
+        <li>Analizowanie danych / generowanie raportów nie może mieć żadnego wpływu na pracę systemu.</li>
+        <li>Dane w raportach muszą być zawsze świeże (dopuszczalny jest opóźnienie w danych, ustalane indywidualnie)</li>
+        <li>Raporty muszą odzwierciedlać realny, niewypaczony stan systemu</li>
+        <li>Struktura danych musi być odporna na regresję</li>
+        <li>Spójna polityka retencji i archiwizowania danych</li>
+    </ol>
+    <h2>1) Separacja Zasobów</h2>
+    <p>
+        Nie jest to nic odkrywczego, jeżeli nie chcemy, żeby nasz system był narażony na przeciążenia
+        wynikające z nadużywania bazy danych poprzez generowanie raportów, musimy postawić sobie osobną bazę danych.
+    </p>
+    <p><strong>Jaką bazę wybrać pod analitykę?</strong></p>
+    <p>
+        To jest w zasadzie temat na osobny artykuł albo nawet serię artykułów.
+        Rozwiązań jest bardzo dużo, jedne lepsze, inne gorsze. Nie istnieje jedno
+        magiczne rozwiązanie na wszystkie problemy.
+    </p>
+    <p>
+        Moja rada, szczególnie dla mniejszych zespołów, niedoświadczonych w zarządzaniu danymi jest taka, żeby nie
+        rzucać się na technologie, z którą nie mamy doświadczenia.
+    </p>
+    <p>
+        Kluczowy jest odpowiedni format danych. Po zamianie wielu wąskich tabelek na jedną szeroką najprawdopodobniej
+        okaże się, że generowanie tego samego raportu tylko bez używania 20x <code>JOIN</code> nie zajmuje już 10 minut
+        a mniej niż pół sekundy.
+    </p>
+    <p>
+        A co jeżeli problemem są agregacje, a nie łączenia?
+    </p>
+    <p>
+        Wtedy, zamiast agregować w locie, lepiej przygotować tabelę zawierającą te dane w formie zagregowanej, a nie
+        surowej.
+    </p>
+    <h2>2) Świeże Dane</h2>
+    <p>
+        No dobra, ale skoro tworzymy nową, niezależną bazę danych, to w jaki sposób zadbamy o to aby dane w tej
+        bazie były świeże i aktualne?
+    </p>
+    <p>
+        Tutaj bardzo dużo zależy od dopuszczalnego opóźnienia w synchronizacji danych.
+        Najczęściej wystarczy jak baza analityczna jest około 24 godziny za bazą transakcyjną. Czyli zawiera
+        dane do "wczoraj", uwzględniając całe "wczoraj".
+    </p>
+    <p>
+        Dlaczego? Bo mało które decyzje biznesowe podejmowane są w danej chwili.
+        Jeżeli jakieś decyzje muszą być podejmowane w tak krótkim czasie, wtedy buduje się właściwe automatyzacje.
+    </p>
+    <p>
+        Jeżeli 24-godzinne opóźnienie jest akceptowalne (czasami nie jest i na to też są sposoby),
+        wystarczy, że synchronizacje przeprowadzimy kilka razy dziennie.
+        Oczywiście tu też nie ma złotej reguły. Tak samo jak nie ma reguły mówiącej jak duży zakres synchronizować na raz.
+    </p>
+    <p>
+        Jest za to jedna dobra praktyka, która ułatwia synchronizację. Polega ona na upewnieniu się, że główne tabele w
+        systemie transakcyjnym zawierają datę utworzenia/modyfikacji rekordu.
+    </p>
+    <p>
+        Posiadając te dwie informacje jesteśmy w stanie zawęzić okno synchronizacji do jakiegoś określonego okresu czasu.
+    </p>
+    <p>
+        Jak to w praktyce wygląda? Możemy np. odpalać proces synchronizacji co 6 godzin, zbierając tylko rekordy zmienione w
+        ciągu ostatnich 24 godzin.<br/>
+        <code>Oczywiście to są przykładowe liczby, te wartości trzeba ustalić na podstawie rozmiaru i zachowania danych.</code>
+    </p>
+    <p>
+        Dlaczego z 24 godzin? Takie dodatkowe zabezpieczenie. Moglibyśmy pobierać dane tylko z 7 godzin, ale jeżeli z jakiegokolwiek
+        powodu synchronizacja się nie wykona, a my tego nie wyłapiemy, możemy stracić dane.
+    </p>
+    <h2>3) Odzwierciedlenie Stanu Systemu</h2>
+    <p>
+        Moja opinia na ten temat może wydać się kontrowersyjna, ale uważam, że najlepszą wiedzę na temat danych i zachowania
+        systemu czy modułu ma zespół, który ten system/moduł buduje.
+    </p>
+    <p>
+        To właśnie ten zespół powinien być odpowiedzialny za to, żeby dane, które są generowane przez system lub jego część
+        za którą dany zespół odpowiada, trafiały do centralnego repozytorium danych.
+    </p>
+    <p>
+        Innymi słowy, to właśnie zespół implementujący daną funkcjonalność powinien na podstawie zebranych wcześniej wymagań
+        przekształcić te dane do odpowiedniego formatu i wypchnąć dalej.
+    </p>
+    <p>
+        Jest to chyba najłatwiejszy sposób upewnienia się, że dane są kompletne a programiści z danego zespołu są
+        świadomi, że te dane są gdzieś wykorzystywane. Format danych analitycznych staje się dla nich
+        swego rodzaju kontraktem – kontraktem, którego muszą przestrzegać.
+    </p>
+    <p>
+        Nie różni się to bardzo od kontraktu na schemat API.
+    </p>
+    <h2>4) Odporność na regresję</h2>
+    <p>
+        Ten punkt jest chyba najbardziej skomplikowany. Poprawna implementacja ewolucji schematu danych jest
+        często nie tyle trudna, co kłopotliwa.
+    </p>
+    <p>
+        W dużym skrócie zasady wyglądają tak:
+    </p>
+    <ul>
+        <li>Nigdy nie usuwamy kolumn</li>
+        <li>Wszystkie kolumny, które dodajemy muszą być <code>nullable</code> albo posiadać wartość domyślną</li>
+        <li>Typy kolumn możemy tylko rozszerzać przykładowo, <code>int</code> możemy zamienić na <code>bigint</code> ale nie na odwrót</li>
+        <li>Nie zmieniamy nazw kolumn</li>
+    </ul>
+    <p>
+        Czy w takim razie nie możemy niczego usuwać?
+    </p>
+    <p>
+        Możemy, ale nie byle jak. Generalnie to jak i jak często będziemy łamać wstęczną kompatybilność zależy tylko od nas.
+    </p>
+    <p>
+        Jeżeli z naszego źródła danych analitycznych korzystamy tylko wewnętrznie i, powiedzmy, analityk zajmujący się budowaniem
+        raportów jest na bieżąco z zmianami w systemie, przy odpowiedniej koordynacji moglibyśmy dodać
+        nowe tabelki, a następnie usunąć stare, dając mu chwilę na zaktualizowanie raportów.
+    </p>
+    <p>
+        Jeżeli jednak nasze źródło danych analitycznych wykorzystywane jest do <code>Data Science</code>, ale pracujemy w środowisku
+        multi-tenancy i dane analityczne/raporty udostępniane są klientom, wtedy do sprawy musimy podejść zupełnie inaczej.
+    </p>
+    <h2>Polityka przechowywania i archiwizowania danych</h2>
+    <p>
+        Tak jak wspominałem wyżej, bardzo istotne jest, aby dane w bazie analitycznej, szczególnie dostarczane przez różne
+        moduły podlegały tym samym regułom odnośnie czasu przechowywania.
+    </p>
+    <p>
+        Jeżeli stany magazynowe w systemie trzymamy tylko z ostatniego roku, a zamówienia z ostatnich 5 lat,
+        Analitycy nie będą w stanie zbudować raportu, który będzie zawierał dane z obu tych źródeł.
+    </p>
+    <p>
+        Jest to bardziej problem natury formalnej niż technicznej. Wydawało by się, że wystarczy się po prostu dogadać,
+        jednak w praktyce nie jest to takie proste.
+    </p>
+    <p>
+        Aby ustalić wspólną politykę przechowywania i archiwizowania danych należy wziąć pod uwagę nie tylko aspekty
+        techniczne, ale również prawne, biznesowe czy właśnie analityczne, co może wymagać kompromisów.
+    </p>
+    <h2>Przykłady</h2>
+    <p>
+        Popatrzmy teraz na prosty przykład procesu ETL, którego zadaniem jest przeniesienie danych z bazy transakcyjnej
+        do bazy analitycznej.
+    </p>
+    <blockquote>
+        W tym przykładzie wykorzystam <a href="https://flow-php.com" target="_blank">Flow PHP</a>, nie jest to
+        jednak coś specjalnie unikalnego dla PHP. W każdym języku możemy zbudować coś bardzo podobnego za pomocą
+        jakiejkolwiek biblioteki ułatwiającej tworzenie aplikacji CLI oraz jakiegoś narzędzia do przetwarzania danych.
+    </blockquote>
+    <p>
+        Poniższy przykład (w nieco zmienionej postaci) pochodzi z sesji live stream, którą miałem przyjemność nagrywać z Rolandem prowadzącym kanał <a href="https://nevercodealone.de/de" target="_blank">Never Code Alone</a>.
+        Materiał video znajdziesz na portalu YouTube pod frazą "Flow PHP"
+    </p>
+    <p>
+        Załóżmy, że tak mniej więcej wygląda format zamówień:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">schema
+|-- order_id: ?uuid
+|-- seller_id: uuid
+|-- created_at: datetime
+|-- updated_at: datetime
+|-- cancelled_at: ?datetime
+|-- discount: ?float
+|-- email: string
+|-- customer: string
+|-- address: map&lt;string, string&gt;
+|-- notes: list&lt;string&gt;
+|-- items: list&lt;structure{sku: string, quantity: integer, price: float}&gt;</code></pre>
+
+    <p>
+        Naszym celem jest przeniesienie tych zamówień do analitycznej bazy danych, przygotujmy więc schemat danych
+        wejściowych jak i docelowych.
+    </p>
+
+    <pre><code class="code-php" data-controller="syntax-highlight">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\DataFrames;
+
+use Flow\ETL\Adapter\Doctrine\DbalMetadata;
+use function Flow\ETL\DSL\integer_schema;
+use function Flow\ETL\DSL\uuid_schema;
+use function Flow\ETL\DSL\datetime_schema;
+use function Flow\ETL\DSL\float_schema;
+use function Flow\ETL\DSL\string_schema;
+use function Flow\ETL\DSL\map_schema;
+use function Flow\Types\DSL\type_map;
+use function Flow\Types\DSL\type_string;
+use function Flow\ETL\DSL\list_schema;
+use function Flow\Types\DSL\type_list;
+use function Flow\Types\DSL\type_structure;
+use function Flow\Types\DSL\type_integer;
+use function Flow\Types\DSL\type_float;
+use function \Flow\ETL\DSL\schema;
+use Flow\ETL\Schema;
+
+final class Orders
+{
+    public static function sourceSchema() : Schema
+    {
+        return schema(
+            uuid_schema(&quot;order_id&quot;),
+            uuid_schema(&quot;seller_id&quot;),
+            datetime_schema(&quot;created_at&quot;),
+            datetime_schema(&quot;updated_at&quot;, nullable: true),
+            datetime_schema(&quot;cancelled_at&quot;, nullable: true),
+            float_schema(&quot;discount&quot;, nullable: true),
+            string_schema(&quot;email&quot;),
+            string_schema(&quot;customer&quot;),
+            map_schema(&quot;address&quot;, type: type_map(key_type: type_string(), value_type: type_string())),
+            list_schema(&quot;notes&quot;, type: type_list(element: type_string())),
+            list_schema(&quot;items&quot;, type: type_list(element: type_structure(elements: [&quot;item_id&quot; =&gt; type_string(), &quot;sku&quot; =&gt; type_string(), &quot;quantity&quot; =&gt; type_integer(), &quot;price&quot; =&gt; type_float()]))),
+        );
+    }
+
+    public static function destinationSchema() : Schema
+    {
+        return self::sourceSchema()
+            -&gt;replace(&#039;updated_at&#039;, datetime_schema(&quot;updated_at&quot;))
+            -&gt;remove(&#039;address&#039;)
+            -&gt;add(
+                string_schema(&#039;street&#039;, metadata: DbalMetadata::length(2048)),
+                string_schema(&#039;city&#039;, metadata: DbalMetadata::length(512)),
+                string_schema(&#039;zip&#039;, metadata: DbalMetadata::length(32)),
+                string_schema(&#039;country&#039;, metadata: DbalMetadata::length(128)),
+            )
+            -&gt;remove(&#039;items&#039;)
+            -&gt;add(
+                uuid_schema(&#039;item_id&#039;, metadata: DbalMetadata::primaryKey()),
+                string_schema(&#039;sku&#039;, metadata: DbalMetadata::length(64)),
+                integer_schema(&#039;quantity&#039;),
+                integer_schema(&#039;price&#039;),
+                string_schema(&#039;currency&#039;, metadata: DbalMetadata::length(3)),
+            )
+            ;
+    }
+}</code></pre>
+
+    <p>
+        Zwróćmy uwagę na to, że docelowa struktura tabeli nie jest już zorientowana na zamówienia, a na zamówione przedmioty.
+        Naszym celem jest rozpakowanie przedmiotów zamówień tak, aby każdy był osobnym wierszem.
+    </p>
+    <p>
+        Dzięki temu analityk, który będzie musiał wygenerować raport, nie będzie już musiał kombinować i rozpakowywać
+        jsona w locie.
+    </p>
+    <p>
+        Kolumna Adres też została rozbita na kilka kolumn, dzięki czemu raport będzie można łatwiej
+        filtrować.
+    </p>
+    <p>
+        Kolejną istotną transformacją jest zamiana <code>price</code> z <code>float</code> na <code>int</code>
+        poprzez przemnożenie wartości zmiennoprzecinkowej przez 100.
+    </p>
+    <p>
+        Ostatnią już zmianą będzie dodanie informacji o tym, w jakiej walucie podawane są ceny. Tylko skąd ta informacja
+        pochodzi? Jest to właśnie bardzo istotny szczegół wynikający z niezbyt dobrej implementacji.
+        W tym konkretnym przypadku wszystkie zamówienia są w dolarach. System o tym wie, programiści o tym wiedzą,
+        ale osoba patrząca na tabelki w bazie bez kontekstu nie musi wcale posiadać takiej wiedzy.
+    </p>
+    <p>
+        Nasza docelowa struktura powinna wyglądać mniej więcej w taki sposób:
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">schema
+|-- order_id: uuid
+|-- seller_id: uuid
+|-- created_at: datetime
+|-- updated_at: datetime
+|-- cancelled_at: ?datetime
+|-- discount: ?float
+|-- email: string
+|-- customer: string
+|-- notes: list&lt;string&gt;
+|-- street: string
+|-- city: string
+|-- zip: string
+|-- country: string
+|-- item_id: uuid
+|-- sku: string
+|-- quantity: integer
+|-- price: integer
+|-- currency: string</code></pre>
+
+    <p>
+        Następnym krokiem będzie utworzenie odpowiedniej tabelki w bazie analitycznej. Możemy to osiągnąć stosunkowo
+        łatwo dzięki adapterowi dla Doctrine DBAL.
+    </p>
+
+    <pre><code class="code-php" data-controller="syntax-highlight">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Dbal;
+
+use App\DataFrames\Orders;
+use App\DataFrames\OrdersCSV;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\Provider\SchemaProvider as MigrationsSchemaProvider;
+use function Flow\ETL\Adapter\Doctrine\to_dbal_schema_table;
+
+final class SchemaProvider implements MigrationsSchemaProvider
+{
+    public const ANALYTICAL_ORDER_LINE_ITEMS = &#039;order_line_items&#039;;
+
+    public function createSchema(): Schema
+    {
+        return new Schema(
+            tables: [
+                to_dbal_schema_table(Orders::destinationSchema(), self::ANALYTICAL_ORDER_LINE_ITEMS),
+            ]
+        );
+    }
+}</code></pre>
+
+    <p>
+        W bazie analitycznej przechowywać będziemy więc "uproszczoną" lub "znormalizowaną" wersję tabeli z zamówieniami.
+        Normalizacja polega na rozpakowaniu przedmiotów zamówienia i uczynieniach ich osobnymi wierszami oraz
+        rozbiciu kolumny "Adres" na kilka kolumn.
+    </p>
+
+    <p>
+        Przyjrzyjmy się więc komendzie CLI, która będzie odpowiedzialna za przeniesienie danych z bazy transakcyjnej
+        do bazy analitycznej.
+    </p>
+
+    <pre><code class="code-php" data-controller="syntax-highlight">&lt;?php
+
+namespace App\Command;
+
+use App\DataFrames\Orders;
+use App\DataFrames\OrdersCSV;
+use App\Dbal\SchemaProvider;
+use Doctrine\DBAL\Connection;
+use Flow\Doctrine\Bulk\Dialect\SqliteInsertOptions;
+use Flow\ETL\Rows;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use function Flow\ETL\Adapter\Doctrine\from_dbal_key_set_qb;
+use function Flow\ETL\Adapter\Doctrine\pagination_key_desc;
+use function Flow\ETL\Adapter\Doctrine\pagination_key_set;
+use function Flow\ETL\Adapter\Doctrine\to_dbal_table_insert;
+use function Flow\ETL\DSL\analyze;
+use function Flow\ETL\DSL\constraint_unique;
+use function Flow\ETL\DSL\data_frame;
+use function Flow\ETL\DSL\lit;
+use function Flow\ETL\DSL\ref;
+use function Flow\ETL\DSL\rename_replace;
+use function Flow\ETL\DSL\schema_to_ascii;
+use function Flow\Types\DSL\type_datetime;
+
+#[AsCommand(
+    name: &#039;app:orders:import&#039;,
+    description: &#039;Import orders from the transactional database to the analytical database.&#039;,
+)]
+class OrdersImportCommand extends Command
+{
+    public function __construct(
+        private readonly Connection $transactional,
+        private readonly Connection $analytical,
+    )
+    {
+        parent::__construct();
+    }
+
+    protected function configure()
+    {
+        $this-&gt;addOption(&#039;start-date&#039;, null, InputOption::VALUE_REQUIRED, &#039;Start date for the data pull.&#039;, &#039;-24 hours&#039;)
+            -&gt;addOption(&#039;end-date&#039;, null, InputOption::VALUE_REQUIRED, &#039;End date for the data pull.&#039;, &#039;now&#039;)
+        ;
+    }
+
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+
+        $io-&gt;title(&#039;Importing orders&#039;);
+
+        $startDate = type_datetime()-&gt;cast($input-&gt;getOption(&#039;start-date&#039;));
+        $endDate = type_datetime()-&gt;cast($input-&gt;getOption(&#039;end-date&#039;));
+
+        $io-&gt;progressStart();
+
+        $report = data_frame()
+            -&gt;read(
+                from_dbal_key_set_qb(
+                    $this-&gt;transactional,
+                    $this-&gt;transactional-&gt;createQueryBuilder()
+                        -&gt;select(&#039;*&#039;)
+                        -&gt;from(SchemaProvider::ORDERS)
+                        -&gt;where(&#039;updated_at BETWEEN :start_date AND :end_date&#039;)
+                        -&gt;setParameter(&#039;start_date&#039;, $startDate-&gt;format(&#039;Y-m-d H:i:s&#039;))
+                        -&gt;setParameter(&#039;end_date&#039;, $endDate-&gt;format(&#039;Y-m-d H:i:s&#039;)),
+                    pagination_key_set(
+                        pagination_key_desc(&#039;updated_at&#039;),
+                        pagination_key_desc(&#039;order_id&#039;)
+                    )
+                )-&gt;withSchema(Orders::sourceSchema())
+            )
+            -&gt;withEntry(&#039;_address&#039;, ref(&#039;address&#039;)-&gt;unpack())
+            -&gt;renameEach(rename_replace(&#039;_address.&#039;, &#039;&#039;))
+            -&gt;withEntry(&#039;_item&#039;, ref(&#039;items&#039;)-&gt;expand())
+            -&gt;withEntry(&#039;_item&#039;, ref(&#039;_item&#039;)-&gt;unpack())
+            -&gt;renameEach(rename_replace(&#039;_item.&#039;, &#039;&#039;))
+            -&gt;drop(&#039;_item&#039;, &#039;items&#039;, &#039;address&#039;)
+            -&gt;withEntry(&#039;currency&#039;, lit(&#039;USD&#039;))
+            -&gt;withEntry(&#039;price&#039;, ref(&#039;price&#039;)-&gt;multiply(100))
+            -&gt;constrain(constraint_unique(&#039;item_id&#039;))
+            -&gt;match(Orders::destinationSchema())
+            -&gt;write(
+                to_dbal_table_insert(
+                    $this-&gt;analytical,
+                    SchemaProvider::ORDER_LINE_ITEMS,
+                    SqliteInsertOptions::fromArray([
+                        &#039;conflict_columns&#039; =&gt; [&#039;item_id&#039;],
+                    ])
+                )
+            )
+            -&gt;run(function (Rows $rows) use ($io) {
+                $io-&gt;progressAdvance($rows-&gt;count());
+            }, analyze: analyze())
+        ;
+
+        $io-&gt;progressFinish();
+
+        $io-&gt;newLine();
+
+        $io-&gt;definitionList(
+            &#039;Orders Import Summary&#039;,
+            new TableSeparator(),
+            [&#039;Execution time &#039; =&gt; \number_format($report-&gt;statistics()-&gt;executionTime-&gt;highResolutionTime-&gt;seconds) . &#039; seconds&#039;],
+            [&#039;Memory usage &#039; =&gt; \number_format($report-&gt;statistics()-&gt;memory-&gt;max()-&gt;inMb()) . &#039; MB&#039;],
+            [&#039;Rows inserted &#039; =&gt; \number_format($report-&gt;statistics()-&gt;totalRows())],
+        );
+
+        return Command::SUCCESS;
+    }
+}
+</code></pre>
+
+    <blockquote>
+        Oczywiście nie jest to najpiękniejsza ani nawet najbardziej poprawna forma. Normalnie komenda CLI nie zawierałaby
+        definicji <code>pipeline'u ETL</code>, jednak na potrzeby przykładu jest to dobry start.
+    </blockquote>
+
+    <p>
+        Dedykowany centralny magazyn danych, to niewątpliwie kusząca opcja, szczególnie w miejscach
+        gdzie brak widoczności uniemożliwia sprawne podejmowanie decyzji.
+    </p>
+    <p>
+        Na szczęscie jest to ten rodzaj funkcjonalności, którą można dołozyć w zasadzie na każdym etapie życia projektu.
+    </p>
+    <p>
+        Może wymagać wprowadzenia dodatkowych procesów oraz pewnej dyscypliny od zespołów, jednak korzyści płynące z takiego rozwiązania są ogromne.
+    </p>
+    <ul>
+        <li>Nie ma obawy o to, że analityka wpłynie na pracę systemu</li>
+        <li>Mamy dostęp do wszystkich zakamarków naszego systemu, każdego mikroserwisu czy modułu</li>
+        <li>Taka centralna baza danych to najlepszy prezent dla analityków</li>
+        <li>Data Science nie polega już na przepalaniu czasu na oczyszczanie danych</li>
+        <li>Możemy łatwo i bezpiecznie podpiąć w zasadzie dowolne narzędzia typu Business Intelligence</li>
+        <li>Tworzymy kulturę pracy z danymi w ramach naszej organizacji</li>
+    </ul>
+    <p>
+        Oczywiście jak wszystko co nowe, takie zmiany mogą wyglądać na trudne do wprowadzenia.
+        Brak doświadczenia w pracy z danymi przynajmniej na początkowych etapach sprawia, że zadanie to może wydawać
+        się wręcz niewykonalne.
+    </p>
+    <p>
+        Z mojego doświadczenia wynika jednak, że najtrudniej jest zacząć, kiedy mamy już:
+    </p>
+    <ul>
+        <li>Kilka pierwszych <code>Pipeline'ów</code> przetwarzających dane</li>
+        <li>Kilka lub kilkanaście schematów naszych danych</li>
+        <li>Jakieś bardziej złożone transformacje</li>
+        <li>Przygotowane testy</li>
+        <li>Ustalone procesy i procedury</li>
+    </ul>
+    <p>
+        Praca idzie wręcz maszynowo.
+    </p>
+    <p>
+        Warto jednak pamiętać, że nie ma jednego uniwersalnego rozwiązania, które będzie pasować do każdego systemu.
+        W każdym przypadku należy dostosować podejście do specyfiki danego systemu i organizacji.
+    </p>
+
+    <h2>Jak zacząć?</h2>
+    <p>
+        Jeśli potrzebujesz pomocy w zakresie budowy centralnego magazynu danych, chętnie Ci pomogę.<br/>
+        <a href="https://norbert.tech/consulting">Skontaktuj się ze mną</a>, a wspólnie stworzymy rozwiązanie, które będzie idealnie dopasowane do Twoich potrzeb.
+    </p>
+    <p>
+        Zachęcam również do odwiedzenia serwera <a href="https://discord.gg/5dNXfQyACW" target="_blank">Discord - Flow PHP</a>, na którym
+        możemy porozmawiać bezpośrednio.
+    </p>
+    <div class="img-wide">
+        <img src="https://norbert.tech/assets/images/blog/analytics-in-transactional-distributed-systems/consulting_01-fa277dfb3736a033cbfcf1ac931afb08.jpg" alt="Konsultacje" />
+    </div>
+
+    </article>
+    <div class="mb-2 mx-auto max-w-screen-lg text-center">
+        <script src="https://giscus.app/client.js"
+                data-repo="norberttech/norbert.tech"
+                data-repo-id="MDEwOlJlcG9zaXRvcnkyMjQ0MDQwNDA="
+                data-category="Comments"
+                data-category-id="DIC_kwDODWAiSM4CionD"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="en"
+                crossorigin="anonymous"
+                async>
+        </script>
+    </div>
+    </main>
+
+    <footer class="p-4 bg-sky-50 absolute bottom-0 w-full">
+        <div class="mx-auto max-w-screen-2xl text-center">
+            <a href="/">by @norbert_tech</a>
+        </div>
+    </footer>
+</body>
+</html>
