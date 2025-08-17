@@ -38,11 +38,11 @@ final class Posts
         ],
         [
             'id' => 4,
-            'title' => 'Analiza danych w systemach transakcyjnych',
-            'labels' => ['data warehousing', 'ETL', 'data processing'],
-            'description' => 'W jaki sposób podejść do analizy danych w systemach transakcyjnych, przede wszystkim jak przygotować dane do analizy.',
+            'title' => 'Analiza danych w rozproszonych systemach transakcyjnych',
+            'labels' => ['analiza danych', 'magazyn danych', 'ETL', 'przetwarzanie danych', 'systemy transakcyjne'],
+            'description' => 'Czy Twój system transakcyjny pada pod naporem raportów? Szukasz sposobu na zbudowanie jednolitego źródła danych dla rozproszonego systemu? Dowiedz się, w jaki sposób zacząć zbudować wydajny magazyn danych analitycznych oraz jak uniknąć podstawowych.',
             'date' => '2025-08-12',
-            'slug' => 'analiza-danych-w-systemach-transakcyjnych',
+            'slug' => 'analiza-danych-w-rozproszonych-systemach-transakcyjnych',
             'language' => 'pl',
         ],
     ];
