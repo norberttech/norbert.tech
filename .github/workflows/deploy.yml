@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -55,6 +55,7 @@ jobs:
     - name: Commit generated files
       if: steps.check_changes.outputs.changes == 'true'
       run: |
+        git status --porcelain
         git add .
         git commit -m "Auto-build: Update generated files"
         git push origin main
