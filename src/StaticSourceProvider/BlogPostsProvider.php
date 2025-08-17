@@ -29,6 +29,30 @@ final class BlogPostsProvider implements SourceProvider
             ]);
         }
 
+        foreach ($posts->all('de') as $post) {
+            $sources[] = new Source('blog_post_language', [
+                'date' => $post->date->format('Y-m-d'),
+                'language' => 'de',
+                'slug' => $post->slug,
+            ]);
+        }
+
+        foreach ($posts->all('fr') as $post) {
+            $sources[] = new Source('blog_post_language', [
+                'date' => $post->date->format('Y-m-d'),
+                'language' => 'fr',
+                'slug' => $post->slug,
+            ]);
+        }
+
+        foreach ($posts->all('es') as $post) {
+            $sources[] = new Source('blog_post_language', [
+                'date' => $post->date->format('Y-m-d'),
+                'language' => 'es',
+                'slug' => $post->slug,
+            ]);
+        }
+
         $sources[] = new Source('blog_post_old_redirect', []);
 
         return $sources;

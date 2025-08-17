@@ -21,3 +21,5 @@ services:
     NorbertTech\Portfolio\StaticSourceProvider\:
         resource: '../src/StaticSourceProvider/'
         tags: ['static_content_generator.source_provider']
+
+    NorbertTech\Portfolio\Blog\Posts:

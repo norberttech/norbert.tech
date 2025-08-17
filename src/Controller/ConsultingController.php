@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class ConsultingController extends AbstractController
 {
-    #[Route('/consulting', name: 'consulting')]
+    #[Route('/consulting', name: 'consulting', options: ['sitemap' => true])]
     public function index(Request $request): Response
     {
         return $this->render('consulting/index.html.twig', []);

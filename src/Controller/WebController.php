@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WebController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route('/', name: 'home', options: ['sitemap' => true])]
     public function index(Request $request): Response
     {
         return $this->render('index.html.twig', []);

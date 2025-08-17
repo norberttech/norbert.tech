@@ -10,13 +10,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class BlogController extends AbstractController
 {
+    public function __construct(
+        private readonly Posts $posts,
+    ) {}
+
     #[Route('/blog', name: 'blog')]
     public function index(): Response
     {
-        $posts = new Posts();
-
         return $this->render('blog/index.html.twig', [
-            'posts' => $posts->all(),
+            'posts' => $this->posts,
         ]);
     }
 
@@ -36,10 +38,11 @@ class BlogController extends AbstractController
             return new RedirectResponse($this->generateUrl('blog_post', ['date' => $date, 'slug' => $slug]), 301);
         }
 
-        $post = (new Posts())->findByDateAndSlug($date, $slug, $language);
+        $post = $this->posts->findByDateAndSlug($date, $slug, $language);
 
         return $this->render('blog/posts/' . $date . '/' . $slug . '/post.html.twig', [
             'post' => $post,
+            'posts' => $this->posts,
             'template_folder' => 'blog/posts/' . $date . '/' . $slug,
         ]);
     }
@@ -47,10 +50,11 @@ class BlogController extends AbstractController
     #[Route('/blog/{date}/{slug}', name: 'blog_post')]
     public function post(string $date, string $slug): Response
     {
-        $post = (new Posts())->findByDateAndSlug($date, $slug, 'en');
+        $post = $this->posts->findByDateAndSlug($date, $slug, 'en');
 
         return $this->render('blog/posts/' . $date . '/' . $slug . '/post.html.twig', [
             'post' => $post,
+            'posts' => $this->posts,
             'template_folder' => 'blog/posts/' . $date . '/' . $slug,
         ]);
     }

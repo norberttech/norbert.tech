@@ -5,44 +5,75 @@
 {% block header %}{% endblock %}
 
 {% block content %}
-<h1 class="font-bold text-4xl md:mb-6 p-2">Norbert - Personal Blog</h1>
-<p class="mb-2">
-    Welcome to my personal blog. Here you'll find articles on various topics, including software architecture, web development, and data processing.<br/>
-    I hope you find the content useful and informative.
-</p>
-<p class="mb-4">
-    Some of my other articles are available on the following websites:
-</p>
-<ul class="list list-disc pl-10 mb-5">
-    <li class="mb-2"><a href="https://zawarstwaabstrakcji.pl" target="_blank">Za Warstwą Abstrakcji</a> - Only in 🇵🇱 </li>
-    <li class="mb-2"><a href="https://flow-php.com/blog" target="_blank">Flow PHP - Blog</a> - Data Processing</li>
-</ul>
-{% for post in posts %}
-    <article class="p-2 mb-6">
-        <div class="mb-2">
-            <img src="{{ asset('images/icons/pencil.svg') }}" width="32" height="32" alt="feature" class="inline mr-2 bg-blue-100 p-1 -mt-4 rounded">
-            <a
-                href="{{ path('blog_post', {date: post.date | date('Y-m-d'), slug: post.slug}) }}"
-            >
-                <h2 class="inline text-4xl font-bold">{{ post.title }}</h2>
-            </a>
-        </div>
-        <div>
-        {% for label in post.labels %}
-            <small><span class="badge badge-info">{{ label }}</span></small>
-        {% endfor %}
-        </div>
-        <hr class="text-blue-100 my-4 border-t-2 rounded">
-        <h3 class="mb-2 text-sm">Posted on {{ post.date | date }}</h3>
-        <p class="mb-2">
-            {{ post.description }}
-        </p>
-        <a
-                href="{{ path('blog_post', {date: post.date | date('Y-m-d'), slug: post.slug}) }}"
-                class="text-blue-500 hover:underline mt-2"
-        >
-            Read more
-        </a>
-    </article>
-{% endfor %}
+<div class="mx-auto max-w-screen-lg px-2">
+    <h1 class="font-bold text-4xl md:mb-6 p-2">Norbert - Personal Blog</h1>
+    <p class="mb-2">
+        Welcome to my personal blog. Here you'll find articles on various topics, including software architecture, web development, and data processing.
+        I hope you find the content useful and informative.
+    </p>
+    <p class="mb-4">
+        Some of my other articles are available on the following websites:
+    </p>
+    <ul class="list list-disc pl-10 mb-5">
+        <li class="mb-2"><a href="https://zawarstwaabstrakcji.pl" target="_blank">Za Warstwą Abstrakcji</a> - Only in 🇵🇱 </li>
+        <li class="mb-2"><a href="https://flow-php.com/blog" target="_blank">Flow PHP - Blog</a> - Data Processing</li>
+    </ul>
+    {% for post in posts.all %}
+        <article class="p-2 mb-6">
+            <div class="mb-2">
+                <img src="{{ asset('images/icons/pencil.svg') }}" width="32" height="32" alt="feature" class="inline mr-2 bg-blue-100 p-1 -mt-4 rounded">
+                <a
+                    href="{{ path('blog_post', {date: post.date | date('Y-m-d'), slug: post.slug}) }}"
+                >
+                    <h2 class="inline text-4xl font-bold">{{ post.title }}</h2>
+                </a>
+            </div>
+            <div>
+            {% for label in post.labels %}
+                <small><span class="badge badge-info">{{ label }}</span></small>
+            {% endfor %}
+            </div>
+            <hr class="text-blue-100 my-4 border-t-2 rounded">
+            <h3 class="mb-2 text-sm">Posted on {{ post.date | date('Y-m-d') }}</h3>
+            <p class="mb-2">
+                {{ post.description }}
+            </p>
+            <ul class="mt-2 pl-[20px] list list-disc">
+                <li>
+                    <a href="{{ path('blog_post', {date: post.date | date('Y-m-d'), slug: post.slug}) }}"
+                       class="text-lg hover:opacity-80"
+                       title="English">Read in: 🇺🇸 English</a>
+                </li>
+                {% for translationId in post.translationsIds %}
+                    {% set translatedPost = posts.get(translationId) %}
+                    {% if translatedPost.language == 'pl' %}
+                        <li>
+                            <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
+                               class="text-lg hover:opacity-80"
+                               title="Polish">Read in: 🇵🇱 Polish</a>
+                        </li>
+                    {% elseif translatedPost.language == 'de' %}
+                        <li>
+                            <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
+                               class="text-lg hover:opacity-80"
+                               title="Deutsch">Read in: 🇩🇪 Deutsch</a>
+                        </li>
+                    {% elseif translatedPost.language == 'es' %}
+                        <li>
+                            <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
+                               class="text-lg hover:opacity-80"
+                               title="Spanish">Read in: 🇪🇸 Spanish</a>
+                        </li>
+                    {% elseif translatedPost.language == 'fr' %}
+                        <li>
+                            <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
+                               class="text-lg hover:opacity-80"
+                               title="French">Read in: 🇫🇷 French</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </article>
+    {% endfor %}
+</div>
 {% endblock %}

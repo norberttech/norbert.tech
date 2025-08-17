@@ -1,0 +1,644 @@
+{% extends 'blog/post.html.twig' %}
+
+{%- block title -%}
+    {{ post.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {{ post.description }}
+{%- endblock -%}
+
+{% block article %}
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg') }}" alt="Data Analytics in Distributed Transactional Systems" />
+    </div>
+
+    <h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
+    <div class="mb-2">
+        <small class="text-sm">Published {{ post.date | date }}</small>
+    </div>
+    <div class="mb-4">
+        {% for label in post.labels %}
+            <small><span class="badge badge-info">{{ label }}</span></small>
+        {% endfor %}
+    </div>
+    <p>
+        In this post, I'll tackle the problem of data analytics in distributed transactional systems.<br/>
+        If you're looking for ideas on building a central data warehouse that will let you gather data from across your entire system,
+        regardless of its fragmentation, without drowning in operational costs, then this post is for you.
+    </p>
+
+    <h2>It all starts innocently enough</h2>
+    <p>
+        Most systems we build daily store data in some relational database.
+        PostgreSQL has become an extremely popular and solid choice, practically becoming
+        the industry standard in recent years.
+    </p>
+    <p>
+        The story of most projects tends to look pretty similar: we start by validating an idea, gain
+        our first users, the system starts generating revenue, business figures out how to increase profits, new
+        features emerge. Each new feature means a few new tables in the database.
+    </p>
+    <p>
+        To speed up development, we use an ORM, automatically generate migrations that create and
+        update the database schema.
+    </p>
+    <p>
+        Initially everything goes smoothly, new features bring expected profits, the business starts scaling.
+        We hire more developers to build more features in parallel.
+    </p>
+    <p>
+        Occasionally someone reports that the system starts "slowing down" in certain places, quick reconnaissance, even
+        quicker diagnosis - there's a missing index in some table.
+    </p>
+    <p>
+        We add an index in the ORM mapping configuration for a field the system frequently searches on.
+        Problem solved.
+    </p>
+    <p>
+        The growing team of developers places great emphasis on quality, perhaps even using
+        advanced software development techniques like Event Storming or Domain-Driven Design.<br/>
+        CI/CD runs countless tests, making sure changes don't introduce regressions.
+    </p>
+    <p>
+        The idyll continues, the team or perhaps multiple teams start adding new modules to the system. Modules properly
+        isolated, responsible for specific tasks, never crossing their boundaries or stepping on
+        other modules' toes.
+    </p>
+    <p>
+        For communication, we obviously use queues, implementing the
+        <a href="https://event-driven.io/en/outbox_inbox_patterns_and_delivery_guarantees_explained/" target="_blank">Outbox/Inbox
+            Pattern</a>
+    </p>
+    <p>
+        To ensure proper isolation, we establish rules stating that each module only has access
+        to database tables that belong to it. To get data from another module, you must
+        go to that module, whether through some internal API or any other way.
+    </p>
+    <p>
+        Every so often, business comes to us asking <strong>can you quickly generate this
+            report for us?</strong>.
+        Of course, a few lines of SQL, maybe a few dozen, and the report is ready.
+    </p>
+    <p>
+        Business is happy, the report in CSV format goes to Excel (the most popular BI tool), business draws
+        conclusions, plans new features and changes.
+    </p>
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/happy_business_01.jpg') }}" alt="Business Intelligence" />
+    </div>
+
+    <h2>Time passes, new tables sprout like mushrooms after rain</h2>
+    <p>
+        We can persist in this state for a very long time, even several good years.
+    </p>
+    <p>
+        Meanwhile, someone somewhere will surely come up with the idea to add reporting capabilities to the system.
+        It's only a matter of time.
+    </p>
+    <p>
+        System status reports are one of the most crucial tools for business, providing insight into user behaviors,
+        preferences, and trends. They allow not only understanding what's happening but also properly planning what's
+        about to happen.
+    </p>
+    <p>
+        The better and more detailed the reports, the better decisions can be made based on them. Good
+        business decisions translate to higher profits, higher profits translate to bigger budgets.
+        Bigger budgets translate to better tools, larger teams, better salaries, or bonuses.
+    </p>
+    <p>
+        It should be in every developer's interest to provide business with the best and most
+        precise data possible, after all, better results directly translate to better profits.
+    </p>
+    <h2>First symptoms</h2>
+    <p>
+        The system is running, generating profits. It consists of about 5, maybe even 10 modules, each module consists of 20-50
+        tables in the database. Each module provides its own reports.
+    </p>
+    <ul>
+        <li>Sales</li>
+        <li>Marketing</li>
+        <li>Logistics</li>
+        <li>Inventory Levels</li>
+        <li>Users</li>
+    </ul>
+    <p>
+        Each module exposes only part of the data, a piece of the bigger picture, but none provides a view of the whole.
+    </p>
+    <p>
+        Teams have indeed implemented reference keys to data from other modules, they even managed
+        to create a single place in the user interface from which reports can be generated.
+    </p>
+    <p>
+        But that's still not enough...
+    </p>
+    <p>
+        Very quickly it turns out that reports generated in different modules, written by different developers, perhaps
+        even in different technologies, have different data formats, different naming standards.
+    </p>
+    <p>
+        Date ranges are interpreted differently, one module includes start and end dates, another excludes them,
+        and yet another creates a right-open interval to simplify pagination, because they happen to have
+        an API that uses the same piece of code.
+    </p>
+    <p>
+        Since each module is independent, has its boundaries, its nomenclature, at some point we realize
+        that what we call something in one module, another module exposes under a completely different name.
+        Because in that module's context, it makes sense.
+    </p>
+    <p>
+        Over time, we'll probably also realize that each team has defined different data retention and
+        storage policies.
+        Despite having data from the last 5 years in a key module, we can't do anything with it because modules that
+        provided data needed to enrich the basic report only have data from the last 2 years.
+    </p>
+    <p>
+        These aren't problems that a bit of Excel magic couldn't solve (except perhaps for the missing
+        data).
+        We'll rename these columns, delete those, add a quick filter and that's enough.
+    </p>
+    <p>
+        We'll create one big file with a sheet named "Dashboard", and all the
+        others will be read-only, feeding the dashboard.
+    </p>
+    <p>
+        This approach might even work for a while. Maybe even longer than a while, but let's not kid ourselves.
+        It will all eventually fail, and according to
+        <a href="https://en.wikipedia.org/wiki/Murphy%27s_law" target="_blank">Murphy's laws</a>,
+        it will fail at the worst possible moment.
+    </p>
+    <h2>What's wrong with Excel?</h2>
+    <p>
+        Nothing! Excel is a fantastic tool. The problem isn't with Excel, but with how it's used.
+    </p>
+    <p>
+        All this magic of cleaning and preparing data shouldn't happen in Excel, not
+        on a larger scale. If we're talking about a one-time quick report, no problem. We do what we must,
+        hack together formulas, analyze the data, and forget about it.
+    </p>
+    <p>
+        But if this is to be part of our daily routine, if we cyclically have to go through the same
+        process, following constant changes and system evolution, sooner or later those spreadsheets will become
+        outdated.
+    </p>
+    <p>
+        Columns no longer exist or have changed names, new columns have appeared, the data format has changed, or
+        worse, one of the teams managing a module deleted some data without realizing it was being used
+        by some business user somewhere in one of their reports that they open once a quarter.
+    </p>
+    <p>
+        In the long run, more complex spreadsheets that pull data from automatically generated
+        system reports, which are then merged based on implicit rules, are unmaintainable.
+    </p>
+    <h2>So maybe we'll hook up some BI tool?</h2>
+    <p>
+        Thought many developers who have repeatedly encountered the problem of generating reports.
+    </p>
+    <p>
+        Take <a href="https://www.metabase.com/" target="_blank">Metabase</a> for example. A free tool
+        that we can set up in minutes using Docker.
+    </p>
+    <p>
+        Give it access to our database and several or all tables, and through a very user-friendly interface,
+        business will be able to easily and pleasantly generate the most complex reports.
+    </p>
+    <p>
+        Reports that can contain data from multiple modules simultaneously!
+    </p>
+    <p>
+        We can even hire a data analyst with basic SQL knowledge who will achieve everything that can't
+        be clicked through with a properly prepared query.
+    </p>
+    <h2>Except this doesn't solve the problem</h2>
+    <p>
+        It just postpones it.
+    </p>
+    <p>
+        If we look closely at what has changed, only one thing has changed. The tool...
+        We've moved the problem of cleaning and joining data from Excel to Metabase.
+    </p>
+    <p>
+        Excel has indeed returned to its original role, we can now throw reports downloaded from Metabase into Excel.
+    </p>
+    <p>
+        But our implicit logic of joining/cleaning data has moved from spreadsheets to SQL
+        queries.
+    </p>
+    <p>
+        Besides that, all problems remain the same:
+    </p>
+    <ul>
+        <li>data inconsistency</li>
+        <li>naming inconsistency</li>
+        <li>lack of unified backward compatibility policy</li>
+        <li>lack of unified data retention policy</li>
+    </ul>
+    <h2>So maybe we'll establish processes and rules?</h2>
+    <p>
+        Most of the above problems can be solved by implementing appropriate processes and rules.
+    </p>
+    <p>
+        We can establish naming standards stating that every table in the database must contain a module prefix in its name, and
+        columns are named in lowercase and separated by underscores.
+    </p>
+    <p>
+        We can establish that each module stores data from the last 5 years (hot storage), everything older is
+        archived (cold storage).
+    </p>
+    <p>
+        We can establish that date ranges are always treated as right-open intervals.
+    </p>
+    <p>
+        We can establish that we don't delete any columns from the database, or that before deleting anything, we first
+        enter a transition period during which we show every system user
+        which columns will change and how.
+    </p>
+    <p>
+        Even if we assume for the sake of discussion that these processes can be globally implemented across several
+        teams, and that these teams will strictly and very carefully follow them, <strong>it's not enough...</strong>
+    </p>
+    <h2>Database scaling isn't cheap</h2>
+    <p>
+        Especially when we rely on cloud solutions.
+    </p>
+    <p>
+        Let's imagine a situation where during peak system operation hours (when users generate the most
+        transactions), a business analyst working on their own schedule needs to generate a report based on a typical, SQL
+        query that's thousands of lines long?
+    </p>
+    <p>
+        The analyst runs the query, the database starts grinding. The query takes 5, 10, 15 minutes.
+        The database starts sweating.
+    </p>
+    <p>
+        Users bombard the system with new orders (or whatever other operations that generate lots
+        of writes) while the analyst waits for results.
+    </p>
+    <p>
+        At the same moment, someone from business needs to quickly check several reports, each containing
+        "total row count in the table".
+        There are several such people.
+    </p>
+    <p>
+        All these operations overlap, our already heavily loaded database can't keep up.
+    </p>
+    <p>
+        Some user transactions don't go through. <br/>
+        The system is barely breathing. Wait time for the most basic operations is measured in seconds.
+    </p>
+    <p>
+        And now the cherry on top, when all these Dantean scenes are taking place, when Pager Duty is red-hot
+        from all types and kinds of incidents, when teams are panicking trying to bring the system back to life,
+        DevOps are figuring out how to quickly scale the database...
+    </p>
+    <div class="img-wide">
+        <img class="mt-[-150px]" src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/construction_01.jpg') }}" alt="Construction work" />
+    </div>
+    <p>
+        The CEO starts a presentation for a potential business partner, with whom cooperation
+        is to prove crucial in the company's development strategy...
+    </p>
+    <h2>So maybe we'll just set up a replica?</h2>
+    <p>
+        After all, reports won't overload our transactional database.
+    </p>
+    <p>
+        We'll indeed double the database maintenance costs, but we'll reduce the risk of system overload and we'll be
+        able to connect our favorite business intelligence tool directly to the replica, giving us real-time data.
+    </p>
+    <p>
+        Sounds fantastic, but in practice it's not that simple.
+    </p>
+    <p>
+        Even ignoring potential problems arising from the very nature of replication, the main and fundamental problem
+        I most often encounter is <strong>perception</strong>.
+    </p>
+    <p>
+        A developer who generated those tables through ORM mappings will look at database tables completely differently
+        than a data analyst.
+    </p>
+    <p>
+        The developer will know which tables need to be joined together to get the complete picture.
+        They'll understand the constraints and conditions embedded somewhere in the application code.
+        Above all, the developer knows or at least should be familiar with the system's (its data's) lifecycle.
+    </p>
+    <p>
+        All this knowledge is usually not available to analysts.
+    </p>
+    <p>
+        It's like telling someone to look at something through a keyhole. You can certainly see something.
+        Some conclusions can be drawn, but it will be very difficult to reconstruct the whole.
+    </p>
+    <p>
+        It's enough that we have a JSONB column in the database where we store some data structures.
+        Let's say the system allows 3 valid combinations of the same structure, but one is super rare, so rare
+        that it hasn't occurred in the system yet. Looking at the data, even comprehensively, the analyst simply can't know
+        that there are 3 combinations of one structure. During normalization, they'll account for 2 cases, while the third
+        becomes a ticking time bomb that will explode, as always, at the least expected moment.
+    </p>
+    <p>
+        In other words, if we have several independent modules in the system. Each with its database, or at least
+        its tables in the database. Which in total gives us 200-300 tables, expecting that an analyst will handle this
+        without problems, won't make mistakes, and reports won't deviate from expectations, is naive to say the least.
+    </p>
+    <p>
+        Nevertheless, exposing a copy/replica of the database for analysts and giving it a 4-letter name derived
+        from the word "analytics" is still widely used.
+    </p>
+    <p>
+        BI tools compete to create the best user interface through which reports can be
+        clicked together.
+        They promise that we'll be able to analyze data without SQL.
+    </p>
+    <p>
+        Yes, this can work, in many places it does work. What we don't talk about loudly though is:
+    </p>
+    <ul>
+        <li>Problems with backward compatibility and data structure changes</li>
+        <li>Problems with properly maintaining/versioning/testing gigantic SQL queries/scripts
+            normalizing data on the fly
+        </li>
+        <li>Replicas/Copies generate additional costs</li>
+        <li>Reducing replica resources is either impossible or prevents generating reports in acceptable
+            times
+        </li>
+    </ul>
+    <p>
+        Which ultimately affects data quality and the effectiveness of business decision-making.
+    </p>
+    <h2>What are we left with?</h2>
+    <p>
+        Maybe let's first establish what problems we want to solve first:
+    </p>
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/strategy_01.jpg') }}" alt="Strategy and analysis" />
+    </div>
+    <ol>
+        <li>Analyzing data/generating reports must have no impact on system operation.</li>
+        <li>Data in reports must always be fresh (data delay is acceptable, determined individually)</li>
+        <li>Reports must reflect the real, undistorted state of the system</li>
+        <li>Data structure must be resistant to regression</li>
+        <li>Consistent data retention and archiving policy</li>
+    </ol>
+    <h2>1) Resource Separation</h2>
+    <p>
+        This is nothing groundbreaking, if we don't want our system to be exposed to overloads
+        resulting from database abuse through report generation, we need to set up a separate database.
+    </p>
+    <p><strong>What database to choose for analytics?</strong></p>
+    <p>
+        This is basically a topic for a separate article or even a series of articles.
+        There are many solutions, some better, some worse. There is no one
+        magical solution to all problems.
+    </p>
+    <p>
+        My advice, especially for smaller teams inexperienced in data management, is not to
+        jump on technologies you have no experience with.
+    </p>
+    <p>
+        The key is the appropriate data format. After converting many narrow tables into one wide one, you'll probably
+        find that generating the same report without using 20x <code>JOIN</code> no longer takes 10 minutes
+        but less than half a second.
+    </p>
+    <p>
+        And what if the problem is aggregations, not joins?
+    </p>
+    <p>
+        Then, instead of aggregating on the fly, it's better to prepare a table containing this data in aggregated form, not
+        raw.
+    </p>
+    <h2>2) Fresh Data</h2>
+    <p>
+        Okay, but since we're creating a new, independent database, how do we ensure that data in this
+        database is fresh and up to date?
+    </p>
+    <p>
+        A lot depends on the acceptable delay in data synchronization.
+        Most often it's enough if the analytical database is about 24 hours behind the transactional database. That is, it contains
+        data up to "yesterday", including all of "yesterday".
+    </p>
+    <p>
+        Why? Because few business decisions are made in the moment.
+        If some decisions must be made in such a short time, then proper automations are built.
+    </p>
+    <p>
+        If a 24-hour delay is acceptable (sometimes it's not and there are ways to handle that too),
+        it's enough to run synchronization a few times a day.
+        Of course, there's no golden rule here either. Just as there's no rule saying how large a range to synchronize at once.
+    </p>
+    <p>
+        There is, however, one good practice that facilitates synchronization. It involves making sure that the main tables in
+        the transactional system contain the record creation/modification date.
+    </p>
+    <p>
+        Having these two pieces of information, we're able to narrow the synchronization window to a specific time period.
+    </p>
+    <p>
+        How does this look in practice? We can, for example, run the synchronization process every 6 hours, collecting only records changed in
+        the last 24 hours.<br/>
+        <code>Of course, these are example numbers, these values need to be determined based on the size and behavior of the data.</code>
+    </p>
+    <p>
+        Why 24 hours? It's an additional safeguard. We could fetch data from just 7 hours, but if for any
+        reason synchronization doesn't execute and we don't catch it, we might lose data.
+    </p>
+    <h2>3) Reflecting System State</h2>
+    <p>
+        My opinion on this topic might seem controversial, but I believe that the best knowledge about data and system
+        or module behavior belongs to the team building that system/module.
+    </p>
+    <p>
+        It's precisely this team that should be responsible for ensuring that data generated by the system or its part
+        that the team is responsible for, reaches the central data repository.
+    </p>
+    <p>
+        In other words, it's the team implementing a given functionality that should, based on previously gathered requirements,
+        transform this data into the appropriate format and push it forward.
+    </p>
+    <p>
+        This is probably the easiest way to ensure that data is complete and developers from a given team are
+        aware that this data is being used somewhere. The analytical data format becomes
+        a kind of contract for them – a contract they must follow.
+    </p>
+    <p>
+        This isn't much different from an API schema contract.
+    </p>
+    <h2>4) Resistance to Regression</h2>
+    <p>
+        This point is probably the most complex. Proper implementation of data schema evolution is
+        often not so much difficult as troublesome.
+    </p>
+    <p>
+        In short, the rules look like this:
+    </p>
+    <ul>
+        <li>Never delete columns</li>
+        <li>All columns we add must be <code>nullable</code> or have a default value</li>
+        <li>Column types can only be extended, for example, <code>int</code> can be changed to <code>bigint</code> but not vice versa</li>
+        <li>Don't change column names</li>
+    </ul>
+    <p>
+        So can't we delete anything?
+    </p>
+    <p>
+        We can, but not just anyhow. Generally, how and how often we break backward compatibility depends only on us.
+    </p>
+    <p>
+        If we only use our analytical data source internally and, let's say, the analyst building
+        reports is up to date with system changes, with proper coordination we could add
+        new tables and then delete old ones, giving them time to update reports.
+    </p>
+    <p>
+        However, if our analytical data source is used for <code>Data Science</code>, but we work in a
+        multi-tenancy environment and analytical data/reports are made available to clients, then we must approach the matter completely differently.
+    </p>
+    <h2>Data Storage and Archiving Policy</h2>
+    <p>
+        As I mentioned above, it's very important that data in the analytical database, especially provided by different
+        modules, follows the same rules regarding storage time.
+    </p>
+    <p>
+        If we keep inventory levels in the system only from the last year, but orders from the last 5 years,
+        analysts won't be able to build a report that contains data from both sources.
+    </p>
+    <p>
+        This is more a formal than technical problem. It would seem that you just need to agree,
+        but in practice it's not that simple.
+    </p>
+    <p>
+        To establish a common data storage and archiving policy, you need to consider not only technical
+        aspects, but also legal, business, and analytical ones, which may require compromises.
+    </p>
+    <h2>Examples</h2>
+    <p>
+        Let's now look at a simple ETL process example, whose task is to transfer data from the transactional database
+        to the analytical database.
+    </p>
+    <blockquote>
+        In this example, I'll use <a href="https://flow-php.com" target="_blank">Flow PHP</a>, but this isn't
+        something particularly unique to PHP. In any language, we can build something very similar using
+        any library that facilitates creating CLI applications and some data processing tool.
+    </blockquote>
+    <p>
+        The example below (in a slightly modified form) comes from a live stream session I had the pleasure of recording with Roland, who runs the <a href="https://nevercodealone.de/de" target="_blank">Never Code Alone</a> channel.
+        You can find the video material on YouTube by searching for "Flow PHP"
+    </p>
+    <p>
+        Let's assume that the order format looks something like this:
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/schema.txt') | e('html') }}</code></pre>
+
+    <p>
+        Our goal is to transfer these orders to the analytical database, so let's prepare the schema for both
+        input and target data.
+    </p>
+
+    <pre><code class="code-php" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/orders.php') | e('html') }}</code></pre>
+
+    <p>
+        Notice that the target table structure is no longer order-oriented, but order item-oriented.
+        Our goal is to unpack order items so that each is a separate row.
+    </p>
+    <p>
+        Thanks to this, the analyst who will need to generate a report won't have to figure out how to unpack
+        JSON on the fly.
+    </p>
+    <p>
+        The Address column has also been split into several columns, making the report easier to
+        filter.
+    </p>
+    <p>
+        Another important transformation is converting <code>price</code> from <code>float</code> to <code>int</code>
+        by multiplying the floating-point value by 100.
+    </p>
+    <p>
+        The last change will be adding information about what currency the prices are in. But where does this information
+        come from? This is a very important detail resulting from poor implementation.
+        In this particular case, all orders are in dollars. The system knows this, developers know this,
+        but someone looking at the tables in the database without context might not have this knowledge.
+    </p>
+    <p>
+        Our target structure should look something like this:
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/final-schema.txt') | e('html') }}</code></pre>
+
+    <p>
+        The next step will be to create the appropriate table in the analytical database. We can achieve this relatively
+        easily thanks to the adapter for Doctrine DBAL.
+    </p>
+
+    <pre><code class="code-php" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/schema-provider.php') | e('html') }}</code></pre>
+
+    <p>
+        So in the analytical database, we'll store a "simplified" or "normalized" version of the orders table.
+        Normalization involves unpacking order items and making them separate rows, as well as
+        splitting the "Address" column into several columns.
+    </p>
+
+    <p>
+        Let's look at the CLI command that will be responsible for transferring data from the transactional database
+        to the analytical database.
+    </p>
+
+    <pre><code class="code-php" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/order-import-command.php') | e('html') }}</code></pre>
+
+    <blockquote>
+        Of course, this isn't the most beautiful or even the most correct form. Normally, a CLI command wouldn't contain
+        the <code>ETL pipeline</code> definition, but for the example's purposes, it's a good start.
+    </blockquote>
+
+    <p>
+        A dedicated central data warehouse is undoubtedly a tempting option, especially in places
+        where lack of visibility prevents efficient decision-making.
+    </p>
+    <p>
+        Fortunately, this is the kind of functionality that can be added at basically any stage of a project's life.
+    </p>
+    <p>
+        It may require introducing additional processes and some discipline from teams, but the benefits of such a solution are enormous.
+    </p>
+    <ul>
+        <li>No fear that analytics will affect system operation</li>
+        <li>We have access to all corners of our system, every microservice or module</li>
+        <li>Such a central database is the best gift for analysts</li>
+        <li>Data Science is no longer about burning time cleaning data</li>
+        <li>We can easily and safely connect basically any Business Intelligence tools</li>
+        <li>We create a data-driven culture within our organization</li>
+    </ul>
+    <p>
+        Of course, like everything new, such changes might look difficult to introduce.
+        Lack of experience working with data, at least in the initial stages, makes the task seem
+        almost impossible.
+    </p>
+    <p>
+        However, my experience shows that the hardest part is starting. Once we have:
+    </p>
+    <ul>
+        <li>A few first <code>Pipelines</code> processing data</li>
+        <li>Several or a dozen schemas for our data</li>
+        <li>Some more complex transformations</li>
+        <li>Prepared tests</li>
+        <li>Established processes and procedures</li>
+    </ul>
+    <p>
+        The work goes almost mechanically.
+    </p>
+    <p>
+        It's worth remembering, though, that there's no one universal solution that will fit every system.
+        In each case, the approach must be adapted to the specifics of the given system and organization.
+    </p>
+
+    <h2>How to get started?</h2>
+    <p>
+        If you need help building a central data warehouse, I'd be happy to help.<br/>
+        <a href="{{ url('consulting') }}">Contact me</a>, and together we'll create a solution perfectly tailored to your needs.
+    </p>
+    <p>
+        I also encourage you to visit the <a href="https://discord.gg/5dNXfQyACW" target="_blank">Discord - Flow PHP</a> server, where
+        we can talk directly.
+    </p>
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/consulting_01.jpg') }}" alt="Consulting" />
+    </div>
+{% endblock %}

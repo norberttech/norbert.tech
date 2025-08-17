@@ -8,4 +8,5 @@ return [
     Symfonycasts\TailwindBundle\SymfonycastsTailwindBundle::class => ['all' => true],
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
+    Presta\SitemapBundle\PrestaSitemapBundle::class => ['all' => true],
 ];
