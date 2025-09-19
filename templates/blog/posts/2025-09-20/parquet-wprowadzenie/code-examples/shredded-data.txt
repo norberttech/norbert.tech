@@ -1,0 +1,17 @@
+Input:
+[
+    'items' => [
+        ['sku' => 'abc', ...],
+        ['sku' => 'def', ...],
+    ]
+]
+
+Output:
+array(1) {
+  ["sku"] =>
+  array(3) {
+    ["repetition_levels"] => array(2) { [0] => int(0) [1] => int(1) }
+    ["definition_levels"] => array(2) { [0] => int(1) [1] => int(1) }
+    ["values"] => array(2) { [0] => string(3) "abc" [1] => string(3) "def" }
+  }
+}

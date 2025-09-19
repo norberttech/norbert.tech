@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace NorbertTech\Portfolio\Blog;
 
+use function Flow\Types\DSL\type_boolean;
+use function Flow\Types\DSL\type_integer;
+use function Flow\Types\DSL\type_list;
+use function Flow\Types\DSL\type_optional;
+use function Flow\Types\DSL\type_string;
+use function Flow\Types\DSL\type_structure;
+
 final class Post
 {
     /**
@@ -28,6 +35,22 @@ final class Post
 
     public static function fromArray(array $data): self
     {
+        type_structure(
+            [
+                'id' => type_integer(),
+                'title' => type_string(),
+                'description' => type_string(),
+                'date' => type_string(),
+                'labels' => type_list(type_string()),
+                'slug' => type_string(),
+            ],
+            [
+                'language' => type_string(),
+                'translations_ids' => type_list(type_integer()),
+                'translated' => type_boolean(),
+            ],
+        )->assert($data);
+
         return new self(
             $data['title'],
             $data['description'],

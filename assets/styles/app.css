@@ -94,6 +94,22 @@ article.blog-post .img-wide img {
     @apply object-cover object-center;
 }
 
+article.blog-post div.important {
+    @apply bg-amber-50 border-l-4 border-amber-400 p-4 my-6;
+
+    p {
+        @apply text-amber-900;
+    }
+}
+
+article.blog-post div.notice {
+    @apply bg-sky-50 border-l-4 border-sky-400 p-4 my-6;
+
+    p {
+        @apply text-sky-900;
+    }
+}
+
 .backdrop-blur-blue {
     backdrop-filter: blur(10px) hue-rotate(180deg);
 }

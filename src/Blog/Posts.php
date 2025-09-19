@@ -102,6 +102,15 @@ final class Posts
             'translations_ids' => [4, 5, 6, 7],
             'translated' => true,
         ],
+        [
+            'id' => 9,
+            'title' => 'Parquet - Wprowadzenie',
+            'labels' => ['parquet', 'binarny', 'kolumnowy', 'format plików'],
+            'description' => 'Czym jest i do czego służy Parquet, binarny kolumnowy format plików będący niemalże standardem w pracy z danymi.',
+            'slug' => 'parquet-wprowadzenie',
+            'language' => 'pl',
+            'date' => '2025-09-20',
+        ],
     ];
 
     public function findByDateAndSlug(string $date, string $slug, string $language = 'en'): Post

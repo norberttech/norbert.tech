@@ -5,6 +5,7 @@
         "php": "^8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "flow-php/types": "^0.22.0",
         "norberttech/static-content-generator-bundle": "1.x-dev",
         "presta/sitemap-bundle": "^4.2",
         "symfony/asset": "6.4.*",

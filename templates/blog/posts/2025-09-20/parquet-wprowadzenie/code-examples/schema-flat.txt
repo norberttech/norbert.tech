@@ -1,0 +1,18 @@
+┌─────────────────────────────┬──────────────────────── Columns ────────┬────────────┬────────────────┬────────────────┐
+│ path                        │ type                     │ logical type │ repetition │ max repetition │ max definition │
+├─────────────────────────────┼──────────────────────────┼──────────────┼────────────┼────────────────┼────────────────┤
+│ order_id                    │ FIXED_LEN_BYTE_ARRAY(16) │ UUID         │ REQUIRED   │ 0              │ 0              │
+│ created_at                  │ INT64                    │ TIMESTAMP    │ REQUIRED   │ 0              │ 0              │
+│ updated_at                  │ INT64                    │ TIMESTAMP    │ OPTIONAL   │ 0              │ 1              │
+│ discount                    │ FLOAT                    │ -            │ OPTIONAL   │ 0              │ 1              │
+│ email                       │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ customer                    │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.street              │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.city                │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.zip                 │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.country             │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ notes.list.element          │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 1              │ 1              │
+│ items.list.element.sku      │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 1              │ 1              │
+│ items.list.element.quantity │ INT64                    │ -            │ REQUIRED   │ 1              │ 1              │
+│ items.list.element.price    │ FLOAT                    │ -            │ REQUIRED   │ 1              │ 1              │
+└─────────────────────────────┴──────────────────────────┴──────────────┴────────────┴────────────────┴────────────────┘
