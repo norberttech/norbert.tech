@@ -49,6 +49,13 @@ pre code.hljs {
 .badge-secondary {
     @apply bg-gray-200 text-gray-800
 }
+.hero {
+    @apply py-2 w-full max-w-screen-2xl mx-auto;
+}
+
+.hero .img-wide {
+    @apply h-[450px] w-full mb-5 overflow-hidden flex items-center justify-center;
+}
 
 article.blog-post p, ul, pre, img {
     @apply mb-2
