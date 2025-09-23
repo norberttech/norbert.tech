@@ -32,7 +32,7 @@
             <style>
             @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
         </style>
-        <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-454b8d98685a9b5cef72f52b7ae839b6.css">
+        <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-9c914d9b3ad2a1ffe833cba4d7599f04.css">
     
             
 <script type="importmap">
@@ -106,7 +106,10 @@
 
             </div>
     <article class="blog-post px-2 py-5 sm:px-4 mx-auto max-w-screen-lg">
-        
+            <div class="img-wide">
+        <img src="https://norbert.tech/assets/images/blog/parquet-introduction/parquet-938ab187c9046dc9c91e90a8c7daa91c.jpeg" alt="Parquet - Introduction" />
+    </div>
+
     <h1 class="font-bold text-4xl mb-2" id="title">Parquet - Wprowadzenie</h1>
     <div class="mb-2">
         <small class="text-sm">Data Publikacji September 20, 2025 00:00</small>
@@ -136,19 +139,34 @@
         w ramach nauki, napisać własną implementację od zera, co okazało się niezwykle cennym doświadczeniem ale i świetną
         zabawą.
     </p>
-    <p>
-        Tyle tytułem wstępu, przejdźmy do rzeczy.
-    </p>
+    <a href="#why-parquet"><h2 id="why-parquet">Dlaczego Parquet</h2></a>
+    <ul>
+        <li><a href="#binary-format">Format Binarny - nawet o 10x mniejszy rozmiar plików</a></li>
+        <li><a href="#metadata">Metadata - łatwiejszy dostęp do wybranych danych</a></li>
+        <li><a href="#schema">Schema - gwarancja poprawnej struktury</a></li>
+        <li><a href="#compression">Kompresja - dodatkowa redukcja rozmiaru</a></li>
+        <li><a href="#encryption">Szyfrowanie - na poziomie, pliku, metadanych, kolumn czy stron</a></li>
+    </ul>
+
     <a href="#binary-format"><h2 id="binary-format">Format Binarny</h2></a>
     <p>
         Dzięki temu, że format ten jest zorientowany na kolumny, nie wiersze, pozwala na bardzo wydajną kompresję danych,
-        co przekłada się na znacznie mniejszy rozmiar pliku. Bez większego wysiłku parquet potrafi skompresować dane nawet do 10 razy,
+        co przekłada się na znacznie mniejszy rozmiar pliku. Bez większego wysiłku parquet potrafi skompresować dane nawet o <strong>10 razy</strong>,
         w porównaniu z tradycyjnymi formatami jak np. CSV czy XML.
     </p>
     <p>
-        Ponadto parquet jest formatem opartym o silne typowanie. Oznacza to, że struktura całego pliku jest zdefiniowana i przechowywana w stopce,
-        dzięki czemu wystarczy odczytać tylko odpowiedni segment aby zrozumieć jakie dane mamy w pliku, oraz w których
-        regionach pliku te dane są zapisane.
+        Jeżeli więc te same dane, zapisane w formacie CSV zajmują 1Gb, to w formacie parquet mogą zająć zaledwie 100Mb.<br/>
+        Przekłada się to nie tylko na koszty przechowywania, ale i przetwarzania danych.<br/>
+        Szczególnie kiedy nasze dane żyją w chmurze, czy to na Azure Bucket, czy AWS S3. Jednym z większych czynników wpływających
+        na rachunek nie jest wcale rozmiar danych, a to ile transferu zużywamy, aby te dane odczytać / zapisać.
+    </p>
+    <p>
+        Tak więc redukując rozmiar pliku, redukujemy nie tylko koszt jego przechowywania, ale również przetwarzania.
+        Istotne jest jednak żeby zrozumieć, że przetwarzanie to tak naprawdę jakakolwiek forma dostępu, czyli zapis/odczyt.
+    </p>
+    <p>
+        Sprowadza się to więc do tego, że poprzez wybór odpowiedniego formatu pliku, oszczędności mogą być naprawdę spore,
+        szczególnie kiedy mówimy o większej ilości danych.
     </p>
     <p>
         Co to w ogóle znaczy, że Parquet jest formatem binarnym?
@@ -245,11 +263,11 @@ Total: 4 bytes for a 32-bit integer</code></pre>
         Jest to szczególnie przydatne w przypadku bardzo dużych zbiorów danych, gdzie często potrzebujemy tylko części informacji.
     </p>
 
-    <a href="#metadata"><h2 id="metadata">Metadane</h2></a>
-
+    <a href="#metadata"><h2 id="metadata">Silna Struktura</h2></a>
     <p>
-        W przypadku przechowywania danych w formacie kolumnowym niezbędnym elementem pozwalającym poprawnie odczytać plik
-        są metadane.
+        Parquet jest formatem opartym o silne typowanie. Oznacza to, że struktura całego pliku jest zdefiniowana i przechowywana w stopce,
+        dzięki czemu wystarczy odczytać tylko odpowiedni segment aby zrozumieć jakie dane mamy w pliku, oraz w których
+        regionach pliku te dane są zapisane.
     </p>
     <p>
         Możemy o tym myśleć jak o mapie pliku, mapie, która powie nam gdzie w pliku dokładnie znajdują się dane, które
@@ -807,13 +825,13 @@ struct ColumnMetaData {
     <a href="#row-groups"><h2 id="row-groups">Data Pages</h2></a>
 
     <p>
-        <code>Data Pages</code>, czyli kolejny logiczny podział w strukturz pliku parqueta.<br/>
+        <code>Pages</code>, czyli kolejny logiczny podział w strukturz pliku parqueta.<br/>
         <code>Row Group -> Column Chunk -> Data Pages</code>
     </p>
 
     <ul>
-        <li><code>RowGroup</code> - jedna lub wiele grup wierszy</li>
-        <li><code>ColumnChunk</code> - każda grupa wierszy zawiera dokładnie 1 <code>ColumnChunk</code> reprezentujący konkretną kolumnę (lub jej dziecko) w grupie</li>
+        <li><code>RowGroup</code> - grupa wierszy (partycja)</li>
+        <li><code>ColumnChunk</code> - każda grupa wierszy zawiera dokładnie 1 <code>ColumnChunk</code> dla każdej kolumny w grupie</li>
         <li><code>Data Page</code> - strona, najmniejsza jednostka logiczna w parquecie agregująca dane</li>
     </ul>
 
@@ -848,14 +866,14 @@ enum PageType {
 }</code></pre>
 
     <p>
-        Oto jak obliczamy adres do pierwszego nagłówka strony dla wybranej grupy wierszy i wybranej kolumny:
+        Aby odczytać nagłówek musimy znać jego adres względem początku pliku, oto jak możemy go obliczyć dla wybranej grupy wierszy i wybranej kolumny:
     </p>
 
-    <ul>
+    <ol>
         <li>Odczytujemy <code>FileMetadata</code></li>
         <li>Znajdujemy odpowiednia <code>RowGroup</code> i odszukujemy istotny dla nas <code>ColumnChunk</code></li>
         <li>Mając <code>ColumnChunk</code> otrzymamy adres <code>file_offset</code> początku <code>ColumnChunk</code> względem początku pliku.</li>
-    </ul>
+    </ol>
 
     <div class="important">
         <p>
@@ -865,7 +883,7 @@ enum PageType {
     </div>
 
     <p>
-        Pierwszą rzeczą jaką należy odczytać jest nagłowek, <code>PageHeader</code>, robiąc to za pomocą Thrifta, przekazując
+        Pierwszą rzeczą jaką należy odczytać jest nagłówek, <code>PageHeader</code>, robiąc to za pomocą Thrifta, przekazując
         stream oraz ustawiając odpowiednio adres początku otrzymamy strukturę danych <code>PageHeader</code>, która powie nam dokładnie jak należy odczytać
         samą stronę.
     </p>
@@ -878,31 +896,142 @@ enum PageType {
         Jest to najprostszy i najbardziej bezpośredni typ strony. Zawiera "tylko" dane.
     </p>
     <p>
-        Dlaczego "tylko"? Aby odpowiedzieć na to pytanie musimy na chwilę wrócić do spłaszczania struktur.
+        Czytając kolumnę typu integer, to co nas interesuje to tak naprawdę liczba wierszy w konkretnej grupie (każdy wiersz to jedna wartość w <code>DataPage</code>).
+        Dlatego wiedząc, że w tej grupie mamy powiedzmy 100 wartości, wiemy że musimy odczytać 400 bajtów (int32 zapisany jest na 4 bajtach). <br/>
     </p>
     <p>
-        Powyżej przedstawiałem przykład jak parquet spłaszcza zagnieżdżone struktury danych, tworząc w zasadzie płaskie
-        ścieżki do każdego pola w strukturze w celu przechowywania ich jako osobnych kolumn.
+        No dobra, ale co w przypadku kiedy kolumna jest opcjonalna? To znaczy, że może zawierać wartości null.<br/>
+        Tutaj sytuacja robi się trochę bardziej skomplikowana ponieważ musimy wiedzieć, które wiersze zawierają wartość null.<br/>
+        Skąd ta wiedza zapytacie? <br/>
+        <code>Definition Levels</code>
     </p>
     <p>
-        <code>items.list.element.sku</code>, <code>items.list.element.quantity</code>, <code>items.list.element.price</code>
+        Sytuacja się trochę komplikuje, na początku pisałem, że <code>DataPage</code> zawiera tylko dane, a teraz dokładam jakieś <code>Definition Levels</code>.<br/>
     </p>
     <p>
-        Patrząc na powyższą strukturę <code>items</code> docelowo otrzymamy listę struktur <code>list<{sku: string, quantity: int32, price: int32</code>
+        W rzeczywistości struktura data page wygląda mniej więcej tak:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">Parquet Data Page: int32
+=======================================
+[ Repetition Levels ]: 0, 0, 0, 0, 0
+---------------------------------------
+[ Definition Levels ]: 1, 0, 1, 1, 0
+---------------------------------------
+[ Values           ]: 42, 73, 19
+=======================================
+</code></pre>
+    <p>
+        Na ten moment, skupmy się tylko na <code>Definition Levels</code> i <code>Values</code>. Bardzo łatwo zauważyć związek między nimi.
+        Ilość <code>Definition Level</code> i <code>Repetition Levels</code> w każdej stronie jest zawsze równa ilości wartości w kolumnie.<br/>
+        Bez względu na to czy są tam nulle czy nie. <code>Definition Levels</code> mówią nam czy dany wiersz zawiera wartość czy null.
     </p>
     <p>
-        Której wartości można zapisać np tak: <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
+        Na tej podstawie, możemy łatwo określić całkowitą ilość nie pustych <code>Values</code> co pozwoli nam na ich odczyt. <br/>
+        W powyższym przykładzie mamy 5 wierszy, z czego 3 stanowią wartości, ponieważ <code>int32</code> zapisujemy na 4 bajtach,
+        wiemy już że musimy odczytać w sumie 12 bajatów.<br/>
+        Wiemy też, że przekształcając kolumnę na wiersze, wiersz pierwszy będzie zawierał wartość <code>42</code>, wiersz drugi <code>null</code>,
+        wiersz trzeci <code>73</code>, wiersz czwarty <code>19</code> i wiersz piąty <code>null</code>.
+    </p>
+    <div class="important">
+        <p>
+            <strong>Ważne:</strong> <code>Repetition Levels</code> i <code>Definition Levels</code> są jednak o wiele bardziej skomplikowane, nieco więcej później.<br/>
+        </p>
+    </div>
+    <p>
+        Tak mniej więcej prezentuje się struktura <code>DataPage</code>.
+    </p>
+    <h3><code>DictionaryPage</code></h3>
+    <p>
+        Skoro dane trzymamy w <code>DataPage</code>, jaki cel ma <code>DictionaryPage</code>?<br/>
+        Otóż <code>DictionaryPage</code> to strona zawierająca słownik wartości.<br/>
+        Słownik, używany do odczytywania danych, szczególnie w przypadku kolumn zawierających powtarzalne wartości.
+    </p>
+
+    <p>
+        Działa to mniej więcej tak, że odczytując <code>ColumChunk</code>, zaczynamy od pierwszej strony, jeżeli ta strona to <code>DictionaryPage</code>,
+        wiemy że mamy do czynienia z słownikiem (w zasadzie wiemy to od początku, ponieważ jest to zapisane w metadanych kolumny).
     </p>
     <p>
-        Wracając do początku tego artykułu wiemy, ze w tym przypadku w płaskiej kolumnie <code>items.list.element.sku</code> musimy zapisać wartości <code>"abc","def"</code>
-        w postaci binarnej.
+        Jeżeli przykładowo odczytujemy kolumnę o wysokiej powtarzalności, np. kolumnę z nazwą kraju, zamiast zapisywać w <code>DataPage</code> pełną nazwę kraju dla każdego wiersza,
+        zapisujemy jedynie jej pozycję w słowniku.<br/>
+        W przypadku takiej kolumny pierwsza strona w kolumnie będzie <code>DictionaryPage</code>, a kolejne będą <code>DataPage</code>.
     </p>
     <p>
-        Skąd więc na podstawie tych dwóch wartości biblioteki czytające pliki wiedzą, jak głęboko w strukturze znajdują się wartości oraz do którego elementu one należą?<br/>
-        Co w przypadku, gdyby nasza struktura wyglądała tak: <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":null, "quantity": 10, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
+        Różnica polega na tym, że w <code>DataPage</code> zamiast pełnej wartości, będą znajdować się pozycje w słowniku, który będziemy trzymać w pamięci w celu odbudowania wierszy.<br/>
+    </p>
+    <div class="important">
+        <p>
+            <strong>Ważne:</strong> Każdy <code>ColumnChunk</code> może zawierać tylko jedną stronę <code>DictionaryPage</code>.
+        </p>
+    </div>
+    <p>
+        Potrafi to dać ogromne oszczędności, zamiast powiedzmy zapisywać binarnie słowo <code>Polska</code> 10 tys. razy, czyli 60k bajtów,
+        zapiszemy tylko pozycję w indeksie (czyli 4 bajty), które dodatkowo zostaną spakowane za pomocą algorytmu <a href="https://parquet.apache.org/docs/file-format/data-pages/encodings/#RLE" target="_blank">Run Length Encoding / Bit-Packing Hybrid</a>.
+        Który, również opierając się na powtarzalności kolejnych wartości zredukuje całkowitą ilość potrzebnych bajtów.
+    </p>
+
+    <h3><code>IndexPage</code></h3>
+    <p>
+        Ostatnim już typem strony, jest <code>IndexPage</code>.<br/>
+        Strona ta nie zawiera danych, nie jest więc niezbędna do odczytu ani zapisu.<br/>
+        Każdy <code>ColumnChunk</code> może zawierać tylko jedną stronę typu <code>IndexPage</code> i znajduje się ona zawsze na końcu, po <code>DictionaryPage</code> oraz wszystkich <code>DataPage</code>.
+    </p>
+    <p>
+        Celem tej strony jest przechowywanie statystyk odnośnie <code>ColumnChunk</code>, jak np. wartości <code>Min/Max</code>, ilość <code>nulli</code> czy sposób sortowania dla każdej strony w konkretnym <code>ColumnChunk</code>.
+        Pozwala to na szybkie filtrowanie oraz odnajdywanie konkretnych tylko konkretnych stron w ramach danego <code>ColumnChunka</code>, co znacząco przyśpiesza przeszukiwanie pliku, jeżeli interesują nas konkretne informacje.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Uwaga:</strong> Każdy <code>ColumnChunk</code> w swoich metadanych zawiera podobne statystyki co <code>IndexPage</code>, jednak nie dla każdej strony a dla całego <code>ColumnChunk</code>.<br/>
+            Dzięki temu, w pierwszej kolejności możemy przeskoczyć całe kolumny, które nas nie interesują a następnie nawet konkretne strony, redukując do absolutnego minimum ilość danych, które musimy odczytać.
+        </p>
+    </div>
+
+    <p>
+        Biorąc pod uwagę, że te informacje znajdują się w metadanych pliku, nawet największe pliki parqueta, mogą być błyskawicznie odczytywane i filtrowane nawet jeżeli są one tylko dostępne przez sieć.<br/>
+        Wystarczy, że uda się nam odczytać metadane, na ich podstawie zlokalizować konkretną grupę wierszy, następnie wybraną kolumnę a na końcu konkretne strony. <br/>
+        Dostaniemy w ten sposób bardzo precyzyjną lokalizację naszych danych, które będziemy mogli odczytać za pomocą nagłówka <code>Http Range Header</code>.
+    </p>
+    <p>
+        To właśnie jeden z powodów, dla których parquet jest tak potężny, nie mówimy już tutaj o brutalnym pobieraniu i iterowaniu po gigabajtowym pliku. Parquet pozwala z precyzją chirurga
+        pobrać i odczytać tylko te obszary pliku, które naprawdę nas interesują.
+    </p>
+
+    <a href="#dremel"><h2 id="dremel">Dremel</h2></a>
+
+    <p>
+        Omawiając strukturę <code>DataPage</code> wspomniałem o <code>Definition Levels</code> oraz <code>Repetition Levels</code>.
+    </p>
+    <p>
+        Omówiony przykład był bardzo prosty, ponieważ dotyczył kolumny prostej (int32), przez co <code>Repetition Levels</code> w ogóle nie mają zastosowania.<br/>
+        Sytuacja zmienia się diametralnie, kiedy mamy do czynienia z kolumną zagnieżdżoną, np. strukturą, listą czy mapą.
+        Spójrzmy na przykład.
+    </p>
+    <p>
+        <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
+    </p>
+    <p>
+        Wracając do wcześniejszej części tego artykułu, a dokładnie do <a href="#nested-types">typów zagnieżdżonych</a>.<br/>
+        Wiemy, że nasze dane po spłaszczeniu będą wyglądać następująco:
+    </p>
+    <ul>
+        <li><code>items.list.element.sku</code> - <code>"abc","def"</code></li>
+        <li><code>items.list.element.quantity</code> - <code>1,2</code></li>
+        <li><code>items.list.element.price</code> - <code>100,200</code></li>
+    </ul>
+    <p>
+        Mamy tutaj do czynienia z 3 kolumnami, każda z nich będzie znajdować się w osobnym <code>Column Chunk</code> i każda będzie zawierać
+        w sobie jedną lub więcej stron.
+    </p>
+    <p>
+        Skąd więc na podstawie tych dwóch wartości (<code>Repetition / Definition Levels)</code> biblioteki czytające pliki wiedzą, jak głęboko w strukturze znajdują się wartości oraz do którego elementu one należą?<br/>
+        Co w przypadku, gdyby nasza struktura wyglądała tak:
+    </p>
+    <p>
+        <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":null, "quantity": 10, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
         (w drugim elemencie sku ma wartość null). <br/>
-        Co w przypadku, kiedy struktura jest o wiele bardziej zagnieżdżona, skąd mamy wiedzieć, która wartość wpada na który poziom zagnieżdżenia?
     </p>
+    <p>Co w przypadku, kiedy struktura jest o wiele bardziej zagnieżdżona, skąd mamy wiedzieć, która wartość wpada na który poziom zagnieżdżenia?</p>
     <p>
         Na to oraz wiele innych pytań odpowiedź znajdziemy w dokumencie opublikowanym przez Google <a href="https://static.googleusercontent.com/media/research.google.com/pl//pubs/archive/36632.pdf" target="_blank">Dremel: Interactive Analysis of Web-Scale Datasets</a>
         który opisuje, w jaki sposób Google przechowuje oraz przeszukuje zagnieżdżone struktury danych.
@@ -918,7 +1047,7 @@ enum PageType {
         </p>
     </div>
     <p>
-        Algorytmy te bazują na 3 definicjach:
+        Algorytmy te bazują na tych 3 definicjach:
     </p>
     <ul>
         <li>Repetition Levels</li>
@@ -926,12 +1055,18 @@ enum PageType {
         <li>Values</li>
     </ul>
     <p>
-        Znaczenia tych pojęć objaśniać nie będę, musiałem jednak o nich wspomnieć w celu wyjaśnienia mechanizmów odczytu oraz zapisu stron.
+        Tak jak już wspominaliśmy <code>Definition Level</code> określa czy dany wiersz zawiera wartość, czy też nie, <code>Repetition Level</code> który w przypadku kolumn płaskich jest zawsze 0.
+        Dla struktur określać będzie czy wartość (lub null) ma być powtórzona, oraz na którym poziomie zagłębienia.
     </p>
+    <div class="notice">
+        <p>
+            <strong>Uwaga:</strong> Wiedza o tym, jak dokładnie działają algorytmy z Dremela, nie jest niezbędna do optymalnego wykorzystywania parqueta.
+            Z tego powodu, nie będę się na ten temat rozpisywał, jeżeli jednak pojawi się zainteresowanie tematem, postaram się poruszyć również i ten wątek w nadchodzących wpisach.
+        </p>
+    </div>
     <p>
-        Wiedza o tym, jak dokładnie działają algorytmy z Dremela, nie jest niezbędna do optymalnego wykorzystywania parqueta. <br/> Poniżej przedstawię tylko mniej więcej, jak wyglądać będą spłaszczone dane.
+         Poniżej przedstawię tylko mniej więcej, jak wyglądać będą spłaszczone dane.
     </p>
-
     <pre>
         <code class="code-shell" data-controller="syntax-highlight">Input:
 [
@@ -942,26 +1077,18 @@ enum PageType {
 ]
 
 Output:
-array(1) {
+{
   [&quot;sku&quot;] =&gt;
-  array(3) {
-    [&quot;repetition_levels&quot;] =&gt; array(2) { [0] =&gt; int(0) [1] =&gt; int(1) }
-    [&quot;definition_levels&quot;] =&gt; array(2) { [0] =&gt; int(1) [1] =&gt; int(1) }
-    [&quot;values&quot;] =&gt; array(2) { [0] =&gt; string(3) &quot;abc&quot; [1] =&gt; string(3) &quot;def&quot; }
+  {
+    [&quot;repetition_levels&quot;] =&gt; { [0] =&gt; int(0) [1] =&gt; int(1) }
+    [&quot;definition_levels&quot;] =&gt; { [0] =&gt; int(1) [1] =&gt; int(1) }
+    [&quot;values&quot;] =&gt; { [0] =&gt; string(3) &quot;abc&quot; [1] =&gt; string(3) &quot;def&quot; }
   }
 }</code>
     </pre>
-
     <p>
         Czyli w rzeczywistości zapisujemy <code>0, 1, 0, 1, "abc", "def"</code> a nie tylko <code>"abc", "def"</code>. <br/>
         To właśnie te dodatkowe liczby mówią w jaki sposób odbudować dowolną strukturę zagnieżdżoną.
-    </p>
-    <p>
-        Wróćmy więc do stron.
-    </p>
-    <h3><code>DataPage</code></h3>
-    <p>
-        Prosta strona składająca się z <code>repetition levels</code>, <code>definition levels</code> oraz <code>values</code>.
     </p>
     <p>
         Ciekawostką jest, że nawet repetition levels i definition levels w celu optymalizacji są wcześnie odpowiednio pakowane przy użyciu algorytmu
