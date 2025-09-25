@@ -3,6 +3,18 @@
 {% block title %}{% endblock %}
 {% block description %}{% endblock %}
 
+{%- block og_img -%}
+    {{ asset('images/avatar.jpeg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+    image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    'Norbert Orzechowicz - Personal Website
+{%- endblock -%}
+
 {% block content %}
 <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4 mx-auto max-w-screen-2xl">
     <div class="col-span-2 p-2">

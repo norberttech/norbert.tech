@@ -8,6 +8,19 @@
     {{ post.description }}
 {%- endblock -%}
 
+{%- block og_img -%}
+{{ asset('images/blog/parquet-introduction/parquet.jpeg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    {{ post.title }}
+{%- endblock -%}
+
+
 {% block article %}
     <div class="img-wide">
         <img src="{{ asset('images/blog/parquet-introduction/parquet.jpeg') }}" alt="Parquet - Introduction" />

@@ -2,6 +2,19 @@
 
 {% block title %}Data Engineering - Consulting Services{% endblock %}
 {% block description %}{% endblock %}
+
+{%- block og_img -%}
+    {{ asset('images/hero-consulting.jpeg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+    image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    'Norbert Orzechowicz - Consulting Services
+{%- endblock -%}
+
 {% block header %}
     <header class="pb-2">
         <div class="w-full bg-cover bg-center relative">
@@ -10,6 +23,7 @@
         </div>
     </header>
 {% endblock %}
+
 
 {% set schedule_meeting_link = "https://calendar.app.google/TR5RDkjBz621UGuQA" %}
 

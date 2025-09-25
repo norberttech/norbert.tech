@@ -8,6 +8,18 @@
     {{ post.description }}
 {%- endblock -%}
 
+{%- block og_img -%}
+    {{ asset('images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+    image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    {{ post.title }}
+{%- endblock -%}
+
 {% block article %}
     <div class="img-wide">
         <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg') }}" alt="Análisis de datos en sistemas transaccionales distribuidos" />
@@ -48,7 +60,7 @@
         Contratamos más programadores para crear más funcionalidades en paralelo.
     </p>
     <p>
-        De vez en cuando alguien reporta que el sistema en algunos lugares comienza a "ralentizarse", reconocimiento rápido, 
+        De vez en cuando alguien reporta que el sistema en algunos lugares comienza a "ralentizarse", reconocimiento rápido,
         diagnóstico aún más rápido, falta un índice en alguna tabla.
     </p>
     <p>
@@ -108,7 +120,7 @@
         Mayor presupuesto se traduce en mejores herramientas, equipos más grandes, mejores salarios o bonos.
     </p>
     <p>
-        En el interés de cada programador debería estar entonces proporcionar al negocio los datos más buenos y 
+        En el interés de cada programador debería estar entonces proporcionar al negocio los datos más buenos y
         precisos posibles, después de todo mejores resultados se traducen directamente en mejores ganancias.
     </p>
     <h2>Primeros síntomas</h2>
@@ -135,7 +147,7 @@
         Pero esto sigue siendo insuficiente...
     </p>
     <p>
-        Muy rápidamente resulta que los informes generados en diferentes módulos, escritos por diferentes programadores, 
+        Muy rápidamente resulta que los informes generados en diferentes módulos, escritos por diferentes programadores,
         quizás incluso en diferentes tecnologías tienen diferentes formatos de datos, diferentes estándares de nomenclatura.
     </p>
     <p>

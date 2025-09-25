@@ -8,6 +8,18 @@
     {{ post.description }}
 {%- endblock -%}
 
+{%- block og_img -%}
+    {{ asset('images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+    image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    {{ post.title }}
+{%- endblock -%}
+
 {% block article %}
     <div class="img-wide">
         <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg') }}" alt="Analiza danych w rozproszonych systemach transakcyjnych" />
