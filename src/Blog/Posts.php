@@ -105,8 +105,8 @@ final class Posts
         [
             'id' => 9,
             'title' => 'Parquet - Wprowadzenie',
-            'labels' => ['parquet', 'binarny', 'kolumnowy', 'format plików'],
-            'description' => 'Czym jest i do czego służy Parquet, binarny kolumnowy format plików będący niemalże standardem w pracy z danymi.',
+            'labels' => ['parquet', 'binarny', 'kolumnowy', 'format plików', 'kompresja danych', 'metadata', 'szyfrowanie', 'Apache Thrift', 'Flow PHP'],
+            'description' => 'Kompletny przewodnik po Apache Parquet - binarnym, kolumnowym formacie plików. Dowiedz się jak osiągnąć 10x mniejsze pliki, wykorzystać metadata do błyskawicznego filtrowania, zrozumieć strukturę Row Groups i Data Pages, oraz poznać zaawansowane funkcje jak szyfrowanie i algorytmy Dremel.',
             'slug' => 'parquet-wprowadzenie',
             'language' => 'pl',
             'date' => '2025-09-20',

@@ -58,6 +58,21 @@
     </p>
     <p>
         Jeżeli więc te same dane, zapisane w formacie CSV zajmują 1Gb, to w formacie parquet mogą zająć zaledwie 100Mb.<br/>
+    </p>
+
+    <p>
+        Na potrzeby tego wpisu wygenerowałem 2 pliki, jeden w formacie CSV, drugi w formacie Parquet.<br/>
+        Struktura tych plików jest bardzo prosta, zawiera 10 kolumn i 10mln wierszy, które wyglądają mniej więcej tak:
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/orders.csv') | e('html') }}</code></pre>
+
+    <p>
+        Efekt kompresji jest naprawdę imponujący:
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/size.txt') | e('html') }}</code></pre>
+
+    <p>
         Przekłada się to nie tylko na koszty przechowywania, ale i przetwarzania danych.<br/>
         Szczególnie kiedy nasze dane żyją w chmurze, czy to na Azure Bucket, czy AWS S3. Jednym z większych czynników wpływających
         na rachunek nie jest wcale rozmiar danych, a to ile transferu zużywamy, aby te dane odczytać / zapisać.
@@ -134,6 +149,27 @@
         W przypadku formatu wierszowego, aby odczytać tylko jedną kolumnę, musimy i tak przejrzeć cały plik.<br/>
         W przypadku formatu kolumnowego możemy odczytać tylko te kolumny, które nas interesują.<br/>
         Jest to szczególnie przydatne w przypadku bardzo dużych zbiorów danych, gdzie często potrzebujemy tylko części informacji.
+    </p>
+
+
+    <a href="#immutable"><h2 id="immutable">Niezmienny</h2></a>
+    <p>
+        Ze względu na sposób w jaki dane są przechowywane w formacie kolumnowym, pliki parquet są niezmienne.<br/>
+        Nie oznacza to jednak, że nie można ich modyfikować. Można, ale jedyna sensowna operacja to dopisywanie danych na końcu.
+    </p>
+    <p>
+        Dlaczego? Parquet przechowuje dane w formacie kolumnowym, oznacza to że jeżeli mamy kolumnę <code>email</code>
+        to wszystkie wiersze (w danej grupie wierszy i stronie - o tym dalej) będą zapisane ciągniem jeden za drugim. </br>
+        Próba modyfikacji jednego wiersza jest więc niemożliwa, ponieważ wymagałaby przesunięcia praktycznie całego pliku.
+    </p>
+    <p>
+        Możliwe jest natomiast dodanie nowej grupy wierszy na końcu pliku. Robi się to tak, że z końcówki pliku usuwa się metadane,
+        które tymczasowo trafiają do pamięci. W ich miejsce zapisuje się nową grupę wierszy (którą też należy dodać do metadanych),
+        a następnie na samym końcu ponownie zapisuje się metadane.
+    </p>
+    <p>
+        Z tego względu, jeżeli chcemy usunąc coś z pliku parqueta, w praktyce musimy przepisać cały plik, z pominięciem
+        niechcianych danych.
     </p>
 
     <a href="#metadata"><h2 id="metadata">Silna Struktura</h2></a>
