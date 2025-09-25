@@ -53,6 +53,14 @@ final class BlogPostsProvider implements SourceProvider
             ]);
         }
 
+        foreach ($posts->all('it') as $post) {
+            $sources[] = new Source('blog_post_language', [
+                'date' => $post->date->format('Y-m-d'),
+                'language' => 'it',
+                'slug' => $post->slug,
+            ]);
+        }
+
         $sources[] = new Source('blog_post_old_redirect', []);
 
         return $sources;

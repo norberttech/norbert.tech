@@ -44,7 +44,7 @@ final class Posts
             'date' => '2025-08-12',
             'slug' => 'analiza-danych-w-rozproszonych-systemach-transakcyjnych',
             'language' => 'pl',
-            'translations_ids' => [5, 6, 7, 8],
+            'translations_ids' => [5, 6, 7, 8, 10],
         ],
         [
             'id' => 5,
@@ -54,7 +54,7 @@ final class Posts
             'date' => '2025-08-12',
             'slug' => 'data-analytics-in-distributed-transactional-systems',
             'language' => 'en',
-            'translations_ids' => [4, 6, 7, 8],
+            'translations_ids' => [4, 6, 7, 8, 10],
             'translated' => true,
         ],
         [
@@ -71,7 +71,7 @@ final class Posts
             'date' => '2025-08-12',
             'slug' => 'analyse-donnees-systemes-transactionnels-distribues',
             'language' => 'fr',
-            'translations_ids' => [4, 5, 7, 8],
+            'translations_ids' => [4, 5, 7, 8, 10],
             'translated' => true,
         ],
         [
@@ -82,7 +82,7 @@ final class Posts
             'date' => '2025-08-12',
             'slug' => 'datenanalyse-in-verteilten-transaktionssystemen',
             'language' => 'de',
-            'translations_ids' => [4, 5, 6, 8],
+            'translations_ids' => [4, 5, 6, 8, 10],
             'translated' => true,
         ],
         [
@@ -99,7 +99,24 @@ final class Posts
             'date' => '2025-08-12',
             'slug' => 'analisis-datos-sistemas-transaccionales-distribuidos',
             'language' => 'es',
-            'translations_ids' => [4, 5, 6, 7],
+            'translations_ids' => [4, 5, 6, 7, 10],
+            'translated' => true,
+        ],
+        [
+            'id' => 10,
+            'title' => 'Analisi dei Dati nei Sistemi Transazionali Distribuiti',
+            'labels' => [
+                'analisi dei dati',
+                'data warehouse',
+                'ETL',
+                'elaborazione dati',
+                'sistemi transazionali',
+            ],
+            'description' => 'Il tuo sistema transazionale crolla sotto il peso dei report? Cerchi un modo per costruire una fonte dati unificata per il tuo sistema distribuito? Scopri come iniziare a costruire un data warehouse analitico efficiente ed evitare le insidie comuni.',
+            'date' => '2025-08-12',
+            'slug' => 'analisi-dati-sistemi-transazionali-distribuiti',
+            'language' => 'it',
+            'translations_ids' => [4, 5, 6, 7, 8],
             'translated' => true,
         ],
         [

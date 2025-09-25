@@ -42,6 +42,12 @@
                            class="text-lg hover:opacity-80"
                            title="French">🇫🇷 French</a>
                     </li>
+                {% elseif translatedPost.language == 'it' %}
+                    <li>
+                        <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
+                           class="text-lg hover:opacity-80"
+                           title="French">🇮🇹 Italian</a>
+                    </li>
                 {% endif %}
             {% endfor %}
         </ul>
