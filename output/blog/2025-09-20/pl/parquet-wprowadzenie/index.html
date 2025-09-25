@@ -8,16 +8,14 @@
     <meta property="og:title" content="Parquet - Wprowadzenie" />
     <meta name="twitter:title" content="Parquet - Wprowadzenie" >
 
-    <meta name="description" content="Czym jest i do czego służy Parquet, binarny kolumnowy format plików będący niemalże standardem w pracy z danymi.">
-    <meta property="og:description" content="Czym jest i do czego służy Parquet, binarny kolumnowy format plików będący niemalże standardem w pracy z danymi.">
-    <meta name="twitter:description" content="Czym jest i do czego służy Parquet, binarny kolumnowy format plików będący niemalże standardem w pracy z danymi.">
+    <meta name="description" content="Kompletny przewodnik po Apache Parquet - binarnym, kolumnowym formacie plików. Dowiedz się jak osiągnąć 10x mniejsze pliki, wykorzystać metadata do błyskawicznego filtrowania, zrozumieć strukturę Row Groups i Data Pages, oraz poznać zaawansowane funkcje jak szyfrowanie i algorytmy Dremel.">
+    <meta property="og:description" content="Kompletny przewodnik po Apache Parquet - binarnym, kolumnowym formacie plików. Dowiedz się jak osiągnąć 10x mniejsze pliki, wykorzystać metadata do błyskawicznego filtrowania, zrozumieć strukturę Row Groups i Data Pages, oraz poznać zaawansowane funkcje jak szyfrowanie i algorytmy Dremel.">
+    <meta name="twitter:description" content="Kompletny przewodnik po Apache Parquet - binarnym, kolumnowym formacie plików. Dowiedz się jak osiągnąć 10x mniejsze pliki, wykorzystać metadata do błyskawicznego filtrowania, zrozumieć strukturę Row Groups i Data Pages, oraz poznać zaawansowane funkcje jak szyfrowanie i algorytmy Dremel.">
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://norbert.tech/blog/2025-09-20/pl/parquet-wprowadzenie" />
-    <meta property="og:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg" />
-    <meta property="og:image:type" content="image/svg+xml" />
-    <meta property="og:image:alt" content="Norbert Orzechowicz - Personal Website" />
-
+                <meta property="og:image" content="https://norbert.tech/assets/images/blog/parquet-introduction/parquet-938ab187c9046dc9c91e90a8c7daa91c.jpeg" />
+                    
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://norbert.tech/blog/2025-09-20/pl/parquet-wprowadzenie" />
     <meta name="twitter:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
@@ -119,6 +117,11 @@
                     <small><span class="badge badge-info">binarny</span></small>
                     <small><span class="badge badge-info">kolumnowy</span></small>
                     <small><span class="badge badge-info">format plików</span></small>
+                    <small><span class="badge badge-info">kompresja danych</span></small>
+                    <small><span class="badge badge-info">metadata</span></small>
+                    <small><span class="badge badge-info">szyfrowanie</span></small>
+                    <small><span class="badge badge-info">Apache Thrift</span></small>
+                    <small><span class="badge badge-info">Flow PHP</span></small>
             </div>
     <p>
         Parquet, binarny, kolumnowy format plików stworzony w celu wydajnego przechowywania oraz przeszukiwania danych.
@@ -156,6 +159,27 @@
     </p>
     <p>
         Jeżeli więc te same dane, zapisane w formacie CSV zajmują 1Gb, to w formacie parquet mogą zająć zaledwie 100Mb.<br/>
+    </p>
+
+    <p>
+        Na potrzeby tego wpisu wygenerowałem 2 pliki, jeden w formacie CSV, drugi w formacie Parquet.<br/>
+        Struktura tych plików jest bardzo prosta, zawiera 10 kolumn i 10mln wierszy, które wyglądają mniej więcej tak:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">index,order_id,created_at,updated_at,discount,email,customer,address,notes,items
+0,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,2025-01-01T12:10:00+00:00,24.4,user-0@example.com,&quot;John Doe 0&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 0&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-0&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 0&quot;&quot;,&quot;&quot;Note 2 for order 0&quot;&quot;,&quot;&quot;Note 3 for order 0&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+1,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,2025-01-01T12:10:00+00:00,24.4,user-1@example.com,&quot;John Doe 1&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 1&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-1&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 1&quot;&quot;,&quot;&quot;Note 2 for order 1&quot;&quot;,&quot;&quot;Note 3 for order 1&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+2,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,,,user-2@example.com,&quot;John Doe 2&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 2&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-2&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 2&quot;&quot;,&quot;&quot;Note 2 for order 2&quot;&quot;,&quot;&quot;Note 3 for order 2&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+3,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,,24.4,user-3@example.com,&quot;John Doe 3&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 3&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-3&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 3&quot;&quot;,&quot;&quot;Note 2 for order 3&quot;&quot;,&quot;&quot;Note 3 for order 3&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+</code></pre>
+
+    <p>
+        Efekt kompresji jest naprawdę imponujący:
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">4.1G Sep 20 18:32 orders.csv
+437M Sep 20 18:47 orders.parquet</code></pre>
+
+    <p>
         Przekłada się to nie tylko na koszty przechowywania, ale i przetwarzania danych.<br/>
         Szczególnie kiedy nasze dane żyją w chmurze, czy to na Azure Bucket, czy AWS S3. Jednym z większych czynników wpływających
         na rachunek nie jest wcale rozmiar danych, a to ile transferu zużywamy, aby te dane odczytać / zapisać.
@@ -261,6 +285,27 @@ Total: 4 bytes for a 32-bit integer</code></pre>
         W przypadku formatu wierszowego, aby odczytać tylko jedną kolumnę, musimy i tak przejrzeć cały plik.<br/>
         W przypadku formatu kolumnowego możemy odczytać tylko te kolumny, które nas interesują.<br/>
         Jest to szczególnie przydatne w przypadku bardzo dużych zbiorów danych, gdzie często potrzebujemy tylko części informacji.
+    </p>
+
+
+    <a href="#immutable"><h2 id="immutable">Niezmienny</h2></a>
+    <p>
+        Ze względu na sposób w jaki dane są przechowywane w formacie kolumnowym, pliki parquet są niezmienne.<br/>
+        Nie oznacza to jednak, że nie można ich modyfikować. Można, ale jedyna sensowna operacja to dopisywanie danych na końcu.
+    </p>
+    <p>
+        Dlaczego? Parquet przechowuje dane w formacie kolumnowym, oznacza to że jeżeli mamy kolumnę <code>email</code>
+        to wszystkie wiersze (w danej grupie wierszy i stronie - o tym dalej) będą zapisane ciągniem jeden za drugim. </br>
+        Próba modyfikacji jednego wiersza jest więc niemożliwa, ponieważ wymagałaby przesunięcia praktycznie całego pliku.
+    </p>
+    <p>
+        Możliwe jest natomiast dodanie nowej grupy wierszy na końcu pliku. Robi się to tak, że z końcówki pliku usuwa się metadane,
+        które tymczasowo trafiają do pamięci. W ich miejsce zapisuje się nową grupę wierszy (którą też należy dodać do metadanych),
+        a następnie na samym końcu ponownie zapisuje się metadane.
+    </p>
+    <p>
+        Z tego względu, jeżeli chcemy usunąc coś z pliku parqueta, w praktyce musimy przepisać cały plik, z pominięciem
+        niechcianych danych.
     </p>
 
     <a href="#metadata"><h2 id="metadata">Silna Struktura</h2></a>
