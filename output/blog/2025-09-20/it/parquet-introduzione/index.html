@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parquet - Introduzione</title>
+    <meta property="og:title" content="Parquet - Introduzione" />
+    <meta name="twitter:title" content="Parquet - Introduzione" >
+
+    <meta name="description" content="Guida completa ad Apache Parquet - il formato di file binario e colonnare. Scopri come ottenere file 10 volte più piccoli, utilizzare i metadati per filtraggio ultrarapido, comprendere la struttura di Row Groups e Data Pages, ed esplorare funzionalità avanzate come crittografia e algoritmi Dremel.">
+    <meta property="og:description" content="Guida completa ad Apache Parquet - il formato di file binario e colonnare. Scopri come ottenere file 10 volte più piccoli, utilizzare i metadati per filtraggio ultrarapido, comprendere la struttura di Row Groups e Data Pages, ed esplorare funzionalità avanzate come crittografia e algoritmi Dremel.">
+    <meta name="twitter:description" content="Guida completa ad Apache Parquet - il formato di file binario e colonnare. Scopri come ottenere file 10 volte più piccoli, utilizzare i metadati per filtraggio ultrarapido, comprendere la struttura di Row Groups e Data Pages, ed esplorare funzionalità avanzate come crittografia e algoritmi Dremel.">
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://norbert.tech/blog/2025-09-20/it/parquet-introduzione" />
+                <meta property="og:image" content="https://norbert.tech/assets/images/blog/parquet-introduction/parquet-026fc09c95c7c7b4728c30bb85593777.jpg" />
+                    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://norbert.tech/blog/2025-09-20/it/parquet-introduzione" />
+    <meta name="twitter:image" content="https://norbert.tech/assets/images/avatar-8f3c52c37f20d07c5e1631e1512bdeca.jpeg">
+    <meta name="twitter:site" content="@norbert_tech" />
+    <meta name="twitter:creator" content="@norbert_tech" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://norbert.tech/assets/images/favicons/apple-touch-icon-9cae7ee880b4fe0bd755d300e1bca71e.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://norbert.tech/assets/images/favicons/favicon-32x32-b7a4ad4b584ab95534144e071f0e8587.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://norbert.tech/assets/images/favicons/favicon-16x16-154ca21abc06ae116c8d7ffc5713c000.png">
+    <link rel="shortcut icon" href="https://norbert.tech/assets/images/favicons/favicon-db409885df78dea389e6d0b036da382c.ico">
+
+            <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
+        </style>
+        <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-e24f407580be48180186fb40114b24be.css">
+    
+            
+<script type="importmap">
+{
+    "imports": {
+        "app": "https://norbert.tech/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js",
+        "@oddbird/popover-polyfill": "https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js",
+        "https://norbert.tech/assets/bootstrap.js": "https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js",
+        "htmx.org": "https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js",
+        "iconify-icon": "https://norbert.tech/assets/vendor/iconify-icon/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js",
+        "@symfony/stimulus-bundle": "https://norbert.tech/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js",
+        "@hotwired/stimulus": "https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js",
+        "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers.js": "https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js",
+        "https://norbert.tech/assets/controllers/hello_controller.js": "https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+        "https://norbert.tech/assets/controllers/syntax_highlight_controller.js": "https://norbert.tech/assets/controllers/syntax_highlight_controller-ae10e4cee8b4dedbf232536d05654062.js",
+        "https://norbert.tech/assets/controllers/clipboard_controller.js": "https://norbert.tech/assets/controllers/clipboard_controller-6aefa8a9dec3271dae2f05b464bf9204.js",
+        "highlight.js/lib/core": "https://norbert.tech/assets/vendor/highlight.js/lib/core-760145ef158caabe84ca07686407d093.js",
+        "highlight.js/lib/languages/php": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/php-c0eb2105c14097e8a5a1e9a767e8ac95.js",
+        "highlight.js/styles/github-dark.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2Fhighlight.js%2Fstyles%2Fgithub-dark.min-4b46e20f66f76e35d6454ca4f09b57c3.css%22%7D%29%29",
+        "@fontsource-variable/cabin/index.min.css": "data:application/javascript,document.head.appendChild%28Object.assign%28document.createElement%28%22link%22%29%2C%7Brel%3A%22stylesheet%22%2Chref%3A%22https%3A%2F%2Fnorbert.tech%2Fassets%2Fvendor%2F%40fontsource-variable%2Fcabin%2Findex.min-08e34691d22388e6974e6cb2bfbcbfd0.css%22%7D%29%29",
+        "clipboard": "https://norbert.tech/assets/vendor/clipboard/clipboard.index-925566f98181665b5a61fea1bcd9033d.js",
+        "highlight.js/lib/languages/shell": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/shell-664215791af27581e04813723523a355.js",
+        "highlight.js/lib/languages/json": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/json-9ac51ad2a97f9ce56b2f309eb64d7b04.js",
+        "highlight.js/lib/languages/twig": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/twig-0f3c6d18c0368650898b432b7bcf672a.js",
+        "highlight.js/lib/languages/sql": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/sql-09f80640dd6fe9bed6ff4eb255b13f08.js",
+        "highlight.js/lib/languages/javascript": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/javascript-100f963be02a503f0531e497103ff398.js",
+        "highlight.js/lib/languages/xml": "https://norbert.tech/assets/vendor/highlight.js/lib/languages/xml-a2295112e12d4d01f257d59e1cfa676d.js"
+    }
+}
+</script>
+<!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support -->
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+<link rel="modulepreload" href="https://norbert.tech/assets/app-930adf3462cf9ab60908eb1b74cf7ca7.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@oddbird/popover-polyfill/popover-polyfill.index-7979d53637476aa204f709644aed2c19.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/bootstrap-d78d7e12c819dedf89372fb4824c072d.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/htmx.org/htmx.org.index-023ae86a082913526422a6063298f898.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/iconify-icon/iconify-icon.index-8a41e423576dc2d752509fd455f508c1.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/loader-9311b8ea36bad0f6168e687b4d6dee73.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/vendor/@hotwired/stimulus/stimulus.index-304681764684182e6662e0931532ed91.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/@symfony/stimulus-bundle/controllers-11c35dc7f11bbd855b8108888f18f9b7.js">
+<link rel="modulepreload" href="https://norbert.tech/assets/controllers/hello_controller-55882fcad241d2bea50276ea485583bc.js">
+<script type="module">import 'app';</script>
+                <script defer src="https://cloud.umami.is/script.js" data-website-id="9fed007d-d990-428b-b5d9-11c6ff55a3f1"></script>
+    </head>
+<body class="scroll-smooth text-black relative min-h-screen pb-16">
+    <div class="sticky top-0 max-h-screen overflow-y-auto bg-white py-2 px-2 border-b border-gray-500 z-[9999] print:hidden">
+        <div class="grid grid-cols-2 sm:mx-auto sm:max-w-screen-2xl md:px-4">
+            <div class="text-left">
+                <a href="/" class="text-lg">
+                    norbert.tech
+                </a>
+            </div>
+            <div class="text-right">
+                <a href="/consulting" class="text-lg inline-flex items-center space-x-1 md:mr-4 mr-2">
+                    <iconify-icon icon="lineicons:consulting" class="mr-1"></iconify-icon> Consulting
+                </a>
+                <a href="/blog" class="text-lg inline-flex items-center space-x-1">
+                    <iconify-icon icon="ooui:articles-ltr" class="mr-1"></iconify-icon> Blog
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <main class="mx-auto max-w-screen-2xl mb-4 md:pt-4 px-4 lg:px-0">
+            <div class="px-2 py-5 sm:px-4 md:px-8 lg:px-12 mx-auto max-w-4xl">
+        <ul class="mt-2 pl-[20px] flex flex-wrap gap-2 sm:gap-4">
+            <li>
+                <a href="/blog" class="text-sm sm:text-base text-blue-500 hover:underline px-2 py-1 rounded">Go Back</a>
+            </li>
+                                                                <li>
+                        <a href="/blog/2025-09-20/pl/parquet-wprowadzenie"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Polish">🇵🇱 Polish</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/de/parquet-einfuehrung"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Deutsch">🇩🇪 Deutsch</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/es/parquet-introduccion"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Spanish">🇪🇸 Spanish</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/parquet-introduction"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="English">🇺🇸 English</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/fr/parquet-introduction-fr"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="French">🇫🇷 French</a>
+                    </li>
+                                    </ul>
+
+                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="font-medium text-yellow-800">
+                            Translation Notice
+                        </h3>
+                        <div class="mt-2 text-yellow-700">
+                            <p>
+                                This is an automatically translated version of that Article. Despite my best efforts, it might not be perfect.<br/>
+                                Native speakers are welcome to
+                                <a href="https://github.com/norberttech/norbert.tech/edit/main/templates/blog/posts/2025-09-20/parquet-introduzione/post.html.twig"
+                                   class="underline hover:text-yellow-800" target="_blank" rel="noopener">open pull requests
+                                </a> to correct anything that doesn't sound right.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    <article class="blog-post">
+            <div class="img-wide">
+        <img src="https://norbert.tech/assets/images/blog/parquet-introduction/parquet-026fc09c95c7c7b4728c30bb85593777.jpg" alt="Parquet - Introduzione" />
+    </div>
+
+    <h1 class="font-bold text-4xl mb-2" id="title">Parquet - Introduzione</h1>
+    <div class="mb-2">
+        <small class="text-sm">Pubblicato il September 20, 2025 00:00</small>
+    </div>
+    <div class="mb-4">
+                    <small><span class="badge badge-info">parquet</span></small>
+                    <small><span class="badge badge-info">binario</span></small>
+                    <small><span class="badge badge-info">colonnare</span></small>
+                    <small><span class="badge badge-info">formato file</span></small>
+                    <small><span class="badge badge-info">compressione dati</span></small>
+                    <small><span class="badge badge-info">metadati</span></small>
+                    <small><span class="badge badge-info">crittografia</span></small>
+                    <small><span class="badge badge-info">Apache Thrift</span></small>
+                    <small><span class="badge badge-info">Flow PHP</span></small>
+            </div>
+    <p>
+        Parquet è un formato di file binario e colonnare progettato per l'archiviazione e l'interrogazione efficiente dei dati.
+    </p>
+    <p>
+        Ci sono tonnellate di articoli su Parquet là fuori, quindi perché scriverne un altro?<br/>
+        Questa è la mia visione di questo formato fantastico, essenzialmente il risultato della mia esperienza nel lavorare su
+        un'implementazione Parquet pura in PHP.
+    </p>
+    <p>
+        Per quelli che sono capitati qui per caso, dovrei menzionare che sono l'autore del primo framework di elaborazione dati
+        per PHP chiamato <a href="https://flow-php.com" target="_blank">Flow PHP</a>.<br/>
+        Come ogni framework DataFrame che si rispetti, Flow deve leggere e scrivere dati in vari formati, incluso Parquet<br/>
+    </p>
+    <p>
+        Tuttavia, dato che l'unica implementazione che ho trovato era praticamente un port diretto da C#, che non gestisce
+        particolarmente bene le strutture profondamente nidificate e ha parecchie funzionalità mancanti, ho deciso di scrivere la mia
+        implementazione da zero come esercizio di apprendimento. Questo si è rivelato un'esperienza incredibilmente preziosa e molto divertente.
+    </p>
+    <a href="#why-parquet"><h2 id="why-parquet">Perché Parquet</h2></a>
+    <ul>
+        <li><a href="#binary-format">Formato Binario - fino a file 10 volte più piccoli</a></li>
+        <li><a href="#metadata">Metadati - accesso più facile ai dati selezionati</a></li>
+        <li><a href="#schema">Schema - integrità garantita della struttura dati</a></li>
+        <li><a href="#compression">Compressione - ulteriore riduzione delle dimensioni</a></li>
+        <li><a href="#encryption">Crittografia - a livello di file, metadati, colonne o pagine</a></li>
+    </ul>
+
+    <a href="#binary-format"><h2 id="binary-format">Formato Binario</h2></a>
+    <p>
+        Grazie al fatto di essere orientato alle colonne anziché alle righe, questo formato consente una compressione dei dati altamente efficiente,
+        che si traduce in dimensioni di file significativamente più piccole. Senza troppo sforzo, Parquet può comprimere i dati fino a <strong>10 volte</strong>
+        rispetto ai formati tradizionali come CSV o XML.
+    </p>
+    <p>
+        Quindi se gli stessi dati memorizzati in formato CSV occupano 1GB, in formato Parquet potrebbero occupare solo 100MB.<br/>
+    </p>
+
+    <p>
+        Per questo post, ho generato 2 file - uno in formato CSV, l'altro in Parquet.<br/>
+        La struttura di questi file è molto semplice, contiene 10 colonne e 10 milioni di righe che assomigliano a qualcosa del genere:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">index,order_id,created_at,updated_at,discount,email,customer,address,notes,items
+0,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,2025-01-01T12:10:00+00:00,24.4,user-0@example.com,&quot;John Doe 0&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 0&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-0&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 0&quot;&quot;,&quot;&quot;Note 2 for order 0&quot;&quot;,&quot;&quot;Note 3 for order 0&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+1,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,2025-01-01T12:10:00+00:00,24.4,user-1@example.com,&quot;John Doe 1&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 1&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-1&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 1&quot;&quot;,&quot;&quot;Note 2 for order 1&quot;&quot;,&quot;&quot;Note 3 for order 1&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+2,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,,,user-2@example.com,&quot;John Doe 2&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 2&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-2&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 2&quot;&quot;,&quot;&quot;Note 2 for order 2&quot;&quot;,&quot;&quot;Note 3 for order 2&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+3,254d61c5-22c8-4407-83a2-76f1cab53af2,2025-01-01T12:00:00+00:00,,24.4,user-3@example.com,&quot;John Doe 3&quot;,&quot;{&quot;&quot;street&quot;&quot;:&quot;&quot;123 Main St, Apt 3&quot;&quot;,&quot;&quot;city&quot;&quot;:&quot;&quot;City &quot;&quot;,&quot;&quot;zip&quot;&quot;:&quot;&quot;12345-3&quot;&quot;,&quot;&quot;country&quot;&quot;:&quot;&quot;PL&quot;&quot;}&quot;,&quot;[&quot;&quot;Note 1 for order 3&quot;&quot;,&quot;&quot;Note 2 for order 3&quot;&quot;,&quot;&quot;Note 3 for order 3&quot;&quot;]&quot;,&quot;[{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0001&quot;&quot;,&quot;&quot;quantity&quot;&quot;:1,&quot;&quot;price&quot;&quot;:0.14},{&quot;&quot;sku&quot;&quot;:&quot;&quot;SKU_0002&quot;&quot;,&quot;&quot;quantity&quot;&quot;:2,&quot;&quot;price&quot;&quot;:25.13}]&quot;
+</code></pre>
+
+    <p>
+        L'effetto di compressione è davvero impressionante:
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">4.1G Sep 20 18:32 orders.csv
+437M Sep 20 18:47 orders.parquet</code></pre>
+
+    <p>
+        Questo si traduce non solo in costi di archiviazione ma anche in costi di elaborazione dei dati.<br/>
+        Specialmente quando i tuoi dati vivono nel cloud, che sia su Azure Bucket o AWS S3. Uno dei fattori più grandi che influenzano
+        la tua bolletta non è in realtà la dimensione dei dati, ma quanto trasferimento usi per leggere/scrivere quei dati.
+    </p>
+    <p>
+        Quindi riducendo la dimensione del file, riduciamo non solo il costo di archiviarlo ma anche di elaborarlo.
+        È importante capire che l'elaborazione significa davvero qualsiasi forma di accesso - operazioni di lettura/scrittura.
+    </p>
+    <p>
+        Questo si riduce al fatto che scegliendo il formato di file giusto, i risparmi possono essere davvero sostanziali,
+        specialmente quando parliamo di quantità maggiori di dati.
+    </p>
+    <p>
+        Cosa significa effettivamente per Parquet essere un formato binario?
+    </p>
+    <p>
+        Significa grosso modo che i dati sono memorizzati in forma binaria - cioè, in una forma che non può essere
+        letta direttamente usando editor di testo popolari.
+    </p>
+    <p>
+        Ma alla fine tutto è memorizzato in forma binaria, no?
+    </p>
+    <p>
+        Sì, generalmente anche i file di testo sono file binari. La differenza è che nei file di testo la struttura
+        è sempre la stessa e ogni pezzo di informazione è scritto allo stesso modo.
+    </p>
+    <p>
+        Per esempio, se volessimo salvare "12345" in un file di testo, la versione binaria sarebbe così:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">STRING: &quot;12345&quot;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Character:   &#039;1&#039;       &#039;2&#039;      &#039;3&#039;      &#039;4&#039;     &#039;5&#039;      &#039;\0&#039;
+ASCII:       49        50       51        52     53        0
+Binary:    00110001 00110010 00110011 00110100 00110101 00000000
+           └─byte─┘ └─byte─┘ └─byte─┘ └─byte─┘ └─byte─┘ └─byte─┘
+
+Total: 6 bytes (including null terminator)</code></pre>
+    <p>
+        La stessa stringa salvata in formato binario come int32 (intero in forma a 32 bit) sarebbe così:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">INTEGER: 12345
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Integer:     0         0       48       57
+Binary:  00000000  00000000 00110000 00111001
+         └─byte─┘  └─byte─┘ └─byte─┘ └─byte─┘
+
+Total: 4 bytes for a 32-bit integer</code></pre>
+
+    <p>
+        Nota che nel caso del salvataggio di un intero in forma binaria, non puoi semplicemente leggerlo da sinistra a destra (o viceversa).
+        Qui dobbiamo sapere come interpretare questi bit per capire cosa significano.
+        Con i file di testo non abbiamo questo problema, dato che sappiamo che ogni carattere è salvato in forma a 8 bit.
+    </p>
+    <p>
+        Questo è più o meno il motivo per cui qualsiasi editor di testo può aprire qualsiasi file di testo e mostrarci qualcosa che ha più o meno senso.
+    </p>
+    <p>
+        Tuttavia, se proviamo ad aprire un file Parquet in un editor di testo, otterremo una stringa di caratteri che sembra molto casuale e non ha molto senso.
+    </p>
+
+    <a href="#columns-rows"><h2 id="columns-rows">Colonnare vs Basato su Righe</h2></a>
+    <p>
+        Il modo migliore per spiegare la differenza tra questi formati è attraverso la visualizzazione.
+    </p>
+    <p>
+        Nel modello classico basato su righe, ogni riga contiene tutte le colonne, come nel formato CSV
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">+------+------+------+
+| Col1 | Col2 | Col3 |
++------+------+------+
+|  A1  |  B1  |  C1  |
+|  A2  |  B2  |  C2  |
+|  A3  |  B3  |  C3  |
++------+------+------+
+</code></pre>
+
+    <p>
+        Il formato colonnare è interessante in quanto invece di memorizzare i dati riga per riga, li memorizza colonna per colonna.
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">+------+------+------+------+
+| Col1 |  A1  |  A2  |  A3  |
++------+------+------+------+
+| Col2 |  B1  |  B2  |  B3  |
++------+------+------+------+
+| Col3 |  C1  |  C2  |  C3  |
++------+------+------+------+
+</code></pre>
+
+    <p>
+        Memorizzare i dati in formato colonnare porta molti benefici, come:
+    </p>
+    <ul>
+        <li>Capacità di compressione dei dati molto migliori</li>
+        <li>Capacità di leggere solo colonne selezionate</li>
+        <li>Capacità di crittografare colonne selezionate o tutte</li>
+    </ul>
+
+    <p>
+        Con un formato basato su righe, per leggere solo una colonna, dobbiamo comunque attraversare l'intero file.<br/>
+        Con un formato colonnare, possiamo leggere solo le colonne che ci interessano.<br/>
+        Questo è particolarmente utile con dataset molto grandi dove spesso abbiamo bisogno solo di parte delle informazioni.
+    </p>
+
+
+    <a href="#immutable"><h2 id="immutable">Immutabile</h2></a>
+    <p>
+        A causa di come i dati sono memorizzati in formato colonnare, i file Parquet sono immutabili.<br/>
+        Questo non significa che non possono essere modificati. Possono esserlo, ma l'unica operazione sensata è aggiungere dati alla fine.
+    </p>
+    <p>
+        Perché? Parquet memorizza i dati in formato colonnare, il che significa che se abbiamo una colonna `email`,
+        tutte le righe (in un dato gruppo di righe e pagina - di più su questo dopo) sono scritte una dopo l'altra. </br>
+        Tentare di modificare una riga è quindi impossibile, dato che richiederebbe di spostare praticamente l'intero file.
+    </p>
+    <p>
+        Tuttavia, è possibile aggiungere un nuovo gruppo di righe alla fine del file. Questo viene fatto rimuovendo i metadati dalla fine del file,
+        che temporaneamente vanno in memoria. Al loro posto, viene scritto un nuovo gruppo di righe (che deve anche essere aggiunto ai metadati),
+        e poi i metadati vengono scritti di nuovo alla fine.
+    </p>
+    <p>
+        Per questo motivo, se vogliamo rimuovere qualcosa da un file Parquet, in pratica dobbiamo riscrivere l'intero file,
+        escludendo i dati indesiderati.
+    </p>
+
+    <a href="#metadata"><h2 id="metadata">Struttura Forte</h2></a>
+    <p>
+        Parquet è un formato basato su tipizzazione forte. Questo significa che la struttura dell'intero file è definita e memorizzata nel footer,
+        quindi è necessario solo leggere il segmento appropriato per capire che dati abbiamo nel file e in quali
+        regioni del file quei dati sono scritti.
+    </p>
+    <p>
+        Possiamo pensare a questo come a una mappa del file - una mappa che ci dirà esattamente dove nel file si trovano i dati
+        che ci interessano.
+    </p>
+    <p>
+        Ecco più o meno come appare una struttura di file Parquet semplificata:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">+-----------------+
+| PAR1            |
++-----------------+
+| Data            |
+| .............   |
+| .............   |
++-----------------+
+| File Metadata   |
++-----------------+
+| PAR1            |
++-----------------+</code></pre>
+
+    <p>
+        Nell'esempio sopra vediamo 3 elementi:
+    </p>
+
+    <ul>
+        <li><code>PAR1</code> - i "Parquet Magic Bytes" - 4 byte che aprono e chiudono i file Parquet</li>
+        <li><code>Data</code> - qui è dove sono scritte tutte le colonne (di più su questo dopo)</li>
+        <li><code>Metadata</code> - metadati, cioè la mappa del file</li>
+    </ul>
+
+    <p>
+        Il primo passo per leggere correttamente un file Parquet è controllare se i primi 4 byte sono <code>PAR1</code>.<br/>
+        Se così, dobbiamo saltare alla fine del file (seek) e leggere gli ultimi 4 byte.
+    </p>
+    <p>
+        Se la fine e l'inizio del file contengono <code>PAR1</code>, possiamo procedere a leggere i metadati.
+    </p>
+    <p>
+        Per farlo, torniamo indietro di 8 byte dalla fine del file e leggiamo 4 byte che rappresentano la dimensione dei metadati.
+        In altre parole, leggiamo i byte da <code>-8</code> a <code>-4</code>
+    </p>
+    <p>
+        Questi 4 byte sono un <code>intero</code> che ci dice su quanti byte sono scritti i metadati. Avendo
+        questa informazione, possiamo leggere i metadati, che sono serializzati in binario usando <a href="https://thrift.apache.org/" target="_blank">Apache Thrift</a>
+    </p>
+    <a href="#apache-thrift"><h2 id="apache-thrift">Apache Thrift</h2></a>
+    <p>
+        Apache Thrift è uno strumento molto intelligente che permette la serializzazione binaria di interfacce/tipi in praticamente qualsiasi
+        linguaggio di programmazione.
+    </p>
+    <p>
+        <a href="https://github.com/flow-php/flow/blob/1.x/src/lib/parquet/src/Flow/Parquet/Resources/Thrift/parquet_clean.thrift" target="_blank">Qui</a>
+        possiamo vedere come appare la definizione dei metadati Parquet.
+    </p>
+    <p>
+        Questo formato assomiglia un po' a pseudocodice, che viene poi usato dall'applicazione appropriata per generare
+        codice in un dato linguaggio di programmazione.
+    </p>
+    <p>
+        <a href="https://github.com/flow-php/flow/tree/1.x/src/lib/parquet/src/Flow/Parquet/Thrift" target="_blank">Qui</a>
+        possiamo vedere come appare il codice generato in PHP.
+    </p>
+    <p>
+        Una volta che abbiamo le strutture/interfacce/modelli generati, possiamo procedere alla lettura.
+    </p>
+
+    <pre><code class="code-php" data-controller="syntax-highlight">&lt;?php
+
+use Flow\Parquet\Thrift\FileMetaData;
+use Thrift\Protocol\TCompactProtocol;
+use Thrift\Transport\TMemoryBuffer;
+
+$metadataLength = \unpack($this-&gt;byteOrder-&gt;value, $this-&gt;stream-&gt;read(4, $fileTotalSize - 8))[1];
+
+$fileMetadata = new FileMetaData();
+$fileMetadata-&gt;read(
+    new TCompactProtocol(
+        new TMemoryBuffer(
+            $this-&gt;stream-&gt;read($metadataLength, $fileTotalSize - ($metadataLength + 8))
+        )
+    )
+);</code></pre>
+
+    <p>
+        Per questo avremo bisogno della libreria Thrift per il nostro linguaggio di programmazione scelto.
+        Tutte le implementazioni sono disponibili nel repository <a href="https://github.com/apache/thrift" target="_blank">apache/thrift</a>.
+    </p>
+
+    <p>
+        Avendo accesso a <code>$metadata</code>, possiamo iniziare ad analizzare il nostro file per capire la sua struttura.<br/>
+    </p>
+
+    <a href="#parquet-file-metadata"><h2 id="parquet-file-metadata">Parquet - FileMetaData</h2></a>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">struct FileMetaData {
+  1: required i32 version
+  2: required list&lt;SchemaElement&gt; schema;
+  3: required i64 num_rows
+  4: required list&lt;RowGroup&gt; row_groups
+  5: optional list&lt;KeyValue&gt; key_value_metadata
+  6: optional string created_by
+  7: optional list&lt;ColumnOrder&gt; column_orders;
+  8: optional EncryptionAlgorithm encryption_algorithm
+  9: optional binary footer_signing_key_metadata
+}</code></pre>
+
+    <p>
+        Le informazioni chiave sul file sono memorizzate nella struttura <code>FileMetaData</code>.
+        Le più importanti sono:
+    </p>
+    <ul>
+        <li><code>version</code> - versione del formato Parquet</li>
+        <li><code>num_rows</code> - numero di righe nel file</li>
+        <li><code>schema</code> - schema dei dati</li>
+        <li><code>row_groups</code> - qui è dove sono memorizzati i nostri dati</li>
+    </ul>
+
+    <a href="#format-versions"><h2 id="format-versions">Versioni del Formato</h2></a>
+    <p>
+        Al momento di scrivere questo articolo, il formato Parquet era già disponibile nella versione <code>2.12.0</code>.
+    </p>
+    <p>
+        I cambiamenti più cruciali tra le versioni 1.0 e 2.0 sono:
+    </p>
+    <ul>
+        <li><strong>Nuovi schemi di codifica:</strong> DELTA_BINARY_PACKED per i numeri, DELTA_BYTE_ARRAY per le stringhe, RLE_DICTIONARY che sostituisce PLAIN_DICTIONARY</li>
+        <li><strong>Struttura Data Page V2:</strong> Eliminato l'overhead dei metadati, abilitato il filtraggio a livello di pagina</li>
+    </ul>
+    <p>
+        Anche se la versione 2.0 introduce molti miglioramenti, i più grandi player usano ancora la versione 1 di default.
+    </p>
+    <a href="#rows-count"><h2 id="rows-count">Conteggio Righe</h2></a>
+    <p>
+        Questa informazione potrebbe sembrare non intuitiva all'inizio nel contesto del formato colonnare.<br/>
+        Tuttavia, dobbiamo ricordare che il formato colonnare è solo un modo di memorizzare valori, non la struttura dei dati.
+    </p>
+    <p>
+        Nonostante i dati siano raggruppati per colonne e loro tipo, la lettura/scrittura avviene ancora nel modo classico
+        - riga per riga.
+    </p>
+    <p>
+        La differenza è che non leggiamo una riga alla volta, ma un intero gruppo di righe, caricando
+        colonna per colonna in memoria, poi ricostruendo le righe basandoci sugli indici appropriati.
+    </p>
+    <div class="notice">
+    <p>
+        Ricordando che per scrivere correttamente i dati in formato colonnare dobbiamo operare su gruppi logici, non su righe individuali.
+        Possiamo relativamente facilmente gestire il bilanciamento tra uso della memoria e il numero di operazioni IO.
+    </p>
+    </div>
+    <p>
+        Leggere e scrivere dalla memoria è più veloce che leggere e scrivere dal disco (<a href="https://www.bitflux.ai/blog/memory-is-slow-part1/" target="_blank">anche se non sempre</a>).
+        Aumentando il numero di righe che saranno scritte in un gruppo, riduciamo il numero di gruppi, quindi il numero di operazioni IO. <br/>
+        Questo aumenta la velocità di scrittura/lettura mentre aumenta l'uso della memoria.
+    </p>
+    <p>
+        Questo funziona anche al contrario - riducendo il numero di righe in un gruppo, aumentiamo il numero di gruppi nel file, quindi
+        aumentando il numero di operazioni IO.
+    </p>
+    <p>
+        <strong>Dimensione del gruppo, non conteggio righe</strong> - Parquet permette di definire non il numero di righe, ma la dimensione massima
+        di un gruppo di righe. <br/>
+        Tuttavia, ricorda che questi non sono valori assoluti (di più su questo dopo), quindi
+        alcuni gruppi possono essere più piccoli/grandi della dimensione consentita, dipendendo principalmente dall'implementazione della libreria Parquet.
+    </p>
+    <p>
+        Nella documentazione del formato Parquet, troveremo informazioni che la dimensione suggerita del gruppo è <code>512MB - 1GB</code>.
+        Tuttavia, vale la pena affrontare questo con un po' di buon senso, specialmente se non ci stiamo affidando a HDFS (Hadoop Distributed File System) per lettura/scrittura. <br/>
+        Il valore suggerito è impostato in modo che un gruppo di righe si adatti in un blocco HDFS, garantendo che la lettura
+        avvenga da esattamente un nodo.
+    </p>
+    <p>
+        Vale la pena ricordarlo, ma se non pianifichiamo di usare Parquet con un file system distribuito, gruppi di righe più piccoli
+        ci permetteranno di risparmiare molta memoria.
+    </p>
+    <p>
+        Un esempio molto buono di quando i gruppi più piccoli sono più efficienti è quando vogliamo leggere
+        solo una piccola fetta di righe da qualche parte nel mezzo del file (paginazione).
+    </p>
+    <p>
+        Assumendo che dobbiamo leggere solo 100 righe da un file che contiene 10 milioni di righe, impostare una dimensione di gruppo più piccola
+        ci permetterà di risparmiare molto sulla memoria. Perché?
+    </p>
+    <p>
+        Se dividiamo 10 milioni in, diciamo, 10 gruppi, ogni gruppo contiene 1 milione di righe. Questo significa in pratica
+        che dobbiamo leggere l'intero gruppo, poi estrarre solo le 100 righe che ci interessano.
+    </p>
+    <p>
+        Con una dimensione di gruppo più piccola che permette di dividere 10 milioni in 1000 gruppi, analizzando
+        i metadati del file, saremo in grado di saltare più gruppi e caricare molte meno righe in memoria.
+    </p>
+    <div class="notice">
+    <p>
+        La decisione sulla dimensione del gruppo di righe dovrebbe essere ponderata, considerando sia le prestazioni di scrittura che di lettura
+        per il file specifico. La configurazione appropriata si traduce direttamente nell'uso delle risorse, che alla fine si traduce in
+        denaro.
+    </p>
+    </div>
+
+    <a href="#schema"><h2 id="schema">Schema</h2></a>
+
+    <p>
+        Stiamo lentamente arrivando al cuore di Parquet - <code>Row Groups</code>. Ma prima di analizzare la loro struttura, dobbiamo
+        tornare a un altro aspetto molto importante di Parquet: lo schema dei dati.
+    </p>
+
+    <p>
+        Iniziamo con i tipi di dati. Parquet consiste di tipi fisici e logici.
+    </p>
+
+    <h3>Tipi Fisici</h3>
+
+    <p>
+        I tipi fisici sono i tipi di dati di base utilizzati per memorizzare valori in un file Parquet.
+        Sono tipi come:
+    </p>
+
+    <ul>
+        <li>Boolean</li>
+        <li>Byte Array</li>
+        <li>Double</li>
+        <li>Fixed Len Byte Array</li>
+        <li>Float</li>
+        <li>Int32</li>
+        <li>Int64</li>
+        <li>Int96 - (deprecato - usato solo da implementazioni più vecchie)</li>
+    </ul>
+
+    <p>
+        I tipi logici sono tipi utilizzati per rappresentare strutture dati più complesse. Puoi
+        pensare a loro come estensioni dei tipi fisici.
+    </p>
+
+    <h3>Tipi Logici</h3>
+
+    <ul>
+        <li>Bson</li>
+        <li>Date</li>
+        <li>Decimal</li>
+        <li>Enum</li>
+        <li>Integer</li>
+        <li>Json</li>
+        <li>List</li>
+        <li>Map</li>
+        <li>String</li>
+        <li>Time</li>
+        <li>Timestamp</li>
+        <li>Uuid</li>
+    </ul>
+
+    <p>
+        La struttura attuale può sempre essere verificata alla fonte: <a href="https://github.com/apache/parquet-format/blob/master/src/main/thrift/parquet.thrift" target="_blank">apache/parquet-format</a>
+    </p>
+
+    <p>
+        Oltre alla divisione in tipi logici e fisici, Parquet distingue anche colonne piatte e nidificate.<br/>
+        <strong>Le colonne piatte</strong> sono quelle che memorizzano un singolo valore, es. <code>Int32</code>, <code>Boolean</code>, <code>Float</code>, ecc.<br/>
+        <strong>Le colonne nidificate</strong> sono quelle che memorizzano più di un valore, es. <code>List</code>, <code>Map</code>, ecc.
+    </p>
+
+    <p>
+        Ci sono in realtà 3 tipi di colonne nidificate:
+    </p>
+    <ul>
+        <li>List</li>
+        <li>Map</li>
+        <li>Struct</li>
+    </ul>
+    <p>
+        <strong>Struct</strong> è un tipo speciale di colonna che permette di nidificare qualsiasi altro tipo, rendendo possibile creare
+        praticamente qualsiasi struttura dati.
+    </p>
+    <p>
+        Usando i tipi sopra, possiamo modellare praticamente qualsiasi
+        struttura dati e poi efficientemente memorizzarla e interrogarla.
+    </p>
+    <p>
+        Diamo un'occhiata alle definizioni Thrift di <code>SchemaElement</code> e alcuni elementi correlati.
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">struct SchemaElement {
+  1: optional Type type;
+  2: optional i32 type_length;
+  3: optional FieldRepetitionType repetition_type;
+  4: required string name;
+  5: optional i32 num_children;
+  6: optional ConvertedType converted_type;
+  7: optional i32 scale
+  8: optional i32 precision
+  9: optional i32 field_id;
+  10: optional LogicalType logicalType
+}
+
+enum FieldRepetitionType {
+  REQUIRED = 0;
+  OPTIONAL = 1;
+  REPEATED = 2;
+}
+
+enum Type {
+  BOOLEAN = 0;
+  INT32 = 1;
+  INT64 = 2;
+  INT96 = 3;
+  FLOAT = 4;
+  DOUBLE = 5;
+  BYTE_ARRAY = 6;
+  FIXED_LEN_BYTE_ARRAY = 7;
+}
+
+union LogicalType {
+  1:  StringType STRING
+  2:  MapType MAP
+  3:  ListType LIST
+  4:  EnumType ENUM
+  5:  DecimalType DECIMAL
+  6:  DateType DATE
+  7:  TimeType TIME
+  8:  TimestampType TIMESTAMP
+  10: IntType INTEGER
+  11: NullType UNKNOWN
+  12: JsonType JSON
+  13: BsonType BSON
+  14: UUIDType UUID
+}</code></pre>
+
+    <p>
+        La maggior parte dei valori dovrebbe essere abbastanza ovvia, ma diamo un'occhiata a <code>FieldRepetitionType</code>.
+    </p>
+
+    <p>
+        Questo valore ci dice se una data colonna è richiesta, opzionale o ripetibile.<br/>
+        Se una colonna è richiesta, significa che il valore non può essere null. <br/>
+        Se una colonna è opzionale, il valore può essere null, e se è ripetibile, significa che può contenere valori multipli (es. una lista).
+    </p>
+
+    <p>
+        Ecco come potrebbe apparire uno schema di file ordini (in forma DDL)
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">message orders_scheme {
+    required fixed_len_byte_array(16) order_id (UUID)
+    required int64 created_at (TIMESTAMP(MICROS,false))
+    optional int64 updated_at (TIMESTAMP(MICROS,false))
+    optional float discount
+    required binary email (STRING)
+    required binary customer (STRING)
+    required group address {
+          required binary street (STRING);
+          required binary city (STRING);
+          required binary zip (STRING);
+          required binary country (STRING);
+    }
+    required group notes (LIST) {
+          repeated group list {
+                required binary element (STRING);
+          }
+    }
+    required group items (LIST) {
+          repeated group list {
+                required group element {
+                      required binary sku (STRING);
+                      required int64 quantity (INTEGER(64,true));
+                      required float price;
+                }
+          }
+    }
+}</code></pre>
+
+    <a href="#nested-types"><h2 id="nested-types">Tipi Nidificati</h2></a>
+
+    <p>
+        Per capire completamente la struttura dei gruppi di righe, dobbiamo prima capire come Parquet appiattisce i tipi nidificati.<br/>
+        Mentre strutture semplici come <code>address</code> dall'esempio sopra possono essere praticamente ridotte a 4 colonne semplici:
+    </p>
+    <ul>
+        <li><code>address.street</code> - String</li>
+        <li><code>address.city</code> - String</li>
+        <li><code>address.zip</code> - String</li>
+        <li><code>address.country</code> - String</li>
+    </ul>
+    <p>
+        Con <code>Map</code> o <code>List</code>, la situazione è un po' più complicata.
+    </p>
+    <p>
+        Per esempio, se volessimo appiattire <code>Map&lt;string,int32&gt;</code> otterremmo qualcosa del genere:
+    </p>
+    <ul>
+        <li><code>map_column.key_value.key</code> - String</li>
+        <li><code>map_column.key_value.value</code> - Int32</li>
+    </ul>
+    <p>
+        Quindi per l'esempio sopra, il percorso piatto a <code>sku</code> sarebbe così:
+        <code>items.list.element.sku</code>, mentre la struttura completa appiattita sarebbe così:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">┌─────────────────────────────┬──────────────────────── Columns ────────┬────────────┬────────────────┬────────────────┐
+│ path                        │ type                     │ logical type │ repetition │ max repetition │ max definition │
+├─────────────────────────────┼──────────────────────────┼──────────────┼────────────┼────────────────┼────────────────┤
+│ order_id                    │ FIXED_LEN_BYTE_ARRAY(16) │ UUID         │ REQUIRED   │ 0              │ 0              │
+│ created_at                  │ INT64                    │ TIMESTAMP    │ REQUIRED   │ 0              │ 0              │
+│ updated_at                  │ INT64                    │ TIMESTAMP    │ OPTIONAL   │ 0              │ 1              │
+│ discount                    │ FLOAT                    │ -            │ OPTIONAL   │ 0              │ 1              │
+│ email                       │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ customer                    │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.street              │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.city                │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.zip                 │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ address.country             │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 0              │ 0              │
+│ notes.list.element          │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 1              │ 1              │
+│ items.list.element.sku      │ BYTE_ARRAY               │ STRING       │ REQUIRED   │ 1              │ 1              │
+│ items.list.element.quantity │ INT64                    │ -            │ REQUIRED   │ 1              │ 1              │
+│ items.list.element.price    │ FLOAT                    │ -            │ REQUIRED   │ 1              │ 1              │
+└─────────────────────────────┴──────────────────────────┴──────────────┴────────────┴────────────────┴────────────────┘</code></pre>
+
+    <a href="#row-groups"><h2 id="row-groups">Gruppi di Righe</h2></a>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">+-----------------------------------+
+| PAR1                              |
++-----------------------------------+
+| Row Group 1                       |
+|   +-----------------------------+ |
+|   | Column Chunk 1              | |
+|   |   (Metadata + Data Pages)   | |
+|   +-----------------------------+ |
+|   | Column Chunk 2              | |
+|   |   (Metadata + Data Pages)   | |
+|   +-----------------------------+ |
+|   ...                             |
++-----------------------------------+
+| Row Group 2                       |
+|   +-----------------------------+ |
+|   | Column Chunk 1              | |
+|   |   (Metadata + Data Pages)   | |
+|   +-----------------------------+ |
+|   | Column Chunk 2              | |
+|   |   (Metadata + Data Pages)   | |
+|   +-----------------------------+ |
+|   ...                             |
++-----------------------------------+
+| ...                               |
++-----------------------------------+
+| Metadata                          |
++-----------------------------------+
+| PAR1                              |
++-----------------------------------+</code></pre>
+
+    <p>
+        Come già sappiamo, un file Parquet è diviso in gruppi di righe. Scrivere su un file funziona più o meno così:
+    </p>
+    <ul>
+        <li>1) crea un file e aggiungi 4 byte <code>PAR1</code> ad esso</li>
+        <li>2) crea una struttura di metadati basata sullo schema e mantienila in memoria</li>
+        <li>3) appiattisci la riga passata (controllando se si adatta allo schema)</li>
+        <li>4) salva la riga appiattita in memoria in forma binaria</li>
+        <li>
+            5) controlla se la dimensione del gruppo di righe che stiamo attualmente mantenendo in memoria si adatta alla dimensione massima consentita
+            <ul>
+                <li>a) scrivi il gruppo di righe nel file</li>
+                <li>b) aggiorna i metadati in memoria aggiungendo ad essi i metadati del gruppo che abbiamo appena scritto</li>
+            </ul>
+        </li>
+        <li>
+            6) torna al passo 2
+        </li>
+        <li>
+            7) Scrivi i metadati alla fine del file dopo aver scritto tutti i gruppi di righe
+        </li>
+        <li>
+            8) Chiudi il file con 4 byte <code>PAR1</code>
+        </li>
+    </ul>
+    <blockquote>
+        Naturalmente, questa descrizione è molto semplificata. In realtà, è un po' più complessa, e implementazioni diverse
+        possono differire nei dettagli.
+    </blockquote>
+
+    <p>
+        Concentriamoci sulla struttura del gruppo di righe. Prima, diamo un'occhiata alle definizioni Thrift <code>RowGroup</code>.
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">struct RowGroup {
+  1: required list&lt;ColumnChunk&gt; columns
+  2: required i64 total_byte_size
+  3: required i64 num_rows
+  4: optional list&lt;SortingColumn&gt; sorting_columns
+  5: optional i64 file_offset
+  6: optional i64 total_compressed_size
+  7: optional i16 ordinal
+}
+</code></pre>
+
+    <p>
+        Già a questo stadio, possiamo vedere quante informazioni su un gruppo di righe specifico sono memorizzate nei metadati.<br/>
+        Per ora, però, concentriamoci su tre campi:
+    </p>
+    <ul>
+        <li><code>file_offset</code> - quanti byte dall'inizio del file saltare per leggere il gruppo dato</li>
+        <li><code>total_byte_size</code> - su quanti byte è scritto il gruppo di righe</li>
+        <li><code>columns</code> - informazioni dettagliate su ogni colonna scritta all'interno del gruppo dato</li>
+    </ul>
+
+    <div class="important">
+        <p>
+            <strong>Importante:</strong> ogni gruppo di righe contiene sempre tutte le colonne definite nello schema.<br/>
+            Anche se in tutto il gruppo una colonna contiene solo valori null.
+        </p>
+    </div>
+
+    <a href="#column-chunks"><h2 id="column-chunks">Chunk di Colonne</h2></a>
+
+    <p>
+        Andiamo più a fondo e diamo un'occhiata alla definizione Thrift <code>ColumnChunk</code>
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">struct ColumnChunk {
+  1: optional string file_path
+  2: required i64 file_offset
+  3: optional ColumnMetaData meta_data
+  4: optional i64 offset_index_offset
+  5: optional i32 offset_index_length
+  6: optional i64 column_index_offset
+  7: optional i32 column_index_length
+  8: optional ColumnCryptoMetaData crypto_metadata
+  9: optional binary encrypted_column_metadata
+}
+
+struct ColumnMetaData {
+  1: required Type type
+  2: required list&lt;Encoding&gt; encodings
+  3: required list&lt;string&gt; path_in_schema
+  4: required CompressionCodec codec
+  5: required i64 num_values
+  6: required i64 total_uncompressed_size
+  7: required i64 total_compressed_size
+  8: optional list&lt;KeyValue&gt; key_value_metadata
+  9: required i64 data_page_offset
+  10: optional i64 index_page_offset
+  11: optional i64 dictionary_page_offset
+  12: optional Statistics statistics;
+  13: optional list&lt;PageEncodingStats&gt; encoding_stats;
+  14: optional i64 bloom_filter_offset;
+  15: optional i32 bloom_filter_length;
+}
+</code></pre>
+
+    <div class="notice">
+        <p>
+            <strong>Ricorda:</strong> Tutto quello che abbiamo guardato finora è ancora parte dei metadati. <br/>
+            Questo significa che otteniamo tutte queste informazioni su colonne, gruppi di righe e i dati stessi leggendo
+            solo la fine del file, indipendentemente dal fatto che il file sia 1MB o 1TB.
+        </p>
+    </div>
+
+    <p>
+        Qui arriviamo praticamente al posto che ci permette di leggere i dati dal file. <br/>
+        Ma prima che questo accada, dobbiamo imparare l'ultima struttura dati necessaria per la lettura.
+    </p>
+
+    <a href="#data-pages"><h2 id="data-pages">Pagine di Dati</h2></a>
+
+    <p>
+        <code>Pages</code> - un'altra divisione logica nella struttura del file Parquet.<br/>
+        <code>Row Group -> Column Chunk -> Data Pages</code>
+    </p>
+
+    <ul>
+        <li><code>RowGroup</code> - gruppo di righe (partizione)</li>
+        <li><code>ColumnChunk</code> - ogni gruppo di righe contiene esattamente 1 <code>ColumnChunk</code> per ogni colonna nel gruppo</li>
+        <li><code>Data Page</code> - pagina, l'unità logica più piccola in Parquet che aggrega i dati</li>
+    </ul>
+
+    <p>
+        Leggere Parquet si riduce davvero ad analizzare la struttura dei metadati, localizzare l'indirizzo dell'inizio di un gruppo di righe specifico, poi
+        una colonna specifica nel gruppo, e poi iterare attraverso e leggere i dati da ogni pagina.
+    </p>
+
+    <p>
+        Ma prima di iniziare a leggere le pagine, dobbiamo capire se abbiamo a che fare con una <code>DataPage</code>, <code>IndexPage</code>, o <code>DictionaryPage</code>.
+    </p>
+    <p>
+        Per farlo, prima leggiamo il <code>PageHeader</code> - l'intestazione della pagina, la cui definizione Thrift è così
+    </p>
+
+    <pre><code class="code-shell" data-controller="syntax-highlight">struct PageHeader {
+  1: required PageType type
+  2: required i32 uncompressed_page_size
+  3: required i32 compressed_page_size
+  4: optional i32 crc
+  5: optional DataPageHeader data_page_header;
+  6: optional IndexPageHeader index_page_header;
+  7: optional DictionaryPageHeader dictionary_page_header;
+  8: optional DataPageHeaderV2 data_page_header_v2;
+}
+
+enum PageType {
+  DATA_PAGE = 0;
+  INDEX_PAGE = 1;
+  DICTIONARY_PAGE = 2;
+  DATA_PAGE_V2 = 3;
+}</code></pre>
+
+    <p>
+        Per leggere l'intestazione, dobbiamo conoscere il suo indirizzo relativo all'inizio del file. Ecco come possiamo calcolarlo per un gruppo di righe selezionato e una colonna selezionata:
+    </p>
+
+    <ol>
+        <li>Leggi <code>FileMetadata</code></li>
+        <li>Trova il <code>RowGroup</code> appropriato e localizza il <code>ColumnChunk</code> rilevante</li>
+        <li>Avendo <code>ColumnChunk</code>, otteniamo l'indirizzo <code>file_offset</code> dell'inizio di <code>ColumnChunk</code> relativo all'inizio del file.</li>
+    </ol>
+
+    <div class="important">
+        <p>
+            <strong>Importante:</strong> A questo stadio non dobbiamo ancora fisicamente caricare i byte in memoria.<br/>
+            È sufficiente creare uno <code>stream</code> che ci permetta di leggere i dati direttamente dal file.
+        </p>
+    </div>
+
+    <p>
+        La prima cosa da leggere è l'intestazione, <code>PageHeader</code>. Facendolo tramite Thrift, passando lo
+        stream e impostando l'indirizzo di inizio appropriato, otteniamo una struttura dati <code>PageHeader</code> che ci dirà esattamente come leggere
+        la pagina stessa.
+    </p>
+    <p>
+        Ci sono 3 tipi di pagine:
+    </p>
+    <h3><code>DataPage</code></h3>
+    <p>
+        Una pagina che contiene la rappresentazione binaria dei dati da una colonna selezionata dalle righe che sono finite nel gruppo di righe selezionato.<br/>
+        Questo è il tipo di pagina più semplice e diretto. Contiene "solo" dati.
+    </p>
+    <p>
+        Quando leggiamo una colonna integer, quello che ci interessa è il numero di righe in un gruppo specifico (ogni riga è un valore in una <code>DataPage</code>).
+        Quindi sapendo che in questo gruppo abbiamo, diciamo, 100 valori, sappiamo che dobbiamo leggere 400 byte (int32 è scritto su 4 byte). <br/>
+    </p>
+    <p>
+        Va bene, ma cosa succede se la colonna è opzionale? Significa che può contenere valori null.<br/>
+        Qui la situazione diventa un po' più complicata perché dobbiamo sapere quali righe contengono valori null.<br/>
+        Da dove viene questa conoscenza, chiederai? <br/>
+        <code>Definition Levels</code>
+    </p>
+    <p>
+        La situazione si complica un po'. All'inizio ho scritto che <code>DataPage</code> contiene solo dati, e ora sto aggiungendo alcuni <code>Definition Levels</code>.<br/>
+    </p>
+    <p>
+        In realtà, la struttura della pagina dati è più o meno così:
+    </p>
+    <pre><code class="code-shell" data-controller="syntax-highlight">Parquet Data Page: int32
+=======================================
+[ Repetition Levels ]: 0, 0, 0, 0, 0
+---------------------------------------
+[ Definition Levels ]: 1, 0, 1, 1, 0
+---------------------------------------
+[ Values           ]: 42, 73, 19
+=======================================
+</code></pre>
+    <p>
+        Per ora, concentriamoci solo su <code>Definition Levels</code> e <code>Values</code>. È facile vedere la relazione tra loro.
+        Il numero di <code>Definition Levels</code> e <code>Repetition Levels</code> in ogni pagina è sempre uguale al numero di valori nella colonna.<br/>
+        Indipendentemente dal fatto che ci siano null o no. <code>Definition Levels</code> ci dicono se una data riga contiene un valore o null.
+    </p>
+    <p>
+        Basandoci su questo, possiamo facilmente determinare il numero totale di <code>Values</code> non vuoti, il che ci permetterà di leggerli. <br/>
+        Nell'esempio sopra abbiamo 5 righe, di cui 3 sono valori. Dato che <code>int32</code> è scritto su 4 byte,
+        sappiamo che dobbiamo leggere un totale di 12 byte.<br/>
+        Sappiamo anche che quando convertiamo la colonna in righe, la prima riga conterrà il valore <code>42</code>, la seconda riga <code>null</code>,
+        la terza riga <code>73</code>, la quarta riga <code>19</code>, e la quinta riga <code>null</code>.
+    </p>
+    <div class="important">
+        <p>
+            <strong>Importante:</strong> <code>Repetition Levels</code> e <code>Definition Levels</code> sono molto più complicati, però. Di più su questo dopo.<br/>
+        </p>
+    </div>
+    <p>
+        Questa è più o meno la struttura di <code>DataPage</code>.
+    </p>
+    <h3><code>DictionaryPage</code></h3>
+    <p>
+        Dato che manteniamo i dati in <code>DataPage</code>, qual è lo scopo di <code>DictionaryPage</code>?<br/>
+        Beh, <code>DictionaryPage</code> è una pagina che contiene un dizionario di valori.<br/>
+        Un dizionario usato per leggere i dati, specialmente per colonne contenenti valori ripetibili.
+    </p>
+
+    <p>
+        Funziona più o meno così: quando leggiamo un <code>ColumnChunk</code>, iniziamo con la prima pagina. Se questa pagina è una <code>DictionaryPage</code>,
+        sappiamo che abbiamo a che fare con un dizionario (lo sappiamo dall'inizio, dato che è registrato nei metadati della colonna).
+    </p>
+    <p>
+        Se, per esempio, stiamo leggendo una colonna con alta ripetibilità, come una colonna con nomi di paesi, invece di scrivere il nome completo del paese per ogni riga in <code>DataPage</code>,
+        scriviamo solo la sua posizione nel dizionario.<br/>
+        Per una tale colonna, la prima pagina nella colonna sarebbe <code>DictionaryPage</code>, e quelle successive sarebbero <code>DataPage</code>.
+    </p>
+    <p>
+        La differenza è che in <code>DataPage</code>, invece di valori completi, ci sarebbero posizioni nel dizionario, che manterremmo in memoria per ricostruire le righe.<br/>
+    </p>
+    <div class="important">
+        <p>
+            <strong>Importante:</strong> Ogni <code>ColumnChunk</code> può contenere solo una <code>DictionaryPage</code>.
+        </p>
+    </div>
+    <p>
+        Questo può fornire enormi risparmi. Invece di, diciamo, scrivere la parola <code>Polonia</code> in binario 10.000 volte, che sono 60k byte,
+        scriviamo solo la posizione nell'indice (4 byte), che inoltre viene impacchettata usando l'algoritmo <a href="https://parquet.apache.org/docs/file-format/data-pages/encodings/#RLE" target="_blank">Run Length Encoding / Bit-Packing Hybrid</a>.
+        Questo algoritmo, anche basato sulla ripetibilità di valori consecutivi, ridurrà il numero totale di byte necessari.
+    </p>
+
+    <h3><code>IndexPage</code></h3>
+    <p>
+        L'ultimo tipo di pagina è <code>IndexPage</code>.<br/>
+        Questa pagina non contiene dati, quindi non è necessaria per la lettura o la scrittura.<br/>
+        Ogni <code>ColumnChunk</code> può contenere solo una <code>IndexPage</code> ed è sempre situata alla fine, dopo <code>DictionaryPage</code> e tutte le <code>DataPage</code>.
+    </p>
+    <p>
+        Lo scopo di questa pagina è memorizzare statistiche riguardo a <code>ColumnChunk</code>, come valori <code>Min/Max</code>, numero di <code>null</code>, o metodo di ordinamento per ogni pagina in un <code>ColumnChunk</code> specifico.
+        Questo permette rapido filtraggio e trovare solo pagine specifiche all'interno di un dato <code>ColumnChunk</code>, accelerando significativamente la ricerca nel file quando siamo interessati a informazioni specifiche.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Nota:</strong> Ogni <code>ColumnChunk</code> nei suoi metadati contiene statistiche simili a <code>IndexPage</code>, ma non per ogni pagina ma per l'intero <code>ColumnChunk</code>.<br/>
+            Grazie a questo, possiamo prima saltare intere colonne che non ci interessano e poi anche pagine specifiche, riducendo al minimo assoluto la quantità di dati che dobbiamo leggere.
+        </p>
+    </div>
+
+    <p>
+        Considerando che queste informazioni sono nei metadati del file, anche i file Parquet più grandi possono essere letti e filtrati in modo ultra-veloce anche se sono disponibili solo via rete.<br/>
+        È sufficiente che possiamo leggere i metadati, poi basandoci su di essi localizzare un gruppo di righe specifico, poi la colonna selezionata, e infine pagine specifiche. <br/>
+        Questo ci dà una localizzazione molto precisa dei nostri dati, che possiamo leggere usando l'<code>Http Range Header</code>.
+    </p>
+    <p>
+        Questa è esattamente una delle ragioni per cui Parquet è così potente. Non stiamo più parlando di scaricare brutalmente e iterare attraverso un file di gigabyte. Parquet ci permette con precisione chirurgica
+        di scaricare e leggere solo quelle aree del file che ci interessano davvero.
+    </p>
+
+    <a href="#dremel"><h2 id="dremel">Dremel</h2></a>
+
+    <p>
+        Quando ho discusso la struttura di <code>DataPage</code>, ho menzionato <code>Definition Levels</code> e <code>Repetition Levels</code>.
+    </p>
+    <p>
+        L'esempio che ho coperto era molto semplice perché riguardava una colonna semplice (int32), quindi <code>Repetition Levels</code> non si applicano affatto.<br/>
+        La situazione cambia drasticamente quando abbiamo a che fare con una colonna nidificata, come una struttura, lista, o mappa.
+        Diamo un'occhiata a un esempio.
+    </p>
+    <p>
+        <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
+    </p>
+    <p>
+        Tornando alla parte precedente di questo articolo, specificamente ai <a href="#nested-types">tipi nidificati</a>.<br/>
+        Sappiamo che i nostri dati dopo l'appiattimento saranno così:
+    </p>
+    <ul>
+        <li><code>items.list.element.sku</code> - <code>"abc","def"</code></li>
+        <li><code>items.list.element.quantity</code> - <code>1,2</code></li>
+        <li><code>items.list.element.price</code> - <code>100,200</code></li>
+    </ul>
+    <p>
+        Abbiamo 3 colonne qui, ognuna sarà in un <code>Column Chunk</code> separato e ognuna conterrà
+        una o più pagine.
+    </p>
+    <p>
+        Quindi come, basandosi su questi due valori (<code>Repetition / Definition Levels</code>), le librerie che leggono i file sanno quanto profondamente nella struttura si trovano i valori e a quale elemento appartengono?<br/>
+        Cosa succede se la nostra struttura fosse così:
+    </p>
+    <p>
+        <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":null, "quantity": 10, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
+        (nel secondo elemento, sku ha un valore null). <br/>
+    </p>
+    <p>Cosa succede se la struttura è molto più nidificata - come sappiamo quale valore va a quale livello di nidificazione?</p>
+    <p>
+        La risposta a questa e molte altre domande può essere trovata in un documento pubblicato da Google: <a href="https://static.googleusercontent.com/media/research.google.com/pl//pubs/archive/36632.pdf" target="_blank">Dremel: Interactive Analysis of Web-Scale Datasets</a>
+        che descrive come Google memorizza e cerca le strutture dati nidificate.
+    </p>
+    <p>
+        Lo strumento utilizzato da Google si chiama Dremel ed è un sistema distribuito per la ricerca di grandi dataset. <br/>
+        È basato su 2 algoritmi, <code>Shredding</code> e <code>Assembling</code>, che sono descritti molto brevemente nel documento sopra.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Nota:</strong> Descrivere il funzionamento esatto di questi algoritmi va oltre lo scopo di questo post già lungo.<br/>
+            Se c'è interesse nell'argomento, però, cercherò di coprire questo filone nei prossimi post.
+        </p>
+    </div>
+    <p>
+        Questi algoritmi sono basati su queste 3 definizioni:
+    </p>
+    <ul>
+        <li>Repetition Levels</li>
+        <li>Definition Levels</li>
+        <li>Values</li>
+    </ul>
+    <p>
+        Come abbiamo già menzionato, <code>Definition Level</code> determina se una data riga contiene un valore o no. <code>Repetition Level</code>, che per le colonne piatte è sempre 0.
+        Per le strutture, determinerà se un valore (o null) dovrebbe essere ripetuto, e a quale livello di nidificazione.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Nota:</strong> La conoscenza di come funzionano esattamente gli algoritmi di Dremel non è necessaria per l'uso ottimale di Parquet.<br/>
+            Per questo motivo, non elaborerò su questo argomento, ma se c'è interesse, cercherò di coprire questo filone nei prossimi post.
+        </p>
+    </div>
+    <p>
+         Sotto mostrerò solo più o meno come apparirebbero i dati appiattiti.
+    </p>
+    <pre>
+        <code class="code-shell" data-controller="syntax-highlight">Input:
+[
+    &#039;items&#039; =&gt; [
+        [&#039;sku&#039; =&gt; &#039;abc&#039;, ...],
+        [&#039;sku&#039; =&gt; &#039;def&#039;, ...],
+    ]
+]
+
+Output:
+{
+  [&quot;sku&quot;] =&gt;
+  {
+    [&quot;repetition_levels&quot;] =&gt; { [0] =&gt; int(0) [1] =&gt; int(1) }
+    [&quot;definition_levels&quot;] =&gt; { [0] =&gt; int(1) [1] =&gt; int(1) }
+    [&quot;values&quot;] =&gt; { [0] =&gt; string(3) &quot;abc&quot; [1] =&gt; string(3) &quot;def&quot; }
+  }
+}</code>
+    </pre>
+    <p>
+        Quindi in realtà salviamo <code>0, 1, 0, 1, "abc", "def"</code> e non solo <code>"abc", "def"</code>. <br/>
+        Sono esattamente questi numeri aggiuntivi che ci dicono come ricostruire qualsiasi struttura nidificata.
+    </p>
+    <p>
+        Curiosamente, anche i repetition levels e i definition levels sono appropriatamente impacchettati per l'ottimizzazione usando l'algoritmo
+        <a href="https://parquet.apache.org/docs/file-format/data-pages/encodings/#RLE" target="_blank">Run Length Encoding / Bit-Packing Hybrid</a>.
+    </p>
+    <p>
+        Non è tutto, perché non sono solo i livelli ad essere impacchettati, ma anche i valori stessi.<br/>
+        A seconda del tipo di colonna, i valori possono essere impacchettati in modi diversi. Una lista di tutti gli algoritmi di impacchettamento supportati da Parquet (almeno in teoria) può essere trovata
+        <a href="https://parquet.apache.org/docs/file-format/data-pages/encodings" target="_blank">nella documentazione ufficiale</a>.
+    </p>
+    <p>
+        E le informazioni su quale algoritmo è stato usato per impacchettare i dati prima della scrittura possono essere trovate nei metadati, sotto questo percorso: <code>RowGroups[x].ColumnChunk[y].PageHeader[z].data_page_header.encoding</code>
+    </p>
+    <p>
+        Ma questa non è l'ultima parola di Parquet quando si tratta di ottimizzazione!
+    </p>
+    <a href="#compression"><h2 id="compression">Compressione</h2></a>
+    <p>
+        Dopo aver impacchettato e scritto i nostri dati in forma binaria per una pagina specifica, ogni pagina è additionally compressa.
+    </p>
+    <p>
+        A seconda dell'implementazione, Parquet permette l'uso di diversi algoritmi di compressione:
+    </p>
+    <ul>
+        <li>UNCOMPRESSED</li>
+        <li>SNAPPY</li>
+        <li>GZIP</li>
+        <li>LZO</li>
+        <li>BROTLI</li>
+        <li>LZ4</li>
+        <li>ZSTD</li>
+        <li>LZ4_RAW</li>
+    </ul>
+    <p>
+        Un'opzione molto popolare è <a href="https://github.com/google/snappy" target="_blank">Snappy</a>, che offre un compromesso molto buono tra velocità e livello di compressione.
+    </p>
+    <p>
+        Strumenti come <a href="https://spark.apache.org/" target="_blank">Apache Spark</a> lo usano di default.
+    </p>
+    <a href="#encryption"><h2 id="encryption">Crittografia</h2></a>
+    <p>
+        Una delle ultime caratteristiche interessanti di cui vorrei parlare è la crittografia!
+    </p>
+    <p>
+        Sì, Parquet permette di crittografare i dati - crittografia a più livelli.
+    </p>
+    <ul>
+        <li>Metadati - i metadati crittografati rendono effettivamente difficile leggere i contenuti del file, ma non impossibile</li>
+        <li>Dati - i dati crittografati rendono la lettura praticamente impossibile</li>
+        <li>Colonne - particolarmente utile se solo alcune colonne contengono dati sensibili.</li>
+        <li>Pagine</li>
+    </ul>
+    <div class="notice">
+        <p>
+            <strong>Nota:</strong> La crittografia è una di quelle funzionalità che non ho ancora coperto nell'<a href="https://flow-php.com/documentation/components/libs/parquet/">implementazione PHP</a><br/>
+            Per questo motivo non elaborerò su questo argomento. Una volta che avrò la possibilità di implementare questa funzionalità, cercherò di integrare questo articolo.
+        </p>
+    </div>
+    <p>
+        La crittografia in Parquet è basata su <a href="https://parquet.apache.org/docs/file-format/data-pages/encryption/" target="_blank">Parquet Modular Encryption</a> e usa
+        <a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf" target="_blank">AES</a> per la crittografia dei dati.
+    </p>
+    <p>
+        La crittografia, specialmente di colonne selezionate, porta Parquet a un livello superiore di archiviazione dati. <br/> Questo ci permette relativamente facilmente, con overhead minimo,
+        di proteggere ulteriormente i dati che memorizziamo nei file Parquet. <br/>
+    </p>
+    <p>
+        Immaginiamo che Parquet sia usato per memorizzare dati dei clienti, dove le colonne <code>email</code> e <code>phone</code> contengono dati sensibili.<br/>
+        In questa situazione, chiede proprio che quelle due colonne siano protette ulteriormente. Anche se qualcuno riesce ad ottenere accesso fisico al file, senza la chiave non
+        saranno in grado di leggere i dati.
+    </p>
+    <a href="#summary"><h2 id="summary">Riassunto</h2></a>
+    <p>
+        Questo è esattamente il segreto di Parquet e il modo all'efficienza. Invece di memorizzare dati arbitrari in forma testuale, Parquet fa diversi passi in più. <br/>
+        Prima, impone uno schema dei dati basato su tipi semplici ma incredibilmente flessibili, ognuno dei quali può essere
+        rappresentato in forma binaria.<br/>
+        Poi la forma binaria è appropriatamente impacchettata per evitare ripetizioni di byte non necessarie, che viene infine
+        additionally compressa usando algoritmi molto efficienti.<br/>
+        La ciliegina sulla torta sono i metadati avanzati e dettagliati, disponibili a più livelli, permettendo di filtrare
+        partizioni non necessarie o persino interi file senza leggere i loro contenuti.
+    </p>
+    <p>
+        Inoltre, grazie alla divisione logica appropriata, su cui abbiamo pieno controllo (dimensione di gruppi e pagine), possiamo
+        decidere cosa è più importante per noi - velocità o risparmio di memoria. Ricerca o lettura di dati, o magari
+        sicurezza, per cui useremo crittografia aggiuntiva?
+    </p>
+    <p>
+        Parquet è davvero uno strumento potente che, nelle mani giuste, permette l'archiviazione e la ricerca efficiente di
+        enormi quantità di dati.<br/>
+    </p>
+    <p>
+        Se questo post ti ha ispirato a sperimentare con questo formato di dati fantastico, fammi sapere nei commenti!
+    </p>
+    <a href="#help"><h2 id="help">Aiuto</h2></a>
+    <p>
+        Se hai bisogno di aiuto nella costruzione di un data warehouse centrale, sarei felice di aiutarti.<br/>
+        <a href="https://norbert.tech/consulting">Contattami</a>, e insieme creeremo una soluzione perfettamente su misura per le tue esigenze.
+    </p>
+    <p>
+        Ti incoraggio anche a visitare il server <a href="https://discord.gg/5dNXfQyACW" target="_blank">Discord - Flow PHP</a>, dove
+        possiamo parlare direttamente.
+    </p>
+    <div class="img-wide">
+        <img src="https://norbert.tech/assets/images/blog/analytics-in-transactional-distributed-systems/consulting_01-fa277dfb3736a033cbfcf1ac931afb08.jpg" alt="Consulenza" />
+    </div>
+
+    </article>
+    <div class="mb-2 mx-auto max-w-screen-lg text-center">
+        <script src="https://giscus.app/client.js"
+                data-repo="norberttech/norbert.tech"
+                data-repo-id="MDEwOlJlcG9zaXRvcnkyMjQ0MDQwNDA="
+                data-category="Comments"
+                data-category-id="DIC_kwDODWAiSM4CionD"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="en"
+                crossorigin="anonymous"
+                async>
+        </script>
+    </div>
+    </main>
+
+    <footer class="p-4 bg-sky-50 absolute bottom-0 w-full">
+        <div class="mx-auto max-w-screen-2xl text-center">
+            <a href="/">by @norbert_tech</a>
+        </div>
+    </footer>
+</body>
+</html>

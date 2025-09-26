@@ -2,31 +2,7 @@
 
 namespace App\Command;
 
-use App\DataFrames\Orders;
-use App\DataFrames\OrdersCSV;
-use App\Dbal\SchemaProvider;
-use Doctrine\DBAL\Connection;
-use Flow\Doctrine\Bulk\Dialect\SqliteInsertOptions;
-use Flow\ETL\Rows;
-use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use function Flow\ETL\Adapter\Doctrine\from_dbal_key_set_qb;
-use function Flow\ETL\Adapter\Doctrine\pagination_key_desc;
-use function Flow\ETL\Adapter\Doctrine\pagination_key_set;
-use function Flow\ETL\Adapter\Doctrine\to_dbal_table_insert;
-use function Flow\ETL\DSL\analyze;
-use function Flow\ETL\DSL\constraint_unique;
-use function Flow\ETL\DSL\data_frame;
-use function Flow\ETL\DSL\lit;
-use function Flow\ETL\DSL\ref;
-use function Flow\ETL\DSL\rename_replace;
-use function Flow\ETL\DSL\schema_to_ascii;
-use function Flow\Types\DSL\type_datetime;
+// use statements
 
 #[AsCommand(
     name: 'app:orders:import',

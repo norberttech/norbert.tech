@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace App\Dbal;
 
-use App\DataFrames\Orders;
-use App\DataFrames\OrdersCSV;
-use Doctrine\DBAL\Schema\Schema;
-use Doctrine\Migrations\Provider\SchemaProvider as MigrationsSchemaProvider;
-use function Flow\ETL\Adapter\Doctrine\to_dbal_schema_table;
+// use statements
 
 final class SchemaProvider implements MigrationsSchemaProvider
 {

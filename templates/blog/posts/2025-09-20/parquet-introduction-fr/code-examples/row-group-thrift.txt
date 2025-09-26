@@ -1,0 +1,9 @@
+struct RowGroup {
+  1: required list<ColumnChunk> columns
+  2: required i64 total_byte_size
+  3: required i64 num_rows
+  4: optional list<SortingColumn> sorting_columns
+  5: optional i64 file_offset
+  6: optional i64 total_compressed_size
+  7: optional i16 ordinal
+}

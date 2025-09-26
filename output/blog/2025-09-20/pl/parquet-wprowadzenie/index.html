@@ -30,7 +30,7 @@
             <style>
             @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
         </style>
-        <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-9c914d9b3ad2a1ffe833cba4d7599f04.css">
+        <link rel="stylesheet" href="https://norbert.tech/assets/styles/app-e24f407580be48180186fb40114b24be.css">
     
             
 <script type="importmap">
@@ -95,15 +95,40 @@
     </div>
     
     <main class="mx-auto max-w-screen-2xl mb-4 md:pt-4 px-4 lg:px-0">
-            <div class="mx-auto max-w-screen-lg px-2">
-        <ul class="mt-2 pl-[20px] flex gap-4">
+            <div class="px-2 py-5 sm:px-4 md:px-8 lg:px-12 mx-auto max-w-4xl">
+        <ul class="mt-2 pl-[20px] flex flex-wrap gap-2 sm:gap-4">
             <li>
-                <a href="/blog" class="text-blue-500 hover:underline">Go Back</a>
+                <a href="/blog" class="text-sm sm:text-base text-blue-500 hover:underline px-2 py-1 rounded">Go Back</a>
             </li>
-                    </ul>
+                                                                <li>
+                        <a href="/blog/2025-09-20/de/parquet-einfuehrung"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Deutsch">🇩🇪 Deutsch</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/es/parquet-introduccion"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Spanish">🇪🇸 Spanish</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/parquet-introduction"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="English">🇺🇸 English</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/it/parquet-introduzione"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Italian">🇮🇹 Italian</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-09-20/fr/parquet-introduction-fr"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="French">🇫🇷 French</a>
+                    </li>
+                                    </ul>
 
             </div>
-    <article class="blog-post px-2 py-5 sm:px-4 mx-auto max-w-screen-lg">
+    <article class="blog-post">
             <div class="img-wide">
         <img src="https://norbert.tech/assets/images/blog/parquet-introduction/parquet-026fc09c95c7c7b4728c30bb85593777.jpg" alt="Parquet - Introduction" />
     </div>
@@ -185,11 +210,11 @@
         na rachunek nie jest wcale rozmiar danych, a to ile transferu zużywamy, aby te dane odczytać / zapisać.
     </p>
     <p>
-        Tak więc redukując rozmiar pliku, redukujemy nie tylko koszt jego przechowywania, ale również przetwarzania.
+        Redukując rozmiar pliku, redukujemy nie tylko koszt jego przechowywania, ale również przetwarzania.
         Istotne jest jednak żeby zrozumieć, że przetwarzanie to tak naprawdę jakakolwiek forma dostępu, czyli zapis/odczyt.
     </p>
     <p>
-        Sprowadza się to więc do tego, że poprzez wybór odpowiedniego formatu pliku, oszczędności mogą być naprawdę spore,
+        Poprzez wybór odpowiedniego formatu pliku, oszczędności mogą być naprawdę spore,
         szczególnie kiedy mówimy o większej ilości danych.
     </p>
     <p>
@@ -457,10 +482,12 @@ $fileMetadata-&gt;read(
         Różnica polega na tym, że nie odczytujemy jednego wiersza na raz, a całą grupę wierszy, wczytując do pamięci
         kolumnę po kolumnie, a następnie odbudowując wiersze na podstawie odpowiednich indeksów.
     </p>
-    <blockquote>
+    <div class="notice">
+    <p>
         Pamiętając o tym, że aby odpowiednio zapisywać dane w formacie kolumnowym musimy operować na logicznych grupach, a nie na pojedynczych wierszach.
         Możemy w stosunkowo łatwy sposób zarządzać stosunkiem pamięci do ilości operacji IO.
-    </blockquote>
+    </p>
+    </div>
     <p>
         Zapis i odczyt z pamięci jest szybszy niż zapis i odczyt z dysku (<a href="https://www.bitflux.ai/blog/memory-is-slow-part1/" target="_blank">chociaż nie zawsze</a>).
         Zwiększając ilość wierszy, które będą zapisane w jednej grupie, redukujemy ilość grup, czyli ilość operacji IO. <br/>
@@ -503,11 +530,13 @@ $fileMetadata-&gt;read(
         W przypadku ustalenia mniejszego rozmiaru grupy, który pozwoli podzielić 10 mln na 1000 grup, analizując
         metadane pliku, będziemy mogli przeskoczyć większą ilość grup i wczytać do pamięci dużo mniejszą ilość wierszy.
     </p>
-    <blockquote>
+    <div class="notice">
+    <p>
         Decyzja o rozmiarze grupy wierszy powinna być przemyślana zarówno pod kątem wydajności zapisu jak i odczytu
         konkretnego pliku. Odpowiednia konfiguracja przekłada się bezpośrednio na zużycie zasobów co finalnie przekłada się
         na pieniądze.
-    </blockquote>
+    </p>
+    </div>
 
     <a href="#schema"><h2 id="schema">Schema</h2></a>
 
@@ -702,7 +731,7 @@ union LogicalType {
         <li><code>map_column.key_value.value</code> - Int32</li>
     </ul>
     <p>
-        Tak więc dla powyższego przykładu płaska ścieżka do <code>sku</code> będzie wyglądać następująco:
+        Dla powyższego przykładu płaska ścieżka do <code>sku</code> będzie wyglądać następująco:
         <code>items.list.element.sku</code>, natomiast spłaszczona kompletna struktura będzie wyglądać tak:
     </p>
     <pre><code class="code-shell" data-controller="syntax-highlight">┌─────────────────────────────┬──────────────────────── Columns ────────┬────────────┬────────────────┬────────────────┐
@@ -781,10 +810,12 @@ union LogicalType {
             8) Zamknij plik 4 bajtami <code>PAR1</code>
         </li>
     </ul>
-    <blockquote>
-        Oczywiście ten opis jest bardzo uproszczony, w rzeczywistości jest on trochę bardziej złożony, ponadto różne implementacje
-        mogą się różnić w szczegółach.
-    </blockquote>
+    <div class="notice">
+        <p>
+            Oczywiście ten opis jest bardzo uproszczony, w rzeczywistości jest on trochę bardziej złożony, ponadto różne implementacje
+            mogą się różnić w szczegółach.
+        </p>
+    </div>
 
     <p>
         Skupmy się na strukturze grupy wierszy, popatrzmy najpierw na definicje Thrift <code>RowGroup</code>.

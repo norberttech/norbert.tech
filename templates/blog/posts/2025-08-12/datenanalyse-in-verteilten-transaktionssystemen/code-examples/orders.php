@@ -4,22 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFrames;
 
-use Flow\ETL\Adapter\Doctrine\DbalMetadata;
-use function Flow\ETL\DSL\integer_schema;
-use function Flow\ETL\DSL\uuid_schema;
-use function Flow\ETL\DSL\datetime_schema;
-use function Flow\ETL\DSL\float_schema;
-use function Flow\ETL\DSL\string_schema;
-use function Flow\ETL\DSL\map_schema;
-use function Flow\Types\DSL\type_map;
-use function Flow\Types\DSL\type_string;
-use function Flow\ETL\DSL\list_schema;
-use function Flow\Types\DSL\type_list;
-use function Flow\Types\DSL\type_structure;
-use function Flow\Types\DSL\type_integer;
-use function Flow\Types\DSL\type_float;
-use function \Flow\ETL\DSL\schema;
-use Flow\ETL\Schema;
+// use statements
 
 final class Orders
 {

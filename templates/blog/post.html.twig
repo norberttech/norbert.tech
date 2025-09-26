@@ -5,54 +5,54 @@
 {% block header %}{% endblock %}
 
 {% block content %}
-    <div class="mx-auto max-w-screen-lg px-2">
-        <ul class="mt-2 pl-[20px] flex gap-4">
+    <div class="px-2 py-5 sm:px-4 md:px-8 lg:px-12 mx-auto max-w-4xl">
+        <ul class="mt-2 pl-[20px] flex flex-wrap gap-2 sm:gap-4">
             <li>
-                <a href="{{ path('blog') }}" class="text-blue-500 hover:underline">Go Back</a>
+                <a href="{{ path('blog') }}" class="text-sm sm:text-base text-blue-500 hover:underline px-2 py-1 rounded">Go Back</a>
             </li>
             {% for translationId in post.translationsIds %}
                 {% set translatedPost = posts.get(translationId) %}
                 {% if translatedPost.language == 'en' %}
                     <li>
                         <a href="{{ path('blog_post', {date: translatedPost.date | date('Y-m-d'), slug: translatedPost.slug}) }}"
-                           class="text-lg hover:opacity-80"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
                            title="English">🇺🇸 English</a>
                     </li>
                 {% elseif translatedPost.language == 'pl' %}
                     <li>
                         <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
-                           class="text-lg hover:opacity-80"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
                            title="Polish">🇵🇱 Polish</a>
                     </li>
                 {% elseif translatedPost.language == 'de' %}
                     <li>
                         <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
-                           class="text-lg hover:opacity-80"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
                            title="Deutsch">🇩🇪 Deutsch</a>
                     </li>
                 {% elseif translatedPost.language == 'es' %}
                     <li>
                         <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
-                           class="text-lg hover:opacity-80"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
                            title="Spanish">🇪🇸 Spanish</a>
                     </li>
                 {% elseif translatedPost.language == 'fr' %}
                     <li>
                         <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
-                           class="text-lg hover:opacity-80"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
                            title="French">🇫🇷 French</a>
                     </li>
                 {% elseif translatedPost.language == 'it' %}
                     <li>
                         <a href="{{ path('blog_post_language', {date: translatedPost.date | date('Y-m-d'), language: translatedPost.language, slug: translatedPost.slug}) }}"
-                           class="text-lg hover:opacity-80"
-                           title="French">🇮🇹 Italian</a>
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Italian">🇮🇹 Italian</a>
                     </li>
                 {% endif %}
             {% endfor %}
         </ul>
 
-        {% if post.translated %}
+        {% if post.translated and post.language != 'en' %}
             <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
@@ -78,7 +78,7 @@
             </div>
         {% endif %}
     </div>
-    <article class="blog-post px-2 py-5 sm:px-4 mx-auto max-w-screen-lg">
+    <article class="blog-post">
         {{ block('article') }}
     </article>
     <div class="mb-2 mx-auto max-w-screen-lg text-center">

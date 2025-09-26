@@ -1,0 +1,11 @@
+struct FileMetaData {
+  1: required i32 version
+  2: required list<SchemaElement> schema;
+  3: required i64 num_rows
+  4: required list<RowGroup> row_groups
+  5: optional list<KeyValue> key_value_metadata
+  6: optional string created_by
+  7: optional list<ColumnOrder> column_orders;
+  8: optional EncryptionAlgorithm encryption_algorithm
+  9: optional binary footer_signing_key_metadata
+}

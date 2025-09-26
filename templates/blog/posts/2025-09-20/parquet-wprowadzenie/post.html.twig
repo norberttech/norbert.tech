@@ -91,11 +91,11 @@ image/jpeg
         na rachunek nie jest wcale rozmiar danych, a to ile transferu zużywamy, aby te dane odczytać / zapisać.
     </p>
     <p>
-        Tak więc redukując rozmiar pliku, redukujemy nie tylko koszt jego przechowywania, ale również przetwarzania.
+        Redukując rozmiar pliku, redukujemy nie tylko koszt jego przechowywania, ale również przetwarzania.
         Istotne jest jednak żeby zrozumieć, że przetwarzanie to tak naprawdę jakakolwiek forma dostępu, czyli zapis/odczyt.
     </p>
     <p>
-        Sprowadza się to więc do tego, że poprzez wybór odpowiedniego formatu pliku, oszczędności mogą być naprawdę spore,
+        Poprzez wybór odpowiedniego formatu pliku, oszczędności mogą być naprawdę spore,
         szczególnie kiedy mówimy o większej ilości danych.
     </p>
     <p>
@@ -299,10 +299,12 @@ image/jpeg
         Różnica polega na tym, że nie odczytujemy jednego wiersza na raz, a całą grupę wierszy, wczytując do pamięci
         kolumnę po kolumnie, a następnie odbudowując wiersze na podstawie odpowiednich indeksów.
     </p>
-    <blockquote>
+    <div class="notice">
+    <p>
         Pamiętając o tym, że aby odpowiednio zapisywać dane w formacie kolumnowym musimy operować na logicznych grupach, a nie na pojedynczych wierszach.
         Możemy w stosunkowo łatwy sposób zarządzać stosunkiem pamięci do ilości operacji IO.
-    </blockquote>
+    </p>
+    </div>
     <p>
         Zapis i odczyt z pamięci jest szybszy niż zapis i odczyt z dysku (<a href="https://www.bitflux.ai/blog/memory-is-slow-part1/" target="_blank">chociaż nie zawsze</a>).
         Zwiększając ilość wierszy, które będą zapisane w jednej grupie, redukujemy ilość grup, czyli ilość operacji IO. <br/>
@@ -345,11 +347,13 @@ image/jpeg
         W przypadku ustalenia mniejszego rozmiaru grupy, który pozwoli podzielić 10 mln na 1000 grup, analizując
         metadane pliku, będziemy mogli przeskoczyć większą ilość grup i wczytać do pamięci dużo mniejszą ilość wierszy.
     </p>
-    <blockquote>
+    <div class="notice">
+    <p>
         Decyzja o rozmiarze grupy wierszy powinna być przemyślana zarówno pod kątem wydajności zapisu jak i odczytu
         konkretnego pliku. Odpowiednia konfiguracja przekłada się bezpośrednio na zużycie zasobów co finalnie przekłada się
         na pieniądze.
-    </blockquote>
+    </p>
+    </div>
 
     <a href="#schema"><h2 id="schema">Schema</h2></a>
 
@@ -473,7 +477,7 @@ image/jpeg
         <li><code>map_column.key_value.value</code> - Int32</li>
     </ul>
     <p>
-        Tak więc dla powyższego przykładu płaska ścieżka do <code>sku</code> będzie wyglądać następująco:
+        Dla powyższego przykładu płaska ścieżka do <code>sku</code> będzie wyglądać następująco:
         <code>items.list.element.sku</code>, natomiast spłaszczona kompletna struktura będzie wyglądać tak:
     </p>
     <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/schema-flat.txt') | e('html') }}</code></pre>
@@ -507,10 +511,12 @@ image/jpeg
             8) Zamknij plik 4 bajtami <code>PAR1</code>
         </li>
     </ul>
-    <blockquote>
-        Oczywiście ten opis jest bardzo uproszczony, w rzeczywistości jest on trochę bardziej złożony, ponadto różne implementacje
-        mogą się różnić w szczegółach.
-    </blockquote>
+    <div class="notice">
+        <p>
+            Oczywiście ten opis jest bardzo uproszczony, w rzeczywistości jest on trochę bardziej złożony, ponadto różne implementacje
+            mogą się różnić w szczegółach.
+        </p>
+    </div>
 
     <p>
         Skupmy się na strukturze grupy wierszy, popatrzmy najpierw na definicje Thrift <code>RowGroup</code>.

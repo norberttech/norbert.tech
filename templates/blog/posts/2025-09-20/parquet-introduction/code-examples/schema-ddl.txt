@@ -1,0 +1,28 @@
+message orders_scheme {
+    required fixed_len_byte_array(16) order_id (UUID)
+    required int64 created_at (TIMESTAMP(MICROS,false))
+    optional int64 updated_at (TIMESTAMP(MICROS,false))
+    optional float discount
+    required binary email (STRING)
+    required binary customer (STRING)
+    required group address {
+          required binary street (STRING);
+          required binary city (STRING);
+          required binary zip (STRING);
+          required binary country (STRING);
+    }
+    required group notes (LIST) {
+          repeated group list {
+                required binary element (STRING);
+          }
+    }
+    required group items (LIST) {
+          repeated group list {
+                required group element {
+                      required binary sku (STRING);
+                      required int64 quantity (INTEGER(64,true));
+                      required float price;
+                }
+          }
+    }
+}

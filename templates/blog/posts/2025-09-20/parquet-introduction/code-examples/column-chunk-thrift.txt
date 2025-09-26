@@ -1,0 +1,29 @@
+struct ColumnChunk {
+  1: optional string file_path
+  2: required i64 file_offset
+  3: optional ColumnMetaData meta_data
+  4: optional i64 offset_index_offset
+  5: optional i32 offset_index_length
+  6: optional i64 column_index_offset
+  7: optional i32 column_index_length
+  8: optional ColumnCryptoMetaData crypto_metadata
+  9: optional binary encrypted_column_metadata
+}
+
+struct ColumnMetaData {
+  1: required Type type
+  2: required list<Encoding> encodings
+  3: required list<string> path_in_schema
+  4: required CompressionCodec codec
+  5: required i64 num_values
+  6: required i64 total_uncompressed_size
+  7: required i64 total_compressed_size
+  8: optional list<KeyValue> key_value_metadata
+  9: required i64 data_page_offset
+  10: optional i64 index_page_offset
+  11: optional i64 dictionary_page_offset
+  12: optional Statistics statistics;
+  13: optional list<PageEncodingStats> encoding_stats;
+  14: optional i64 bloom_filter_offset;
+  15: optional i32 bloom_filter_length;
+}

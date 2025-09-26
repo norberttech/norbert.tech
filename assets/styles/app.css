@@ -7,6 +7,8 @@
 body {
     font-family: "Cabin", system-ui;
     font-size: 18px;
+    line-height: 1.65;
+    @apply lg:text-[19px];
 }
 
 a {
@@ -15,7 +17,7 @@ a {
 
 code {
     font-size: 0.9em;
-    @apply rounded !px-[4px] !py-[6px] bg-gray-100 text-gray-800;
+    @apply rounded !px-[5px] !py-[2px] bg-gray-100 text-gray-800 border border-gray-300 font-mono;
 }
 
 pre code.hljs {
@@ -57,28 +59,46 @@ pre code.hljs {
     @apply h-[450px] w-full mb-5 overflow-hidden flex items-center justify-center;
 }
 
-article.blog-post p, ul, pre, img {
-    @apply mb-2
+article.blog-post {
+    @apply px-2 py-2 sm:px-4 md:px-8 lg:px-12 mx-auto max-w-4xl
+}
+
+article.blog-post p {
+    @apply mb-5 leading-[1.75];
+}
+
+article.blog-post ul, article.blog-post ol, article.blog-post pre, article.blog-post img {
+    @apply mb-5;
 }
 
 article.blog-post pre {
-    @apply overflow-x-auto
+    @apply overflow-x-auto;
+}
+
+@media (max-width: 640px) {
+    article.blog-post p code {
+        display: inline-block;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        vertical-align: bottom;
+    }
 }
 
 article.blog-post h1 {
-    @apply text-3xl font-bold mb-4 mt-4;
+    @apply text-3xl font-bold mb-4 mt-6;
 }
 
 article.blog-post h2 {
-    @apply text-2xl font-semibold mb-3 mt-3;
+    @apply text-2xl font-semibold mb-4 mt-6;
 }
 
 article.blog-post h3 {
-    @apply text-xl font-semibold mb-2 mt-2;
+    @apply text-xl font-semibold mb-3 mt-5;
 }
 
 article.blog-post h4 {
-    @apply text-lg font-semibold mb-2 mt-2;
+    @apply text-lg font-semibold mb-2 mt-4;
 }
 
 article.blog-post ul {
@@ -89,12 +109,16 @@ article.blog-post ol {
     @apply list-decimal pl-6;
 }
 
+article.blog-post ul li, article.blog-post ol li {
+    @apply mb-2;
+}
+
 article.blog-post blockquote {
     @apply border-l-4 pl-4 italic text-gray-600 my-4;
 }
 
 article.blog-post .img-wide {
-    @apply h-[450px] w-full mb-5 overflow-hidden flex items-center justify-center;
+    @apply w-full mb-5 overflow-hidden flex items-center justify-center;
 }
 
 article.blog-post .img-wide img {

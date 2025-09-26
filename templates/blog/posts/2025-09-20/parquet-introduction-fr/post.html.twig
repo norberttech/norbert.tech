@@ -1,0 +1,895 @@
+{% extends 'blog/post.html.twig' %}
+
+{%- block title -%}
+    {{ post.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {{ post.description }}
+{%- endblock -%}
+
+{%- block og_img -%}
+{{ asset('images/blog/parquet-introduction/parquet.jpg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    {{ post.title }}
+{%- endblock -%}
+
+
+{% block article %}
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/parquet-introduction/parquet.jpg') }}" alt="Parquet - Introduction" />
+    </div>
+
+    <h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
+    <div class="mb-2">
+        <small class="text-sm">Date de Publication {{ post.date | date }}</small>
+    </div>
+    <div class="mb-4">
+        {% for label in post.labels %}
+            <small><span class="badge badge-info">{{ label }}</span></small>
+        {% endfor %}
+    </div>
+    <p>
+        Parquet, un format de fichier binaire et colonnaire créé pour le stockage et la recherche efficaces de données.
+    </p>
+    <p>
+        Sur internet, il y a plein d'articles sur Parquet, alors pourquoi en ajouter un de plus ?<br/>
+        Voici ma vision de ce format fantastique, qui est essentiellement le résultat de mes expériences de travail sur
+        l'écriture d'une implémentation de Parquet en PHP pur.
+    </p>
+    <p>
+        Pour ceux qui sont arrivés ici par hasard, je mentionnerai juste que je suis l'auteur du premier framework de traitement
+        de données en PHP, appelé <a href="https://flow-php.com" target="_blank">Flow PHP</a>.<br/>
+        Comme il convient à un Data Frame, Flow doit pouvoir lire et écrire des données dans différents formats, y compris Parquet<br/>
+    </p>
+    <p>
+        Cependant, comme la seule implémentation que j'ai trouvée était essentiellement un port direct de C#, qui en plus
+        ne gère pas complètement les structures profondément imbriquées et possède beaucoup de fonctions manquantes, j'ai décidé
+        dans le cadre de l'apprentissage, d'écrire ma propre implémentation à partir de zéro, ce qui s'est avéré être une expérience extrêmement précieuse mais aussi très amusante.
+    </p>
+    <a href="#why-parquet"><h2 id="why-parquet">Pourquoi Parquet</h2></a>
+    <ul>
+        <li><a href="#binary-format">Format Binaire - des fichiers jusqu'à 10x plus petits</a></li>
+        <li><a href="#metadata">Métadonnées - accès plus facile aux données sélectionnées</a></li>
+        <li><a href="#schema">Schéma - garantie de structure correcte</a></li>
+        <li><a href="#compression">Compression - réduction supplémentaire de la taille</a></li>
+        <li><a href="#encryption">Chiffrement - au niveau du fichier, des métadonnées, des colonnes ou des pages</a></li>
+    </ul>
+
+    <a href="#binary-format"><h2 id="binary-format">Format Binaire</h2></a>
+    <p>
+        Grâce au fait que ce format est orienté colonnes, pas lignes, il permet une compression de données très efficace,
+        ce qui se traduit par une taille de fichier significativement plus petite. Sans beaucoup d'effort, Parquet peut comprimer les données jusqu'à <strong>10 fois</strong>,
+        comparé aux formats traditionnels comme CSV ou XML.
+    </p>
+    <p>
+        Donc, si les mêmes données sauvegardées au format CSV occupent 1Go, au format Parquet elles peuvent n'occuper que 100Mo.<br/>
+    </p>
+
+    <p>
+        Pour les besoins de cet article, j'ai généré 2 fichiers, un au format CSV, l'autre au format Parquet.<br/>
+        La structure de ces fichiers est très simple, elle contient 10 colonnes et 10 millions de lignes, qui ressemblent à peu près à ceci :
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/orders.csv') | e('html') }}</code></pre>
+
+    <p>
+        L'effet de compression est vraiment impressionnant :
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/size.txt') | e('html') }}</code></pre>
+
+    <p>
+        Cela se traduit non seulement par des coûts de stockage, mais aussi de traitement des données.<br/>
+        Surtout quand nos données vivent dans le cloud, que ce soit sur Azure Bucket ou AWS S3. L'un des plus grands facteurs affectant
+        la facture n'est pas tant la taille des données, mais combien de trafic nous utilisons pour lire/écrire ces données.
+    </p>
+    <p>
+        Donc en réduisant la taille du fichier, nous réduisons non seulement le coût de le stocker, mais aussi de le traiter.
+        Il est important de comprendre que le traitement est en réalité toute forme d'accès, c'est-à-dire écriture/lecture.
+    </p>
+    <p>
+        Cela revient donc à dire qu'en choisissant le format de fichier approprié, les économies peuvent être vraiment importantes,
+        surtout quand on parle de plus grandes quantités de données.
+    </p>
+    <p>
+        Que signifie exactement que Parquet est un format binaire ?
+    </p>
+    <p>
+        Cela signifie à peu près que les données sont stockées sous forme binaire, c'est-à-dire d'une manière qui ne peut pas être
+        lue directement en utilisant des éditeurs de texte populaires.
+    </p>
+    <p>
+        Mais tout finalement est stocké sous forme binaire, non ?
+    </p>
+    <p>
+        Oui, généralement les fichiers texte sont aussi des fichiers binaires, la différence est que dans les fichiers texte la structure
+        du fichier est toujours la même et chaque information est sauvegardée de la même manière.
+    </p>
+    <p>
+        Par exemple, si nous voulions sauvegarder "12345" dans un fichier texte, la version binaire ressemblerait à ceci :
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/binary-text.txt') | e('html') }}</code></pre>
+    <p>
+        La même chaîne sauvegardée au format binaire comme int32 (entier sous forme 32 bits) ressemblerait à ceci :
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/binary-integer.txt') | e('html') }}</code></pre>
+
+    <p>
+        Remarquons que dans le cas de sauvegarder un entier sous forme binaire, on ne peut pas simplement le lire de gauche à droite (ou vice-versa).
+        Ici nous devons déjà savoir comment interpréter ces bits pour comprendre ce qu'ils signifient.
+        Dans le cas des fichiers texte nous n'avons pas ce problème, puisque nous savons que chaque caractère est sauvegardé sous forme 8 bits.
+    </p>
+    <p>
+        À peu près pour cette raison n'importe quel éditeur de texte est capable d'ouvrir n'importe quel fichier texte et de nous afficher quelque chose qui aura plus ou moins de sens.
+    </p>
+    <p>
+        Cependant, si nous essayons d'ouvrir un fichier type Parquet dans un éditeur de texte, nous obtiendrons une chaîne de caractères semblant très aléatoire et n'ayant pas beaucoup de sens.
+    </p>
+
+    <a href="#columns-rows"><h2 id="columns-rows">Colonnaire / Par Lignes</h2></a>
+    <p>
+        Il est préférable d'expliquer la différence entre ces formats à l'aide de visualisation.
+    </p>
+    <p>
+        Dans le modèle classique par lignes chaque ligne contient toutes les colonnes, comme par exemple au format CSV
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/rows.txt') | e('html') }}</code></pre>
+
+    <p>
+        Le format colonnaire est intéressant car au lieu de stocker les données ligne par ligne, il les stocke colonne par colonne.
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/columns.txt') | e('html') }}</code></pre>
+
+    <p>
+        Stocker les données au format colonnaire apporte de nombreux avantages, comme :
+    </p>
+    <ul>
+        <li>Bien meilleure capacité de compression des données</li>
+        <li>Possibilité de lire seulement les colonnes sélectionnées</li>
+        <li>Possibilité de chiffrer les colonnes sélectionnées ou toutes</li>
+    </ul>
+
+    <p>
+        Dans le cas du format par lignes, pour lire seulement une colonne, nous devons quand même parcourir tout le fichier.<br/>
+        Dans le cas du format colonnaire nous pouvons lire seulement les colonnes qui nous intéressent.<br/>
+        C'est particulièrement utile dans le cas de très gros ensembles de données, où souvent nous n'avons besoin que d'une partie de l'information.
+    </p>
+
+
+    <a href="#immutable"><h2 id="immutable">Immuable</h2></a>
+    <p>
+        En raison de la façon dont les données sont stockées au format colonnaire, les fichiers Parquet sont immuables.<br/>
+        Cela ne signifie pas cependant qu'on ne peut pas les modifier. On peut, mais la seule opération sensée est d'ajouter des données à la fin.
+    </p>
+    <p>
+        Pourquoi ? Parquet stocke les données au format colonnaire, cela signifie que si nous avons une colonne <code>email</code>
+        toutes les lignes (dans un groupe de lignes et une page donnés - de cela plus tard) seront écrites l'une après l'autre. </br>
+        Essayer de modifier une ligne est donc impossible, parce que cela nécessiterait de déplacer pratiquement tout le fichier.
+    </p>
+    <p>
+        Il est cependant possible d'ajouter un nouveau groupe de lignes à la fin du fichier. Cela se fait en retirant les métadonnées de la fin du fichier,
+        qui temporairement vont en mémoire. À leur place on écrit le nouveau groupe de lignes (qu'il faut aussi ajouter aux métadonnées),
+        et ensuite à la fin on réécrit les métadonnées.
+    </p>
+    <p>
+        Pour cette raison, si nous voulons supprimer quelque chose d'un fichier Parquet, en pratique nous devons réécrire tout le fichier, en omettant
+        les données indésirables.
+    </p>
+
+    <a href="#metadata"><h2 id="metadata">Structure Forte</h2></a>
+    <p>
+        Parquet est un format basé sur le typage fort. Cela signifie que la structure de tout le fichier est définie et stockée dans le pied de page,
+        grâce à quoi il suffit de lire seulement le segment approprié pour comprendre quelles données nous avons dans le fichier, et dans quelles
+        régions du fichier ces données sont sauvegardées.
+    </p>
+    <p>
+        Nous pouvons penser à cela comme à une carte du fichier, une carte qui nous dira où exactement dans le fichier se trouvent
+        les données qui nous intéressent.
+    </p>
+    <p>
+        Voici comment ressemble à peu près la structure simplifiée d'un fichier au format Parquet :
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/basic-file-structure.txt') | e('html') }}</code></pre>
+
+    <p>
+        Dans l'exemple ci-dessus nous voyons 3 éléments :
+    </p>
+
+    <ul>
+        <li><code>PAR1</code> - c'est-à-dire "Parquet Magic Bytes" - 4 octets ouvrant et fermant les fichiers au format Parquet</li>
+        <li><code>Data</code> - ici sont sauvegardées toutes les colonnes (de cela plus tard)</li>
+        <li><code>Metadata</code> - métadonnées, c'est-à-dire la carte du fichier</li>
+    </ul>
+
+    <p>
+        La première étape pour lire correctement un fichier Parquet est de vérifier si les 4 premiers octets sont <code>PAR1</code>.<br/>
+        Si c'est le cas, nous devons sauter à la fin du fichier (seek) et lire les 4 derniers octets.
+    </p>
+    <p>
+        Si la fin et le début du fichier contiennent <code>PAR1</code> nous pouvons procéder à la lecture des métadonnées.
+    </p>
+    <p>
+        Pour cela nous reculons de 8 octets depuis la fin du fichier et lisons 4 octets représentant la taille des métadonnées.
+        En d'autres termes, nous lisons les octets <code>-8</code> à <code>-4</code>
+    </p>
+    <p>
+        Ces 4 octets sont un <code>integer</code> nous disant sur combien d'octets sont écrites les métadonnées. Ayant
+        cette information nous pouvons lire les métadonnées, qui sont sérialisées de manière binaire à l'aide d'<a href="https://thrift.apache.org/" target="_blank">Apache Thrift</a>
+    </p>
+    <a href="#apache-thrift"><h2 id="apache-thrift">Apache Thrift</h2></a>
+    <p>
+        Apache Thrift est un outil très intelligent permettant la sérialisation binaire d'interfaces / types dans pratiquement chaque
+        langage de programmation.
+    </p>
+    <p>
+        <a href="https://github.com/flow-php/flow/blob/1.x/src/lib/parquet/src/Flow/Parquet/Resources/Thrift/parquet_clean.thrift" target="_blank">Ici</a>
+        nous pouvons voir comment ressemble la définition des métadonnées au format Parquet.
+    </p>
+    <p>
+        Ce format ressemble un peu à du pseudocode, qui ensuite à l'aide de l'application appropriée est utilisé pour générer
+        du code dans un langage de programmation donné.
+    </p>
+    <p>
+        <a href="https://github.com/flow-php/flow/tree/1.x/src/lib/parquet/src/Flow/Parquet/Thrift" target="_blank">Ici</a>
+        nous pouvons voir comment ressemble le code généré en PHP.
+    </p>
+    <p>
+        Quand nous avons déjà les structures/interfaces/modèles générés nous pouvons procéder à la lecture.
+    </p>
+
+    <pre><code class="code-php" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/thrift.php') | e('html') }}</code></pre>
+
+    <p>
+        Pour cela nous aurons besoin de la bibliothèque Thrift pour le langage de programmation choisi.
+        Toutes les implémentations sont disponibles dans le dépôt <a href="https://github.com/apache/thrift" target="_blank">apache/thrift</a>.
+    </p>
+
+    <p>
+        Ayant accès à <code>$metadata</code> nous pouvons commencer à analyser notre fichier pour comprendre sa structure.<br/>
+    </p>
+
+    <a href="#parquet-file-metadata"><h2 id="parquet-file-metadata">Parquet - FileMetaData</h2></a>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/file-metadata.txt') | e('html') }}</code></pre>
+
+    <p>
+        Les informations clés sur le fichier sont stockées dans la structure <code>FileMetaData</code>.
+        Les plus importantes d'entre elles sont :
+    </p>
+    <ul>
+        <li><code>version</code> - version du format Parquet</li>
+        <li><code>num_rows</code> - nombre de lignes dans le fichier</li>
+        <li><code>schema</code> - schéma des données</li>
+        <li><code>row_groups</code> - ici sont stockées nos données</li>
+    </ul>
+
+    <a href="#format-versions"><h2 id="format-versions">Versions du Format</h2></a>
+    <p>
+        Au moment d'écrire cet article le format Parquet était déjà disponible en version <code>2.12.0</code>.
+    </p>
+    <p>
+        Les changements les plus cruciaux entre les versions 1.0 et 2.0 sont :
+    </p>
+    <ul>
+        <li><strong>Nouveaux schémas d'encodage :</strong> DELTA_BINARY_PACKED pour les nombres, DELTA_BYTE_ARRAY pour les chaînes, RLE_DICTIONARY remplaçant PLAIN_DICTIONARY</li>
+        <li><strong>Structure Data Page V2 :</strong> Éliminé la surcharge de métadonnées, permis le filtrage au niveau des pages</li>
+    </ul>
+    <p>
+        Bien que la version 2.0 introduise de nombreuses améliorations, les plus grands acteurs utilisent encore la version 1 par défaut.
+    </p>
+    <a href="#rows-count"><h2 id="rows-count">Nombre de Lignes</h2></a>
+    <p>
+        Cette information peut sembler peu intuitive au début dans le contexte du format colonnaire.<br/>
+        Nous devons cependant nous rappeler que le format colonnaire n'est qu'une façon de stocker les valeurs et non la structure des données.
+    </p>
+    <p>
+        Bien que les données soient groupées sur la base des colonnes et de leur type, la lecture/écriture se fait encore de manière classique,
+        c'est-à-dire ligne par ligne.
+    </p>
+    <p>
+        La différence est qu'on ne lit pas une ligne à la fois, mais tout un groupe de lignes, chargeant en mémoire
+        colonne par colonne, puis reconstruisant les lignes sur la base des index appropriés.
+    </p>
+    <div class="notice">
+    <p>
+        En gardant à l'esprit que pour écrire correctement les données au format colonnaire nous devons opérer sur des groupes logiques, et non sur des lignes individuelles.
+        Nous pouvons de manière relativement facile gérer le rapport entre mémoire et quantité d'opérations IO.
+    </p>
+    </div>
+    <p>
+        L'écriture et la lecture depuis la mémoire est plus rapide que l'écriture et la lecture depuis le disque (<a href="https://www.bitflux.ai/blog/memory-is-slow-part1/" target="_blank">bien que pas toujours</a>).
+        En augmentant la quantité de lignes qui seront écrites dans un groupe, nous réduisons le nombre de groupes, c'est-à-dire le nombre d'opérations IO. <br/>
+        Ainsi nous augmentons la vitesse d'écriture/lecture, tout en augmentant l'utilisation de la mémoire.
+    </p>
+    <p>
+        Cela marche aussi dans l'autre sens, en réduisant la quantité de lignes dans un groupe, nous augmentons le nombre de groupes dans le fichier, ainsi
+        augmentant le nombre d'opérations IO.
+    </p>
+    <p>
+        <strong>Taille du groupe, pas quantité de lignes</strong> - Parquet permet de définir non pas la quantité de lignes, mais la taille maximale
+        du groupe de lignes. <br/>
+        Il faut cependant se rappeler que ce ne sont pas des valeurs absolues (de cela un peu plus tard), donc
+        certains groupes peuvent être plus petits/plus gros que la taille permise et cela dépend principalement de l'implémentation de la bibliothèque
+        pour Parquet.
+    </p>
+    <p>
+        Dans la documentation du format Parquet nous trouverons l'information que la taille suggérée du groupe est <code>512Mo - 1Go</code>.
+        Il vaut cependant la peine d'aborder cela avec un peu de bon sens, surtout si pour la lecture/écriture nous ne dépendons pas de HDFS (Hadoop Distributed File System). <br/>
+        La valeur suggérée est établie de telle manière qu'un groupe de lignes tienne dans un bloc HDFS, garantissant que la lecture
+        se fasse depuis exactement un nœud.
+    </p>
+    <p>
+        Il vaut la peine de s'en souvenir, cependant si nous ne prévoyons pas d'utiliser Parquet avec un système de fichiers distribué, des groupes de lignes plus petits
+        permettront d'économiser beaucoup de mémoire.
+    </p>
+    <p>
+        Un très bon exemple de cas où des groupes plus petits sont plus efficaces est le cas où nous voudrions lire
+        seulement une petite section de lignes quelque part au milieu du fichier (pagination).
+    </p>
+    <p>
+        En supposant que nous devons lire seulement 100 lignes d'un fichier qui contient 10 millions de lignes, établir une taille de groupe plus petite
+        permettra d'économiser beaucoup en mémoire. Pourquoi ?
+    </p>
+    <p>
+        Si nous divisons 10 millions en disons 10 groupes, chaque groupe contient 1 million de lignes. Cela signifie qu'en pratique
+        nous devons lire tout le groupe, puis extraire seulement les 100 lignes qui nous intéressent.
+    </p>
+    <p>
+        Dans le cas d'établir une taille de groupe plus petite, qui permettrait de diviser 10 millions en 1000 groupes, en analysant
+        les métadonnées du fichier, nous pourrons sauter une plus grande quantité de groupes et charger en mémoire une quantité beaucoup plus petite de lignes.
+    </p>
+    <div class="notice">
+    <p>
+        La décision sur la taille du groupe de lignes devrait être réfléchie tant pour la performance d'écriture que de lecture
+        du fichier spécifique. La configuration appropriée se traduit directement par l'utilisation de ressources ce qui finalement se traduit
+        par de l'argent.
+    </p>
+    </div>
+
+    <a href="#schema"><h2 id="schema">Schéma</h2></a>
+
+    <p>
+        Lentement nous arrivons au cœur de Parquet, c'est-à-dire <code>Row Groups</code>. Mais avant d'analyser leur structure, nous devons
+        revenir à un autre aspect très important de Parquet, le schéma des données.
+    </p>
+
+    <p>
+        Commençons par les types de données. Parquet consiste en types physiques et logiques.
+    </p>
+
+    <h3>Types Physiques</h3>
+
+    <p>
+        Les types physiques sont les types de données de base qui sont utilisés pour stocker les valeurs dans le fichier Parquet.
+        Ce sont des types tels que :
+    </p>
+
+    <ul>
+        <li>Boolean</li>
+        <li>Byte Array</li>
+        <li>Double</li>
+        <li>Fixed Len Byte Array</li>
+        <li>Float</li>
+        <li>Int32</li>
+        <li>Int64</li>
+        <li>Int96 - (déprécié - utilisé seulement par les anciennes implémentations)</li>
+    </ul>
+
+    <p>
+        Les types logiques sont des types qui sont utilisés pour représenter des structures de données plus complexes. On peut
+        penser à eux comme à une extension des types physiques.
+    </p>
+
+    <h3>Types Logiques</h3>
+
+    <ul>
+        <li>Bson</li>
+        <li>Date</li>
+        <li>Decimal</li>
+        <li>Enum</li>
+        <li>Integer</li>
+        <li>Json</li>
+        <li>List</li>
+        <li>Map</li>
+        <li>String</li>
+        <li>Time</li>
+        <li>Timestamp</li>
+        <li>Uuid</li>
+    </ul>
+
+    <p>
+        La structure actuelle peut toujours être vérifiée à la source, <a href="https://github.com/apache/parquet-format/blob/master/src/main/thrift/parquet.thrift" target="_blank">apache/parquet-format</a>
+    </p>
+
+    <p>
+        Outre la division en types logiques et physiques, Parquet distingue aussi les colonnes plates et imbriquées.<br/>
+        <strong>Les colonnes plates</strong> sont celles qui stockent une seule valeur, par exemple <code>Int32</code>, <code>Boolean</code>, <code>Float</code>, etc.<br/>
+        <strong>Les colonnes imbriquées</strong> sont celles qui stockent plus d'une valeur, par exemple <code>List</code>, <code>Map</code>, etc.
+    </p>
+
+    <p>
+        En principe il existe 3 types de colonnes imbriquées :
+    </p>
+    <ul>
+        <li>List</li>
+        <li>Map</li>
+        <li>Struct</li>
+    </ul>
+    <p>
+        <strong>Struct</strong>, est un type spécial de colonne qui permet d'imbriquer n'importe quels autres types, permettant de créer
+        pratiquement n'importe quelle structure de données.
+    </p>
+    <p>
+        En utilisant les types ci-dessus nous sommes capables de modéliser pratiquement n'importe quelle
+        structure de données, puis de la stocker et de la rechercher efficacement.
+    </p>
+    <p>
+        Regardons donc les définitions Thrift <code>SchemaElement</code> et quelques éléments liés.
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/schema-element.txt') | e('html') }}</code></pre>
+
+    <p>
+        La plupart des valeurs devraient être assez évidentes, regardons cependant <code>FieldRepetitionType</code>.
+    </p>
+
+    <p>
+        Cette valeur nous dit si une colonne donnée est requise, optionnelle ou répétable.<br/>
+        Si une colonne est requise, cela signifie que la valeur ne peut pas être nulle. <br/>
+        Si une colonne est optionnelle la valeur peut être nulle, et si elle est répétable, cela signifie qu'elle peut contenir plusieurs valeurs (par exemple une liste).
+    </p>
+
+    <p>
+        Voici comment peut ressembler le schéma d'un fichier de commandes (sous forme DDL)
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/schema-ddl.txt') | e('html') }}</code></pre>
+
+    <a href="#nested-types"><h2 id="nested-types">Types Imbriqués</h2></a>
+
+    <p>
+        Pour comprendre pleinement la structure des groupes de lignes nous devons d'abord comprendre comment Parquet aplatit les types imbriqués.<br/>
+        Alors que des structures simples comme <code>address</code> de l'exemple ci-dessus peuvent être réduites essentiellement à 4 colonnes simples :
+    </p>
+    <ul>
+        <li><code>address.street</code> - String</li>
+        <li><code>address.city</code> - String</li>
+        <li><code>address.zip</code> - String</li>
+        <li><code>address.country</code> - String</li>
+    </ul>
+    <p>
+        Dans le cas de <code>Map</code> ou <code>List</code> la situation est un peu plus compliquée.
+    </p>
+    <p>
+        Par exemple, si nous voulions aplatir <code>{{ 'Map<string,int32>'|e }}</code> nous obtiendrions quelque chose comme ceci :
+    </p>
+    <ul>
+        <li><code>map_column.key_value.key</code> - String</li>
+        <li><code>map_column.key_value.value</code> - Int32</li>
+    </ul>
+    <p>
+        Donc pour l'exemple ci-dessus le chemin plat vers <code>sku</code> ressemblerait à ceci :
+        <code>items.list.element.sku</code>, tandis que la structure plate complète ressemblerait à ceci :
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/schema-flat.txt') | e('html') }}</code></pre>
+
+    <a href="#row-groups"><h2 id="row-groups">Groupes de Lignes</h2></a>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/row-groups.txt') | e('html') }}</code></pre>
+
+    <p>
+        Conformément à ce que nous savons déjà, un fichier Parquet est divisé en groupes de lignes, l'écriture au fichier fonctionne en résumé ainsi :
+    </p>
+    <ul>
+        <li>1) créer le fichier et ajouter 4 octets <code>PAR1</code></li>
+        <li>2) créer une structure de métadonnées basée sur le schéma et la garder en mémoire</li>
+        <li>3) aplatir la ligne passée (en vérifiant si elle correspond au schéma)</li>
+        <li>4) écrire la ligne aplatie en mémoire sous forme binaire</li>
+        <li>
+            5) vérifier si la taille du groupe de lignes que nous avons actuellement en mémoire rentre dans la taille maximale permise
+            <ul>
+                <li>a) écrire le groupe de lignes au fichier</li>
+                <li>b) mettre à jour les métadonnées en mémoire en leur ajoutant les métadonnées du groupe que nous venons d'écrire</li>
+            </ul>
+        </li>
+        <li>
+            6) retourner à l'étape 2
+        </li>
+        <li>
+            7) Écrire les métadonnées à la fin du fichier après avoir écrit tous les groupes de lignes
+        </li>
+        <li>
+            8) Fermer le fichier avec 4 octets <code>PAR1</code>
+        </li>
+    </ul>
+    <div class="notice">
+    <p>
+        Bien sûr cette description est très simplifiée, en réalité c'est un peu plus complexe, de plus différentes implémentations
+        peuvent différer dans les détails.
+    </p>
+    </div>
+
+    <p>
+        Concentrons-nous sur la structure du groupe de lignes, regardons d'abord les définitions Thrift <code>RowGroup</code>.
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/row-group-thrift.txt') | e('html') }}</code></pre>
+
+    <p>
+        Déjà à cette étape on voit combien d'informations sur un groupe spécifique de lignes sont stockées dans les métadonnées.<br/>
+        Pour l'instant concentrons-nous sur trois champs :
+    </p>
+    <ul>
+        <li><code>file_offset</code> - c'est-à-dire combien d'octets depuis le début du fichier il faut sauter pour lire le groupe donné</li>
+        <li><code>total_byte_size</code> - sur combien d'octets est écrit le groupe de lignes</li>
+        <li><code>columns</code> - informations détaillées sur chaque colonne écrite dans le cadre du groupe donné</li>
+    </ul>
+
+    <div class="important">
+        <p>
+            <strong>Important :</strong> chaque groupe de lignes contient toujours toutes les colonnes définies dans le schéma.<br/>
+            Même si sur l'étendue de tout le groupe une colonne ne contient que des valeurs nulles.
+        </p>
+    </div>
+
+    <a href="#column-chunks"><h2 id="column-chunks">Chunks de Colonne</h2></a>
+
+    <p>
+        Allons plus profond et regardons la définition Thrift <code>ColumnChunk</code>
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/column-chunk-thrift.txt') | e('html') }}</code></pre>
+
+    <div class="notice">
+        <p>
+            <strong>Rappel :</strong> Tout ce sur quoi nous avons regardé jusqu'à maintenant fait encore partie des métadonnées. <br/>
+            Cela signifie que toute cette information sur les colonnes, groupes de lignes ou les données elles-mêmes nous l'obtenons en lisant
+            seulement la fin du fichier, indépendamment de si le fichier fait 1Mo ou 1To.
+        </p>
+    </div>
+
+    <p>
+        Ici nous arrivons essentiellement à l'endroit qui nous permet de lire les données du fichier. <br/>
+        Mais avant que cela n'arrive nous devons connaître la dernière structure de données nécessaire à la lecture.
+    </p>
+
+    <a href="#data-pages"><h2 id="data-pages">Pages de Données</h2></a>
+
+    <p>
+        <code>Pages</code>, c'est-à-dire une autre division logique dans la structure du fichier Parquet.<br/>
+        <code>Row Group -> Column Chunk -> Data Pages</code>
+    </p>
+
+    <ul>
+        <li><code>RowGroup</code> - groupe de lignes (partition)</li>
+        <li><code>ColumnChunk</code> - chaque groupe de lignes contient exactement 1 <code>ColumnChunk</code> pour chaque colonne dans le groupe</li>
+        <li><code>Data Page</code> - page, la plus petite unité logique dans Parquet agrégeant les données</li>
+    </ul>
+
+    <p>
+        En fait la lecture de Parquet se résume à analyser la structure des métadonnées, localiser l'adresse du début d'un groupe spécifique de lignes, puis
+        une colonne spécifique dans le groupe, puis itérer et lire les données de chaque page.
+    </p>
+
+    <p>
+        Mais avant de commencer à lire les pages, nous devons comprendre si nous avons affaire à <code>DataPage</code>, <code>IndexPage</code> ou <code>DictionaryPage</code>.
+    </p>
+    <p>
+        Pour cela nous lisons d'abord <code>PageHeader</code> c'est-à-dire l'en-tête de la page, dont la définition Thrift ressemble à ceci
+    </p>
+
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/page-header.txt') | e('html') }}</code></pre>
+
+    <p>
+        Pour lire l'en-tête nous devons connaître son adresse relative au début du fichier, voici comment nous pouvons la calculer pour un groupe de lignes et une colonne sélectionnés :
+    </p>
+
+    <ol>
+        <li>Nous lisons <code>FileMetadata</code></li>
+        <li>Nous trouvons le <code>RowGroup</code> approprié et recherchons le <code>ColumnChunk</code> pertinent pour nous</li>
+        <li>Ayant <code>ColumnChunk</code> nous obtiendrons l'adresse <code>file_offset</code> du début de <code>ColumnChunk</code> relative au début du fichier.</li>
+    </ol>
+
+    <div class="important">
+        <p>
+            <strong>Important :</strong> À cette étape nous n'avons pas encore besoin de charger physiquement les octets en mémoire.<br/>
+            Il suffit que nous créions un <code>stream</code> permettant de lire les données directement depuis le fichier.
+        </p>
+    </div>
+
+    <p>
+        La première chose qu'il faut lire est l'en-tête, <code>PageHeader</code>, en le faisant avec Thrift, en passant
+        le stream et en configurant appropriément l'adresse du début nous obtiendrons la structure de données <code>PageHeader</code>, qui nous dira exactement comment lire
+        la page elle-même.
+    </p>
+    <p>
+        Il existe 3 types de pages :
+    </p>
+    <h3><code>DataPage</code></h3>
+    <p>
+        Page contenant la représentation binaire des données de la colonne sélectionnée des lignes qui sont allées dans le groupe de lignes sélectionné.<br/>
+        C'est le type de page le plus simple et le plus direct. Elle contient "seulement" des données.
+    </p>
+    <p>
+        En lisant une colonne de type entier, ce qui nous intéresse c'est vraiment le nombre de lignes dans le groupe spécifique (chaque ligne est une valeur dans <code>DataPage</code>).
+        Donc en sachant que dans ce groupe nous avons disons 100 valeurs, nous savons que nous devons lire 400 octets (int32 est écrit sur 4 octets). <br/>
+    </p>
+    <p>
+        Bon, mais que se passe-t-il quand la colonne est optionnelle ? Cela signifie qu'elle peut contenir des valeurs nulles.<br/>
+        Ici la situation devient un peu plus compliquée parce que nous devons savoir quelles lignes contiennent une valeur nulle.<br/>
+        D'où vient cette connaissance ?<br/>
+        <code>Definition Levels</code>
+    </p>
+    <p>
+        La situation se complique un peu, au début j'ai écrit que <code>DataPage</code> contient seulement des données, et maintenant j'ajoute des <code>Definition Levels</code>.<br/>
+    </p>
+    <p>
+        En réalité la structure de data page ressemble à peu près à ceci :
+    </p>
+    <pre><code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/data-page.txt') | e('html') }}</code></pre>
+    <p>
+        Pour l'instant, concentrons-nous seulement sur <code>Definition Levels</code> et <code>Values</code>. Il est très facile de remarquer la relation entre eux.
+        La quantité de <code>Definition Level</code> et <code>Repetition Levels</code> dans chaque page est toujours égale à la quantité de valeurs dans la colonne.<br/>
+        Peu importe s'il y a des nulls ou pas. <code>Definition Levels</code> nous disent si une ligne donnée contient une valeur ou null.
+    </p>
+    <p>
+        Sur cette base, nous pouvons facilement déterminer la quantité totale de <code>Values</code> non vides ce qui nous permettra de les lire. <br/>
+        Dans l'exemple ci-dessus nous avons 5 lignes, dont 3 constituent des valeurs, puisque <code>int32</code> nous l'écrivons sur 4 octets,
+        nous savons déjà que nous devons lire en total 12 octets.<br/>
+        Nous savons aussi qu'en transformant la colonne en lignes, la première ligne contiendra la valeur <code>42</code>, la deuxième <code>null</code>,
+        la troisième <code>73</code>, la quatrième <code>19</code> et la cinquième <code>null</code>.
+    </p>
+    <div class="important">
+        <p>
+            <strong>Important :</strong> <code>Repetition Levels</code> et <code>Definition Levels</code> sont cependant beaucoup plus compliqués, un peu plus plus tard.<br/>
+        </p>
+    </div>
+    <p>
+        Voici comment se présente à peu près la structure de <code>DataPage</code>.
+    </p>
+    <h3><code>DictionaryPage</code></h3>
+    <p>
+        Si nous gardons les données dans <code>DataPage</code>, quel but a <code>DictionaryPage</code> ?<br/>
+        Eh bien <code>DictionaryPage</code> est une page qui contient un dictionnaire de valeurs.<br/>
+        Dictionnaire, utilisé pour lire les données, surtout dans le cas de colonnes contenant des valeurs répétables.
+    </p>
+
+    <p>
+        Cela marche à peu près ainsi qu'en lisant <code>ColumChunk</code>, nous commençons par la première page, si cette page est <code>DictionaryPage</code>,
+        nous savons que nous avons affaire à un dictionnaire (en fait nous le savons depuis le début, parce que c'est écrit dans les métadonnées de la colonne).
+    </p>
+    <p>
+        Si par exemple nous lisons une colonne avec haute répétabilité, ex. une colonne avec le nom du pays, au lieu d'écrire dans <code>DataPage</code> le nom complet du pays pour chaque ligne,
+        nous écrivons seulement sa position dans le dictionnaire.<br/>
+        Dans le cas d'une telle colonne la première page dans la colonne sera <code>DictionaryPage</code>, et les suivantes seront <code>DataPage</code>.
+    </p>
+    <p>
+        La différence est que dans <code>DataPage</code> au lieu de la valeur complète, il y aura des positions dans le dictionnaire, que nous garderons en mémoire pour reconstruire les lignes.<br/>
+    </p>
+    <div class="important">
+        <p>
+            <strong>Important :</strong> Chaque <code>ColumnChunk</code> peut contenir seulement une page <code>DictionaryPage</code>.
+        </p>
+    </div>
+    <p>
+        Cela peut donner d'énormes économies, au lieu de disons écrire de manière binaire le mot <code>Pologne</code> 10 mille fois, c'est-à-dire 70k octets,
+        nous écrirons seulement la position dans l'index (c'est-à-dire 4 octets), qui en plus seront empaquetés en utilisant l'algorithme <a href="https://parquet.apache.org/docs/file-format/data-pages/encodings/#RLE" target="_blank">Run Length Encoding / Bit-Packing Hybrid</a>.
+        Qui, se basant aussi sur la répétabilité des valeurs consécutives réduira la quantité totale d'octets nécessaires.
+    </p>
+
+    <h3><code>IndexPage</code></h3>
+    <p>
+        Le dernier type de page est <code>IndexPage</code>.<br/>
+        Cette page ne contient pas de données, donc elle n'est pas nécessaire pour la lecture ni l'écriture.<br/>
+        Chaque <code>ColumnChunk</code> peut contenir seulement une page de type <code>IndexPage</code> et elle se trouve toujours à la fin, après <code>DictionaryPage</code> et toutes les <code>DataPage</code>.
+    </p>
+    <p>
+        Le but de cette page est de stocker des statistiques concernant <code>ColumnChunk</code>, comme les valeurs <code>Min/Max</code>, quantité de <code>nulls</code> ou manière de tri pour chaque page dans un <code>ColumnChunk</code> spécifique.
+        Cela permet un filtrage rapide et de trouver seulement des pages spécifiques dans le cadre d'un <code>ColumnChunk</code> donné, ce qui accélère significativement la recherche dans le fichier, si des informations spécifiques nous intéressent.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Attention :</strong> Chaque <code>ColumnChunk</code> dans ses métadonnées contient des statistiques similaires à <code>IndexPage</code>, mais pas pour chaque page mais pour tout le <code>ColumnChunk</code>.<br/>
+            Grâce à cela, en premier lieu nous pouvons sauter des colonnes complètes qui ne nous intéressent pas et ensuite même des pages spécifiques, réduisant au minimum absolu la quantité de données que nous devons lire.
+        </p>
+    </div>
+
+    <p>
+        Considérant que cette information se trouve dans les métadonnées du fichier, même les plus gros fichiers Parquet peuvent être lus et filtrés instantanément même s'ils ne sont disponibles qu'à travers le réseau.<br/>
+        Il suffit que nous réussissions à lire les métadonnées, sur leur base localiser un groupe spécifique de lignes, puis une colonne sélectionnée et à la fin des pages spécifiques. <br/>
+        Nous obtiendrons de cette manière une localisation très précise de nos données, que nous pourrons lire en utilisant l'en-tête <code>Http Range Header</code>.
+    </p>
+    <p>
+        C'est précisément une des raisons pour lesquelles Parquet est si puissant, nous ne parlons plus de téléchargement brutal et d'itération sur un fichier de gigaoctets. Parquet permet avec la précision d'un chirurgien
+        de télécharger et lire seulement les zones du fichier qui nous intéressent vraiment.
+    </p>
+
+    <a href="#dremel"><h2 id="dremel">Dremel</h2></a>
+
+    <p>
+        En discutant de la structure de <code>DataPage</code> j'ai mentionné <code>Definition Levels</code> et <code>Repetition Levels</code>.
+    </p>
+    <p>
+        L'exemple discuté était très simple, parce qu'il concernait une colonne simple (int32), donc <code>Repetition Levels</code> n'ont pas d'application du tout.<br/>
+        La situation change diamétralement quand nous avons affaire à une colonne imbriquée, ex. structure, liste ou carte.
+        Regardons un exemple.
+    </p>
+    <p>
+        <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
+    </p>
+    <p>
+        En revenant à la partie antérieure de cet article, spécifiquement aux <a href="#nested-types">types imbriqués</a>.<br/>
+        Nous savons que nos données après aplatissement ressembleront à ceci :
+    </p>
+    <ul>
+        <li><code>items.list.element.sku</code> - <code>"abc","def"</code></li>
+        <li><code>items.list.element.quantity</code> - <code>1,2</code></li>
+        <li><code>items.list.element.price</code> - <code>100,200</code></li>
+    </ul>
+    <p>
+        Nous avons ici 3 colonnes, chacune d'elles se trouvera dans un <code>Column Chunk</code> séparé et chacune contiendra
+        une ou plusieurs pages.
+    </p>
+    <p>
+        Alors comment sur la base de ces deux valeurs (<code>Repetition / Definition Levels)</code> les bibliothèques lisant les fichiers savent-elles à quelle profondeur dans la structure se trouvent les valeurs et à quel élément elles appartiennent ?<br/>
+        Que se passerait-il si notre structure ressemblait à ceci :
+    </p>
+    <p>
+        <code>[{"sku":"abc", "quantity": 1, "price": 100}, {"sku":null, "quantity": 10, "price": 100}, {"sku":"def", "quantity": 2, "price": 200}]</code>
+        (dans le deuxième élément sku a la valeur null). <br/>
+    </p>
+    <p>Que se passe-t-il quand la structure est beaucoup plus imbriquée, comment savons-nous quelle valeur va à quel niveau d'imbrication ?</p>
+    <p>
+        La réponse à cette et beaucoup d'autres questions nous la trouverons dans le document publié par Google <a href="https://static.googleusercontent.com/media/research.google.com/pl//pubs/archive/36632.pdf" target="_blank">Dremel: Interactive Analysis of Web-Scale Datasets</a>
+        qui décrit comment Google stocke et recherche les structures de données imbriquées.
+    </p>
+    <p>
+        L'outil utilisé par Google s'appelle Dremel et c'est un système distribué de recherche de gros ensembles de données. <br/>
+        Il se base sur 2 algorithmes, <code>Shredding</code> et <code>Assembling</code>, qui sont décrits très brièvement dans le document ci-dessus.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Attention :</strong> Décrire le fonctionnement exact de ces algorithmes dépasse le cadre de cet article déjà long.<br/>
+            Si de l'intérêt apparaît pour le sujet, j'essaierai d'aborder aussi ce fil dans les prochains articles.
+        </p>
+    </div>
+    <p>
+        Ces algorithmes se basent sur ces 3 définitions :
+    </p>
+    <ul>
+        <li>Repetition Levels</li>
+        <li>Definition Levels</li>
+        <li>Values</li>
+    </ul>
+    <p>
+        Comme nous l'avons déjà mentionné <code>Definition Level</code> détermine si une ligne donnée contient une valeur, ou pas, <code>Repetition Level</code> qui dans le cas de colonnes plates est toujours 0.
+        Pour les structures il déterminera si la valeur (ou null) doit être répétée, et à quel niveau de profondeur.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Attention :</strong> La connaissance de comment fonctionnent exactement les algorithmes de Dremel, n'est pas nécessaire pour l'utilisation optimale de Parquet.<br/>
+            Pour cette raison, je ne vais pas m'étendre sur ce sujet, cependant si de l'intérêt apparaît pour le sujet, j'essaierai d'aborder aussi ce fil dans les prochains articles.
+        </p>
+    </div>
+    <p>
+         Ci-dessous je présenterai seulement à peu près comment ressembleront les données aplaties.
+    </p>
+    <pre>
+        <code class="code-shell" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/shredded-data.txt') | e('html') }}</code>
+    </pre>
+    <p>
+        C'est-à-dire qu'en réalité nous écrivons <code>0, 1, 0, 1, "abc", "def"</code> et non seulement <code>"abc", "def"</code>. <br/>
+        Ce sont précisément ces nombres additionnels qui disent comment reconstruire n'importe quelle structure imbriquée.
+    </p>
+    <p>
+        C'est curieux que même les repetition levels et definition levels pour l'optimisation sont empaquetés appropriément en utilisant l'algorithme
+        <a href="https://parquet.apache.org/docs/file-format/data-pages/encodings/#RLE" target="_blank">Run Length Encoding / Bit-Packing Hybrid</a>.
+    </p>
+    <p>
+        Ça ne s'arrête pas là, parce que non seulement les niveaux sont empaquetés, mais aussi les valeurs elles-mêmes.<br/>
+        Selon le type de colonne, les valeurs peuvent être empaquetées de différentes manières, la liste de tous les algorithmes d'empaquetage supportés par Parquet (au moins en théorie) nous la trouverons
+        <a href="https://parquet.apache.org/docs/file-format/data-pages/encodings" target="_blank">dans la documentation officielle</a>.
+    </p>
+    <p>
+        Tandis que l'information sur quel algorithme a été utilisé pour empaqueter les données avant l'écriture nous la trouverons dans les métadonnées, sous ce chemin <code>RowGroups[x].ColumnChunk[y].PageHeader[z].data_page_header.encoding</code>
+    </p>
+    <p>
+        Mais ce n'est pas le dernier mot de Parquet dans le contexte d'optimisation !
+    </p>
+    <a href="#compression"><h2 id="compression">Compression</h2></a>
+    <p>
+        Après empaquetage et écriture sous forme binaire de nos données pour une page spécifique, chaque page est additionnellement compressée.
+    </p>
+    <p>
+        Selon l'implémentation Parquet permet l'utilisation de différents algorithmes de compression :
+    </p>
+    <ul>
+        <li>UNCOMPRESSED</li>
+        <li>SNAPPY</li>
+        <li>GZIP</li>
+        <li>LZO</li>
+        <li>BROTLI</li>
+        <li>LZ4</li>
+        <li>ZSTD</li>
+        <li>LZ4_RAW</li>
+    </ul>
+    <p>
+        Une option très populaire est <a href="https://github.com/google/snappy" target="_blank">Snappy</a>, qui offre un très bon compromis entre vitesse et degré de compression.
+    </p>
+    <p>
+        Des outils comme <a href="https://spark.apache.org/" target="_blank">Apache Spark</a> l'utilisent même par défaut.
+    </p>
+    <a href="#encryption"><h2 id="encryption">Chiffrement</h2></a>
+    <p>
+        Une des dernières caractéristiques intéressantes que je veux discuter, c'est le chiffrement !
+    </p>
+    <p>
+        Oui, Parquet permet de chiffrer les données, chiffrer à plusieurs niveaux.
+    </p>
+    <ul>
+        <li>Métadonnées - les métadonnées chiffrées rendent effectivement difficile la lecture du contenu du fichier, mais ce n'est pas impossible</li>
+        <li>Données - les données chiffrées rendent pratiquement impossible la lecture</li>
+        <li>Colonnes - particulièrement utile si seulement certaines colonnes contiennent des données sensibles.</li>
+        <li>Pages</li>
+    </ul>
+    <div class="notice">
+        <p>
+            <strong>Attention :</strong> Le chiffrement est une de ces caractéristiques que je n'ai pas encore couvertes dans <a href="https://flow-php.com/documentation/components/libs/parquet/">l'implémentation pour PHP</a><br/>
+            Pour cette raison je ne vais pas m'étendre sur ce sujet, dès que j'aurai l'occasion d'implémenter cette fonctionnalité, j'essaierai de compléter l'article.
+        </p>
+    </div>
+    <p>
+        Le chiffrement dans Parquet se base sur <a href="https://parquet.apache.org/docs/file-format/data-pages/encryption/" target="_blank">Parquet Modular Encryption</a> et utilise
+        <a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf" target="_blank">AES</a> pour chiffrer les données.
+    </p>
+    <p>
+        Le chiffrement, surtout de colonnes sélectionnées, élève Parquet à un niveau supérieur de stockage de données. <br/> Grâce à cela de manière relativement facile, avec peu de surcharge,
+        nous pouvons protéger en plus les données que nous stockons dans les fichiers Parquet. <br/>
+    </p>
+    <p>
+        Imaginons que Parquet est utilisé pour stocker des données de clients, où la colonne <code>email</code> et <code>phone</code> contiennent des données sensibles.<br/>
+        Dans cette situation, il est demandé que ces deux colonnes soient protégées en plus. Même si quelqu'un réussit à obtenir un accès physique au fichier, sans la clé il ne
+        pourra toujours pas lire les données.
+    </p>
+    <a href="#summary"><h2 id="summary">Résumé</h2></a>
+    <p>
+        C'est précisément le secret de Parquet et la façon d'atteindre l'efficacité. Au lieu de stocker des données arbitraires sous forme textuelle, Parquet va plusieurs étapes plus loin. <br/>
+        En premier lieu il force un schéma de données basé sur des types simples mais incroyablement flexibles, dont chacun peut être
+        représenté sous forme binaire.<br/>
+        Ensuite la forme binaire est appropriément empaquetée, pour éviter les répétitions inutiles d'octets, ce qui à la fin est
+        additionnellement compressé à l'aide d'algorithmes très efficaces.<br/>
+        La cerise sur le gâteau sont les métadonnées avancées et détaillées, disponibles à plusieurs niveaux, permettant de filtrer
+        les partitions inutiles, ou même des fichiers entiers sans lire leur contenu.
+    </p>
+    <p>
+        De plus grâce à la division logique appropriée, sur laquelle nous avons un contrôle complet (taille des groupes et pages) nous pouvons
+        décider ce qui est plus important pour nous, vitesse ou économie de mémoire. Recherche ou lecture de données ou peut-être
+        sécurité, pour laquelle nous utiliserons un chiffrement additionnel.
+    </p>
+    <p>
+        Parquet est vraiment un outil puissant qui dans les bonnes mains permet un stockage et une recherche efficaces
+        d'énormes quantités de données.<br/>
+    </p>
+    <p>
+        Si cet article t'a inspiré à expérimenter avec ce format de données révolutionnaire, fais-le savoir dans les commentaires !
+    </p>
+    <a href="#help"><h2 id="help">Aide</h2></a>
+    <p>
+        Si tu as besoin d'aide dans la construction d'un entrepôt central de données, je serai ravi de t'aider.<br/>
+        <a href="{{ url('consulting') }}">Contacte-moi</a>, et ensemble nous créerons une solution qui sera parfaitement adaptée à tes besoins.
+    </p>
+    <p>
+        Je t'encourage aussi à visiter le serveur <a href="https://discord.gg/5dNXfQyACW" target="_blank">Discord - Flow PHP</a>, où
+        nous pouvons parler directement.
+    </p>
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/consulting_01.jpg') }}" alt="Conseil" />
+    </div>
+{% endblock %}
