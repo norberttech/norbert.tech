@@ -17,7 +17,7 @@
 
 {% block content %}
 <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4 mx-auto max-w-screen-2xl">
-    <div class="col-span-2 p-2">
+    <div class="col-span-2 py-2">
         <h2 class="font-bold text-4xl mb-4">My name is Norbert</h2>
         <p class="mb-2">
             I'm a software architect with a focus on designing and building highly scalable web applications and data processing systems.
@@ -25,6 +25,23 @@
         <p class="mb-2">
             In my spare time, I maintain several open-source projects and enjoy automating and optimizing everything around me.
         </p>
+
+        {% if latestPost %}
+        <div class="mt-6 pt-4 border-t border-gray-300">
+            <h3 class="font-bold text-xl mb-2">Latest Blog Post</h3>
+            <h4 class="font-semibold text-lg mb-2">
+                <a href="{{ path('blog_post', {date: latestPost.date | date('Y-m-d'), slug: latestPost.slug}) }}" class="text-blue-600 hover:text-blue-800">
+                    {{ latestPost.title }}
+                </a>
+            </h4>
+            <p class="mb-2 text-gray-700">
+                {{ latestPost.description }}
+            </p>
+            <a href="{{ path('blog_post', {date: latestPost.date | date('Y-m-d'), slug: latestPost.slug}) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                Read more →
+            </a>
+        </div>
+        {% endif %}
     </div>
     <div class="md:pr-4 p-2">
         <h2 class="text-lg font-bold">Links</h2>
