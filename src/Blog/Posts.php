@@ -244,6 +244,15 @@ final class Posts
             'translations_ids' => [9, 11, 12, 13, 14],
             'translated' => true,
         ],
+        [
+            'id' => 16,
+            'title' => 'Mroczne strony modularyzacji',
+            'labels' => ['modularyzacja', 'architektura', 'rozwój oprogramowania'],
+            'description' => 'Opis wpisu o mrocznych stronach modularyzacji.',
+            'slug' => 'mroczne-strony-modularyzacji',
+            'language' => 'pl',
+            'date' => '2025-10-18',
+        ],
     ];
 
     public function findByDateAndSlug(string $date, string $slug, string $language = 'en'): Post

@@ -1,0 +1,523 @@
+{% extends 'blog/post.html.twig' %}
+
+{%- block title -%}
+    {{ post.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {{ post.description }}
+{%- endblock -%}
+
+{%- block og_img -%}
+{#{{ asset('images/blog/mroczne-strony-modularyzacji/hero.jpg') }}#}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    {{ post.title }}
+{%- endblock -%}
+
+
+{% block article %}
+{#    <div class="img-wide">#}
+{#        <img src="{{ asset('images/blog/mroczne-strony-modularyzacji/hero.jpg') }}" alt="{{ post.title }}" />#}
+{#    </div>#}
+
+    <h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
+    <div class="mb-2">
+        <small class="text-sm">Data Publikacji {{ post.date | date }}</small>
+    </div>
+    <div class="mb-4">
+        {% for label in post.labels %}
+            <small><span class="badge badge-info">{{ label }}</span></small>
+        {% endfor %}
+    </div>
+
+    <a href="#introduction"><h2 id="introduction">Wprowadzenie</h2></a>
+    <p>
+        Trafiłem niedawno na bardzo ciekawy problem, który skłonił mnie do refleksji na temat mniej kuszących aspektów
+        modularyzacji, o których przeważnie nie słyszymy na konferencjach czy warsztatach.
+    </p>
+    <p>
+        Zacznijmy może od początku, czym w ogóle jest modularyzacja? Najprościej mówiąc, jest to podział
+        systemu na samodzielne części (moduły), z których każdy posiada:
+    </p>
+    <ul>
+        <li>Jasno określoną odpowiedzialność</li>
+        <li>Komunikuje się poprzez zdefiniowane protokoły komunikacji</li>
+        <li>Może być rozwijany niezależnie od pozostałych modułów</li>
+    </ul>
+    <p>
+        W dużym skrócie jest to ukłon w kierunku zasady <strong>dziel i zwyciężaj</strong>. Zamiast zmagać się
+        z wielkim, skomplikowanym i zagmatwanym problemem, dzielimy go na mniejsze problemy, co znacznie ułatwia
+        ich rozwiązywanie.
+    </p>
+    {# Tutaj Obrazek splatanych korzeni drzewa#}
+
+    <p>
+        Wiele osób słysząc "modularyzacja" myśli "mikroserwisy", dlatego zanim przejdziemy dalej, ustalmy jedną kwestię.
+        Mikroserwisy to tylko jeden ze sposobów na implementację modularyzacji, tak samo jak modularny monolit.
+    </p>
+    <p>
+        Mikroserwisy od modularnego monolitu różnią się w zasadzie tylko tym, że każdy moduł jest deployowany oddzielnie,
+        a protokół komunikacji między nimi opiera się najczęściej na HTTP lub komunikacji asynchronicznej (np. kolejki).
+    </p>
+    <p>
+        Modularny monolit z kolei deployowany jest jako jedna całość. Do komunikacji między modułami zamiast protokołu
+        HTTP możemy wykorzystać bezpośrednie wywołania metod z innych modułów (ukryte oczywiście za odpowiednią warstwą abstrakcji).
+        Możemy również z powodzeniem wykorzystać systemy kolejkowe do komunikacji asynchronicznej.
+    </p>
+
+    <a href="#current-state"><h2 id="current-state">Stan Aktualny</h2></a>
+
+    <p>
+        Wyobraźmy sobie system składający się z trzech modułów.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Uwaga:</strong> Poniższy diagram jest bardzo uproszczonym modelem, którego celem jest
+            tylko przedstawienie problemu.
+        </p>
+    </div>
+    <ul>
+        <li>Moduł <code>IAM</code> (Identity and Access) - użytkownicy / grupy / uprawnienia</li>
+        <li>Moduł <code>A</code> - zarządzanie zasobami</li>
+        <li>Moduł <code>B</code> - zarządzanie innymi zasobami</li>
+    </ul>
+
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/problem.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/problem.png') }}" alt="Mroczne Strony Modularyzacji - problem" />
+        </a>
+    </div>
+
+    <p>
+        System uprawnień jest tutaj nieco skomplikowany, w głównej mierze opiera się o <code>ACL</code> (Access Control List),
+        czyli nadawanie uprawnień do zasobów bezpośrednio użytkownikom lub grupom.
+    </p>
+    <p>
+        Do tego występują też elementy <code>RBAC</code> (Role Based Access Control), gdzie użytkownicy o konkretnych
+        rolach mają zdefiniowane uprawnienia do konkretnych części systemu.
+    </p>
+    <p>
+        Mamy też częściowo <code>ABAC</code> (Attribute Based Access Control), gdzie uprawnienia wynikają z atrybutów użytkownika,
+        w tym wypadku przynależności do grupy.
+    </p>
+    <p>
+        Brzmi znajomo? To wcale nie jest aż tak unikalny przypadek jak mogłoby się wydawać. No ale do sedna.
+    </p>
+    <a href="#problem"><h2 id="problem">Problem</h2></a>
+    <p>
+        System uprawnień, jak widać na diagramie, zdefiniowany jest w module <code>IAM</code>, czyli to tam przechowujemy
+        informację na temat:
+    </p>
+    <ul>
+        <li>Użytkowników oraz ich ról</li>
+        <li>Grup, do których należą użytkownicy</li>
+        <li>Uprawnień do konkretnych zasobów</li>
+    </ul>
+    <p>
+        Moduły A i B natomiast są odpowiedzialne za zarządzanie swoimi zasobami, muszą jednak upewnić się, że
+        dany użytkownik ma dostęp do konkretnego zasobu.
+    </p>
+    <p>
+        Schemat zależności modułów jest więc następujący: Moduły A i B wiedzą o istnieniu modułu IAM (są od niego
+        zależne), sam moduł IAM natomiast nie ma pojęcia o istnieniu modułów A i B.
+    </p>
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/dependencies.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/dependencies.png') }}" alt="Mroczne Strony Modularyzacji - Zależności" />
+        </a>
+    </div>
+    <p>
+        Problem, na jaki trafił zespół, to "w jaki sposób utworzyć stronicowaną listę zasobów w danym module na podstawie uprawnień użytkownika".
+    </p>
+    <p>
+        Lista zasobów dodatkowo ma pozwalać na:
+    </p>
+    <ul>
+        <li>Filtrowanie na podstawie cech zasobu</li>
+        <li>Sortowanie na podstawie cech zasobu</li>
+        <li>Pozwalać zwracać tylko wybraną stronę</li>
+    </ul>
+    <p>
+        Powyższe wymagania znacznie utrudniają implementację, gdyby nie filtrowanie/stronicowanie, moglibyśmy uderzyć
+        bezpośrednio do modułu <code>IAM</code> z żądaniem zwrócenia zasobów dla danego użytkownika.
+    </p>
+    <p>
+        Jednak bez cech zasobów, po których możemy filtrować/sortować, moduł <code>IAM</code> może co najwyżej zwrócić nam wszystkie zasoby,
+        a filtrowanie musielibyśmy zrobić po stronie modułu. Nie jest to jednak zbyt skalowalne rozwiązanie.
+    </p>
+    <p>
+        Nie wiedząc, jak wybrnąć z tej sytuacji, zespół postanowił (świadomie lub nie) złamać zasady modularyzacji i powiązać
+        ze sobą moduły na poziomie bazy danych.
+    </p>
+    <p>
+        Ponieważ system wdrożony jest jako modularny monolit, a każdy moduł ma dostęp do tej samej bazy danych (każdy moduł posiada swoje tabele z odpowiednim prefixem),
+        teoretycznie nic nie stoi na przeszkodzie, aby budując zapytanie SQL zwracające listę zasobów dla konkretnego modułu,
+        podłączyć do niego tabele uprawnień z modułu <code>IAM</code> i odfiltrować te zasoby, do których użytkownik nie ma dostępu.
+    </p>
+    <p>
+        Szybkie, proste i nawet działa.
+    </p>
+    <p>
+        Prawdopodobnie mogłoby to tak sobie egzystować, gdyby nie jedno nowe wymaganie: musimy wydzielić jeden z modułów z
+        monolitu...
+    </p>
+    <p>
+        I tutaj zaczynają się schody. Jak wydzielić moduł A jako niezależny serwis, kiedy jest on mocno sprzężony na poziomie
+        bazy danych z modułem IAM? Jeżeli usuniemy <code>join</code> do tabel <code>IAM</code>, kontrola dostępu przestanie
+        działać.
+    </p>
+    <p>
+        Poniżej przedstawię techniki, które pozwolą nam wydzielić ten moduł z monolitu bez utraty funkcjonalności, łamania
+        zasad modularyzacji czy zmian w zależnościach między modułami.
+    </p>
+    <div class="notice">
+        <p>
+            Podczas projektowania modularnego monolitu, warto spróbować trochę innego podziału.
+            Zamiast prefixować tabele, w ramach jednego serwera bazodanowego można stworzyć osobne bazy/schematy dla każdego
+            modułu, co znacząco utrudni tworzenie przypadkowego sprzężenia na poziomie zapytań SQL.
+        </p>
+    </div>
+    <a href="#division-of-responsibility"><h2 id="division-of-responsibility">Podział odpowiedzialności</h2></a>
+    <p>
+        A co gdyby to nie moduł <code>IAM</code> odpowiadał za uprawnienia nadawane do zasobów, które
+        żyją tylko w konkretnym module?
+    </p>
+    <p>
+        Jednym z możliwych (dla wielu pewnie najlepszym) rozwiązań jest separacja odpowiedzialności, tzn. <code>IAM</code>
+        odpowiada za autoryzację, użytkowników, ich rolę oraz grupy, do których są przypisani.
+    </p>
+    <p>
+        Moduły natomiast same zarządzają regułami uprawnień do zasobów. Oznacza to w praktyce przeniesienie tabel <code>access_rules</code>
+        do <code>Module A</code> oraz <code>Module B</code>.
+    </p>
+    <p>
+        W rezultacie otrzymalibyśmy architekturę podobną do tej poniżej:
+    </p>
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/separation.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/separation.png') }}" alt="Mroczne Strony Modularyzacji - Separacja" />
+        </a>
+    </div>
+    <p>
+        Żaden z modułów nie musi więc robić wycieczek do <code>IAM</code> w celu uzyskania listy zasobów dostępnych
+        dla wybranego użytkownika.
+    </p>
+    <p>
+        Mamy wprawdzie lekką duplikację – musimy dla każdego z istniejących modułów w zasadzie powtórzyć logikę
+        uprawnień oraz wpiąć ją w istniejące mechanizmy modułów.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Uwaga:</strong> Tutaj może pojawić się pokusa stworzenia komponentu.
+            O ile nie mamy w zespołach ludzi doświadczonych w budowaniu bibliotek / komponentów, najlepiej zacząć
+            od duplikacji. Duplikacja w dłuższej perspektywie czasu boli o wiele mniej niż niepoprawna abstrakcja.
+        </p>
+    </div>
+    <p>
+        Tylko czy to wystarczy?
+    </p>
+    <p>
+        Nie do końca, jeżeli przyglądniemy się tabeli uprawnień, zauważymy, że uprawnienia mogą być nadawane bezpośrednio
+        użytkownikowi lub grupie, do której dany użytkownik przynależy.
+    </p>
+    <p>
+        Oznacza to, że w <code>Module A</code> nadajemy uprawnienia do zasobu dla grupy <code>Group 01</code>, do której
+        należy <code>User 01</code> oraz <code>User 02</code>.<br/>
+        Dzięki temu obydwaj użytkownicy mają dostęp do zasobu.
+    </p>
+    <p>
+        Co natomiast jeżeli usuniemy użytkownika z wybranej grupy?
+    </p>
+    <p>
+        Możemy do tego podejść na dwa sposoby:
+    </p>
+    <ol>
+        <li>Podczas każdej weryfikacji dostępu odpytujemy moduł <code>IAM</code> o listę grup użytkownika</li>
+        <li>Godzimy się na <code>eventual consistency</code> i grupy użytkownika trzymamy w sesji, którą odświeżamy co kilka/kilkanaście minut</li>
+    </ol>
+
+    <p>
+        Pierwsze rozwiązanie jest najprostsze w implementacji, nie narusza granic odpowiedzialności modułów, może jednak
+        dość szybko stać się wąskim gardłem.
+    </p>
+    <p>
+        Oczywiście nie stanie się to od razu, dodatkowo ze względu na charakter danych (częstszy odczyt niż zapis) możemy
+        też odciążyć bazę danych poprzez wprowadzenie odpowiednich mechanizmów cachujących.
+    </p>
+    <p>
+        W przypadku rozwiązania numer dwa musimy upewnić się, że jest to w ogóle akceptowalne rozwiązanie z punktu widzenia
+        biznesu.
+    </p>
+    <a href="#projection"><h2 id="projection">Projekcja</h2></a>
+    <p>
+        Innym podejściem do rozwiązania problemu jest zachowanie struktury uprawnień w module <code>IAM</code>, ale
+        wprowadzenie mechanizmów pozwalających modułom <code>Module A</code> oraz <code>Module B</code> na synchronizację
+        tabeli uprawnień do lokalnej projekcji.
+    </p>
+    <p>
+        Projekcja ta to nic innego jak uproszczona forma tabeli <code>access_rules</code> powielona w konkretnym module.
+    </p>
+    <p>
+        W rezultacie dalej otrzymujemy pewną duplikację, ale moduły <code>Module A</code> oraz <code>Module B</code>
+        nie skupiają się na zarządzaniu uprawnieniami – ta odpowiedzialność nadal jest oddelegowana do modułu <code>IAM</code>.
+    </p>
+    <p>
+        Ich odpowiedzialność zredukowana została do synchronizacji uprawnień z modułem uprawnień.
+    </p>
+    <p>
+        Tylko, jak i kiedy przeprowadzać tę synchronizację? Za każdym razem, kiedy nadajemy uprawnienia do zasobu.
+    </p>
+    <p>
+        <code>Module A</code> podczas nadawania uprawnień użytkownikowi lub grupie, do jakiegoś zasobu, najpierw
+        komunikuje się z modułem <code>IAM</code>.
+    </p>
+    <p>
+        To samo robimy podczas usuwania dostępu do zasobu. Najpierw usuwamy wpis w module <code>IAM</code> a następnie
+        usuwamy wpis w lokalnej projekcji.
+    </p>
+    <p>
+        Co natomiast jeżeli usuniemy użytkownika z wybranej grupy?
+    </p>
+    <p>
+        Wracamy tutaj w zasadzie do tego samego problemu, który mieliśmy w poprzednim podejściu. Możemy albo
+        każdorazowo pobierać listę grup użytkownika z modułu <code>IAM</code>, lub pogodzić się z <code>eventual consistency</code>.
+    </p>
+    <p>
+        Różnica pomiędzy separacją a projekcją jest bardzo niewielka. Z projekcjami możemy jednak pójść krok dalej.
+    </p>
+    <a href="#events"><h2 id="events">Zdarzenia</h2></a>
+    <p>
+        Moduł <code>IAM</code> może również propagować zdarzenia dotyczące:
+    </p>
+    <ul>
+        <li>Dodania użytkownika do grup</li>
+        <li>Usunięcia użytkownika z grupy</li>
+        <li>Usunięcia grupy</li>
+    </ul>
+    <p>
+        Aby zachować odpowiednią strukturę zależności, zdarzenia te nie mogą być publikowane "pod konkretnego odbiorcę".
+        Musimy tutaj zastosować podejście Pub/Sub, polegające na tym, że <code>IAM</code> wystawia zdarzenia na konkretny
+        <code>Topic</code>, do którego zainteresowane moduły mogą się zasubskrybować.
+    </p>
+    <p>
+        Dzięki temu obydwa moduły dostaną kopię tego samego zdarzenia, które będą mogły obsłużyć niezależnie.
+    </p>
+    <p>
+        Budując projekcję możemy też znacznie uprościć jej strukturę, poprzez rozbicie grup na listy użytkowników.
+    </p>
+    <p>
+        Jeżeli grupa otrzymuje uprawnienie typu <code>access</code> do jakiegoś zasobu, to zamiast przechowywać
+        jeden wpis w projekcji reprezentujący grupę, możemy stworzyć wpis dla każdego użytkownika grupy.
+    </p>
+    <p>
+        Dzięki temu podczas weryfikacji praw dostępu w ogóle nie musimy pytać moduł <code>IAM</code> o nic. "Wystarczy", że
+        zareagujemy odpowiednio na zdarzenia propagowane przez moduł <code>IAM</code>:
+    </p>
+    <ul>
+        <li>Dodanie użytkownika do grupy</li>
+        <li>Usunięcie użytkownika z grupy</li>
+        <li>Usunięcie grupy</li>
+    </ul>
+    <p>
+        W zasadzie tylko te zdarzenia są dla nas istotne. Dodanie grupy czy użytkownika nie wpływa w zasadzie na nic,
+        dlatego możemy śmiało je ignorować/odfiltrować.
+    </p>
+    <a href="#events-reliability"><h2 id="events-reliability">Wiarygodność zdarzeń</h2></a>
+    <p>
+        Oczywiście podejście oparte o zdarzenia niesie ze sobą pewne ryzyko. Jednym z nich jest np. zaburzona kolejność
+        zdarzeń.<br/>
+        Przykładowo najpierw dostajemy zdarzenie "usunięcia użytkownika z grupy", a dopiero później "dodania", kiedy
+        w rzeczywistości zdarzenia te nastąpiły w odwrotnej kolejności.
+    </p>
+    <p>
+        Tak, to może być pewnym problemem, szczególnie kiedy w treści wiadomości zawierającej zdarzenie znajdują się też
+        wszystkie szczegóły danego zdarzenia.
+    </p>
+    <p>
+        Możemy jednak temu zaradzić, decydując się na wykorzystanie zdarzeń anemicznych, czyli takich, które w zasadzie
+        zawierają jedynie identyfikatory zasobów, których dotyczą, a po całą resztę trzeba już udać się do modułu źródłowego.
+    </p>
+    <p>
+        Porównajmy oba podejścia na przykładzie zdarzenia <code>UserRemovedFromGroup</code>:
+    </p>
+
+    <p><strong>Zdarzenie bogate (Rich Event)</strong></p>
+    <pre><code class="language-json" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/rich-event.json') | e('html') }}</code></pre>
+
+    <p><strong>Zdarzenie anemiczne (Anemic Event)</strong></p>
+    <pre><code class="language-json" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/anemic-event.json') | e('html') }}</code></pre>
+
+    <p>
+        Różnica jest zasadnicza. W przypadku zdarzenia bogatego cała informacja o użytkowniku, grupie i uprawnieniach
+        jest zawarta w zdarzeniu. Jeżeli kolejność zdarzeń zostanie zaburzona, nasza projekcja może się znaleźć w niespójnym stanie.
+    </p>
+    <p>
+        Zdarzenie anemiczne natomiast zawiera tylko identyfikatory. Konsument po otrzymaniu takiego zdarzenia musi
+        wykonać dodatkowe zapytanie do modułu <code>IAM</code>, aby pobrać aktualny stan. Dzięki temu niezależnie od kolejności
+        otrzymania zdarzeń zawsze otrzymamy najbardziej aktualną wersję danych.
+    </p>
+
+    <p><strong>Scenariusz problematyczny dla Rich Events</strong></p>
+    <p>
+        Wyobraźmy sobie następującą sekwencję zdarzeń w module <code>IAM</code>:
+    </p>
+    <ol>
+        <li><code>10:00:00</code> - Użytkownik dodany do grupy "Administrators"</li>
+        <li><code>10:00:05</code> - Użytkownik usunięty z grupy "Administrators"</li>
+    </ol>
+    <p>
+        Konsument w Module A otrzymuje zdarzenia w odwrotnej kolejności:
+    </p>
+    <ol>
+        <li>Otrzymuje <code>UserRemovedFromGroup</code> (z danymi z 10:00:05)</li>
+        <li>Otrzymuje <code>UserAddedToGroup</code> (z danymi z 10:00:00)</li>
+    </ol>
+    <p>
+        W przypadku <strong>rich events</strong>, projekcja w Module A pokazuje, że użytkownik <strong>należy</strong>
+        do grupy (bo ostatnie otrzymane zdarzenie to "dodanie"), mimo że w rzeczywistości został już z niej usunięty.
+    </p>
+    <p>
+        W przypadku <strong>anemic events</strong>, niezależnie od kolejności otrzymania, Module A wykona zapytanie do IAM
+        i otrzyma aktualny stan - użytkownik <strong>nie należy</strong> do grupy.
+    </p>
+
+    <div class="notice">
+        <p>
+            Zdarzenia anemiczne redukują ryzyko niespójności, ale nie eliminują go całkowicie.
+            Nadal możliwa jest sytuacja, gdzie między otrzymaniem eventu a zapytaniem do IAM
+            stan się zmieni. Można więc rozważyć dodanie version number lub timestamp
+            do eventów i sprawdzać je przy aktualizacji projekcji. Chociaż mechanizmy zabezpieczające
+            będą w dużej mierze wynikać z ruchu i częstotliwości zmian.
+        </p>
+    </div>
+
+    <p>
+        Przedstawia się to w następujący sposób:
+    </p>
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/events.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/events.png') }}" alt="Mroczne Strony Modularyzacji - Zdarzenia" />
+        </a>
+    </div>
+    <p>
+        Kiedy konsument modułu A otrzymuje informację, jego rolą jest udać się do modułu <code>IAM</code> i zapytać go
+        o wszystkie reguły dla konkretnej grupy. Moduł <code>IAM</code> może zwrócić nam rekordy z tabeli uprawnień dotyczących
+        konkretnej grupy, a następnie, jeżeli jakiekolwiek reguły występują, możemy zapytać o użytkowników tej grupy i w
+        lokalnej projekcji modułu zbudować dla nich projekcję uprawnień.
+    </p>
+    <p>
+        Możemy też delikatnie ułatwić sobie życie i do protokołu komunikacji z modułem <code>IAM</code> dołożyć możliwość
+        pobierania płaskiej struktury uprawnień, która zwróci nam nie grupę, a listę użytkowników grupy z uprawnieniami do
+        konkretnego zasobu.
+    </p>
+    <div class="important">
+        <p>
+            <strong>Uwaga:</strong> W celu zapewnienia dodatkowej gwarancji dostarczenia zdarzeń, warto rozważyć
+            implementację wzorca <strong>Outbox</strong>.
+        </p>
+    </div>
+    <p>
+        Chwila, ale czy znowu moduł <code>IAM</code> nie stanie się wąskim gardłem?
+    </p>
+    <p>
+        Nie do końca, istotna jest tutaj nie tylko samo zapytanie, ale raczej jego częstotliwość. Kontrola uprawnień to
+        jeden z tych procesów, gdzie znacznie częściej pytamy o uprawnienia, niż je zmieniamy.
+    </p>
+    <p>
+        Oczywiście nie należy wierzyć mi na słowo, posiadając istniejący system z kontrolą uprawnień, warto to po prostu zmierzyć.
+    </p>
+    <p>
+        Wracając jednak do sedna, w przypadku wykorzystania zdarzeń anemicznych nie musimy aż tak bardzo przejmować się
+        kolejnością ich otrzymywania. Nie opieramy się bowiem na treści zdarzenia, a jedynie na identyfikatorze zasobu, którego
+        dotyczy, co znacznie ułatwia budowanie projekcji.
+    </p>
+    <a href="#duplication"><h2 id="duplication">Duplikacja</h2></a>
+    <p>
+        W obydwu podejściach pojawia się jednak problem duplikacji. Chociaż w tym wypadku "problem" to chyba złe słowo.
+        Jest to po prostu koszt modularyzacji, o którym się po prostu nie mówi.
+    </p>
+    <p>
+        Niezależnie czy zdecydujemy się na separację odpowiedzialności, czy budowanie projekcji, moduły A oraz B będą
+        mniej lub bardziej powielać logikę związaną z uprawnieniami.
+    </p>
+    <p>
+        Dlatego niezależnie od naszego modelu wdrożeniowego (monolit / mikroserwisy) oraz niezależnie od tego, jak wydzielimy
+        granice modułów oraz ich odpowiedzialności, musimy po prostu przygotować się na ten koszt.
+    </p>
+    <p>
+        Moja rada jest tutaj zawsze taka, aby zacząć od duplikacji. Nawet jeżeli nasze implementacje nie różnią się absolutnie
+        niczym pomiędzy modułami.
+    </p>
+    <p>
+        O wiele łatwiej jest wyciągać części wspólne z istniejących rozwiązań, niż projektować części wspólne dla rozwiązań
+        jeszcze nieistniejących.
+    </p>
+    <a href="#whats-better"><h2 id="whats-better">Co będzie lepsze?</h2></a>
+    <p>
+        Na to pytanie nie ma jednoznacznej odpowiedzi. Możemy jednak spróbować przeanalizować naszą sytuację i wybrać
+        takie rozwiązanie, które pozwoli nam wydzielić jeden z modułów oraz pozbyć się sprzężenia na poziomie bazy danych.
+    </p>
+    <p>
+        Dla modułu, który ma zostać wydzielony, sugerowałbym (o ile jest to możliwe) separację odpowiedzialności oraz
+        przeniesienie zarządzania uprawnieniami do zasobów do tego modułu.
+    </p>
+    <p>
+        Skoro i tak musimy wykonać pewną pracę, skoro i tak musimy ten moduł odseparować fizycznie od naszego monolitu,
+        możemy też pójść krok dalej i stosunkowo niewielkim kosztem zredukować jeszcze bardziej jego zależność od
+        <code>IAM</code>.
+    </p>
+    <p>
+        Czy jednak taka operacja ma sens dla istniejących modułów?
+    </p>
+    <p>
+        Dla modułów, które nie muszą być wydzielane i dalej będą żyły w ramach modularnego monolitu, sugerowałbym
+        podejście oparte o projekcję, jednak niekoniecznie o zdarzenia.
+    </p>
+    <a href="#projections-without-events"><h2 id="projections-without-events">Projekcje bez zdarzeń</h2></a>
+    <p>
+        Popatrzmy na to z innej perspektywy. Pub/Sub to w zasadzie mechanizm pozwalający nam na pewną formę replikacji.
+        Dzięki zdarzeniom, posiadamy wiedzę, że coś miało miejsce w jakimś momencie w jakimś module.
+    </p>
+    <p>
+        A co gdyby zamiast publikować zdarzenie na <code>Topic</code> wykorzystać <code>Materialized Views</code>?
+    </p>
+    <p>
+        Tak, wielu osobom zapewne w tym momencie zapala się czerwona lampka. No bo jak to tak, materialized view?
+        Logika po stronie bazy danych zamiast w kodzie?
+    </p>
+    <p>
+        Cóż, nie jest to rozwiązanie idealne. Wprawdzie pozbywamy się sprzężenia na poziomie SQL, ale w zamian
+        otrzymujemy inne sprzężenie, tym razem na poziomie bazy danych.
+    </p>
+    <p>
+        Jeżeli jednak podejdziemy do tego pragmatycznie, to finalnie wymieniamy po prostu mechanizm transportu.
+        Zamiast budować pub/sub, implementować Outbox pattern, obsługiwać błędy komunikacji sieciowej, retry itp.
+        możemy po prostu pozwolić bazie danych na replikację danych.
+    </p>
+    <p>
+        Jeżeli z jakiegokolwiek powodu przestanie nam się to sprawdzać, np. kiedy odświeżanie zmaterializowanego widoku
+        będzie zbyt kosztowne i niepotrzebnie zacznie obciążać naszą bazę danych, nic nie będzie stało na przeszkodzie,
+        aby przerzucić się na projekcje.
+    </p>
+    <p>
+        Zanim jednak do tego dojdziemy, możemy też spróbować sam proces odświeżania wrzucić na kolejkę w module <code>IAM</code>
+        i realizować go asynchronicznie. Dostaniemy lekkie opóźnienie, chociaż w tym wypadku powinno być ono na akceptowalnym poziomie.
+    </p>
+    <p>
+        Kluczowe jest zrozumienie, że <code>Materialized View</code> nie jest rozwiązaniem ani złym, ani dobrym – daje nam jednak
+        możliwość stosunkowo szybkiego wprowadzenia uproszczonej separacji bez konieczności budowania całego mechanizmu opartego o zdarzenia.
+    </p>
+    <p>
+        Kiedy jednak pełna separacja/wydajność/vendor locking lub cokolwiek innego zacznie nam tutaj doskwierać, nie powinno być większych
+        problemów z przejściem na projekcje.
+    </p>
+    <p>
+        Właśnie to czyni <code>Materialized View</code> interesującym rozwiązaniem.
+    </p>
+{% endblock %}

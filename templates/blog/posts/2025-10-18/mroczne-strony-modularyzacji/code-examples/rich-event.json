@@ -1,0 +1,17 @@
+{
+  "eventId": "550e8400-e29b-41d4-a716-446655440000",
+  "eventType": "UserRemovedFromGroup",
+  "occurredAt": "2025-10-18T10:30:00Z",
+  "payload": {
+    "userId": 123,
+    "userName": "jan.kowalski",
+    "userEmail": "jan.kowalski@example.com",
+    "groupId": 456,
+    "groupName": "Administrators",
+    "groupPermissions": ["read", "write", "delete"],
+    "removedBy": {
+      "userId": 789,
+      "userName": "admin"
+    }
+  }
+}

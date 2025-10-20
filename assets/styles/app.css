@@ -1,8 +1,6 @@
-@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 body {
     font-family: "Cabin", system-ui;
@@ -129,7 +127,7 @@ article.blog-post div.important {
     @apply bg-amber-50 border-l-4 border-amber-400 p-4 my-6;
 
     p {
-        @apply text-amber-900;
+        @apply text-amber-900 !mb-0;
     }
 }
 
@@ -137,7 +135,7 @@ article.blog-post div.notice {
     @apply bg-sky-50 border-l-4 border-sky-400 p-4 my-6;
 
     p {
-        @apply text-sky-900;
+        @apply text-sky-900 !mb-0;
     }
 }
 
