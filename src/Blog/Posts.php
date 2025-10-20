@@ -248,7 +248,7 @@ final class Posts
             'id' => 16,
             'title' => 'Mroczne strony modularyzacji',
             'labels' => ['modularyzacja', 'architektura', 'rozwój oprogramowania'],
-            'description' => 'Opis wpisu o mrocznych stronach modularyzacji.',
+            'description' => 'Praktyczne wyzwania modularyzacji systemów - jak rozwiązać problem sprzężenia na poziomie bazy danych, kiedy trzeba wydzielić moduł z monolitu. Porównanie podejść: separacja odpowiedzialności, projekcje, zdarzenia anemiczne a także materialized views.',
             'slug' => 'mroczne-strony-modularyzacji',
             'language' => 'pl',
             'date' => '2025-10-18',
