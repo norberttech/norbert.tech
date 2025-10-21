@@ -1,0 +1,577 @@
+{% extends 'blog/post.html.twig' %}
+
+{%- block title -%}
+    {{ post.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {{ post.description }}
+{%- endblock -%}
+
+{%- block og_img -%}
+{{ asset('images/blog/dark-sides-of-modularization/roots.jpg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    {{ post.title }}
+{%- endblock -%}
+
+
+{% block article %}
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/dark-sides-of-modularization/roots.jpg') }}" alt="{{ post.title }}" />
+    </div>
+
+    <h1 class="font-bold text-4xl mb-2" id="title">{{ post.title }}</h1>
+    <div class="mb-2">
+        <small class="text-sm">Publicado el {{ post.date | date }}</small>
+    </div>
+    <div class="mb-4">
+        {% for label in post.labels %}
+            <small><span class="badge badge-info">{{ label }}</span></small>
+        {% endfor %}
+    </div>
+
+    <a href="#introduction"><h2 id="introduction">Introducción</h2></a>
+    <p>
+        Hace poco me topé con un problema bastante interesante que me hizo reflexionar sobre los aspectos menos glamorosos
+        de la modularización - ya sabes, esas cosas de las que normalmente no hablamos en conferencias o talleres.
+    </p>
+    <p>
+        Empecemos por lo básico. ¿Qué es exactamente la modularización? En pocas palabras, es dividir
+        un sistema en partes independientes (módulos), donde cada uno tiene:
+    </p>
+    <ul>
+        <li>Una responsabilidad claramente definida</li>
+        <li>Comunicación a través de protocolos definidos</li>
+        <li>La capacidad de desarrollarse independientemente de otros módulos</li>
+    </ul>
+    <p>
+        En resumen, es un guiño al principio de <strong>divide y vencerás</strong>. En lugar de luchar
+        con un problema enorme, complicado y enredado, lo dividimos en problemas más pequeños que son mucho más fáciles
+        de resolver.
+    </p>
+
+    <p>
+        Mucha gente escucha "modularización" y piensa inmediatamente en "microservicios". Así que antes de continuar, aclaremos algo.
+        Los microservicios son solo una forma de implementar la modularización, al igual que un monolito modular.
+    </p>
+
+    <a href="#current-state"><h2 id="current-state">El Estado Actual</h2></a>
+
+    <p>
+        Imagina un sistema compuesto por tres módulos.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Nota:</strong> El diagrama a continuación es un modelo muy simplificado - su único propósito es
+            ilustrar el problema.
+        </p>
+    </div>
+    <ul>
+        <li>Módulo <code>IAM</code> (Identity and Access) - usuarios / grupos / permisos</li>
+        <li><code>Módulo A</code> - gestión de recursos</li>
+        <li><code>Módulo B</code> - gestión de otros recursos</li>
+    </ul>
+
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/problem.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/problem.png') }}" alt="Los Lados Oscuros de la Modularización - problema" />
+        </a>
+    </div>
+
+    <p>
+        El sistema de permisos aquí es un poco complejo. Se basa principalmente en <code>ACL</code> (Access Control List),
+        lo que significa otorgar permisos a recursos directamente a usuarios o grupos.
+    </p>
+    <p>
+        Además, también hay algo de <code>RBAC</code> (Role Based Access Control), donde los usuarios con
+        roles específicos tienen permisos definidos para partes específicas del sistema.
+    </p>
+    <p>
+        También tenemos parcialmente <code>ABAC</code> (Attribute Based Access Control), donde los permisos se derivan de atributos del usuario,
+        en este caso, la pertenencia a grupos.
+    </p>
+    <p>
+        ¿Te suena familiar? Este no es un caso tan único como podrías pensar. Pero en fin, vayamos al grano.
+    </p>
+    <a href="#problem"><h2 id="problem">El Problema</h2></a>
+    <p>
+        Como puedes ver en el diagrama, el sistema de permisos está definido en el módulo <code>IAM</code> - ahí es donde almacenamos
+        información sobre:
+    </p>
+    <ul>
+        <li>Usuarios y sus roles</li>
+        <li>Grupos a los que pertenecen los usuarios</li>
+        <li>Permisos para recursos específicos</li>
+    </ul>
+    <p>
+        Los módulos A y B, mientras tanto, son responsables de gestionar sus propios recursos, pero necesitan verificar
+        que un usuario determinado tenga acceso a un recurso específico.
+    </p>
+    <p>
+        Así que el esquema de dependencias de módulos se ve así: Los módulos A y B saben de la existencia del módulo IAM (dependen
+        de él), pero el módulo IAM en sí no tiene idea de que existen los módulos A y B.
+    </p>
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/dependencies.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/dependencies.png') }}" alt="Los Lados Oscuros de la Modularización - Dependencias" />
+        </a>
+    </div>
+    <p>
+        El problema con el que se encontró el equipo fue este: "¿Cómo creamos una lista paginada de recursos en un módulo determinado basada en permisos de usuario?"
+    </p>
+    <p>
+        Además, la lista de recursos necesita permitir:
+    </p>
+    <ul>
+        <li>Filtrado basado en características del recurso</li>
+        <li>Ordenación basada en características del recurso</li>
+        <li>Devolver solo una página seleccionada</li>
+    </ul>
+    <p>
+        Estos requisitos hacen que la implementación sea significativamente más difícil. Si no tuviéramos filtrado/paginación, podríamos simplemente
+        consultar directamente al módulo <code>IAM</code> con una solicitud para devolver recursos para un usuario determinado.
+    </p>
+    <div class="important">
+        <p>
+            Las características del recurso son todos sus parámetros y atributos que tienen sentido y significado principalmente dentro de su
+            propio contexto. Ejemplos de características del recurso podrían ser su nombre o fecha de creación. Estos son parámetros por los que
+            el usuario debería poder ordenar o filtrar, pero que no existen en el módulo <code>IAM</code>.
+        </p>
+    </div>
+    <p>
+        Pero sin características del recurso por las que podamos filtrar/ordenar, el módulo <code>IAM</code> puede, en el mejor de los casos, devolver todos los recursos,
+        y tendríamos que hacer el filtrado en el lado del módulo. No es exactamente una solución escalable.
+    </p>
+    <p>
+        Sin saber cómo salir de esta situación, el equipo decidió (consciente o inconscientemente) romper las reglas de modularización y acoplar
+        los módulos a nivel de base de datos.
+    </p>
+    <p>
+        Dado que el sistema está desplegado como un monolito modular y cada módulo tiene acceso a la misma base de datos (cada módulo tiene sus propias tablas con un prefijo apropiado),
+        teóricamente nada impide construir una consulta SQL que devuelva una lista de recursos para un módulo específico
+        y unirla con las tablas de permisos del módulo <code>IAM</code> para filtrar los recursos a los que el usuario no tiene acceso.
+    </p>
+    <p>
+        Rápido, simple y hasta funciona.
+    </p>
+    <p>
+        Esto probablemente podría coexistir pacíficamente, excepto por un nuevo requisito: necesitamos extraer uno de los módulos del
+        monolito...
+    </p>
+    <p>
+        Y aquí es donde las cosas se complican. ¿Cómo extraes el Módulo A como un servicio independiente cuando está estrechamente acoplado a nivel de
+        base de datos con el módulo IAM? Si eliminamos el <code>join</code> a las tablas de <code>IAM</code>, el control de acceso
+        dejará de funcionar.
+    </p>
+    <p>
+        A continuación, presentaré técnicas que nos permitirán extraer este módulo del monolito sin perder funcionalidad, romper
+        las reglas de modularización o cambiar las dependencias entre módulos.
+    </p>
+    <div class="notice">
+        <p>
+            Al diseñar un monolito modular, vale la pena intentar un enfoque ligeramente diferente.
+            En lugar de prefijar tablas, puedes crear bases de datos/esquemas separados para cada módulo dentro de un único servidor de base de datos,
+            lo que hace mucho más difícil crear un acoplamiento accidental a nivel de consulta SQL.
+        </p>
+    </div>
+    <a href="#division-of-responsibility"><h2 id="division-of-responsibility">División de Responsabilidades</h2></a>
+    <p>
+        ¿Y si no fuera el módulo <code>IAM</code> el responsable de los permisos otorgados a recursos
+        que solo existen en un módulo específico?
+    </p>
+    <p>
+        Un enfoque posible (probablemente el mejor para muchos) es la separación de responsabilidades, lo que significa que <code>IAM</code>
+        maneja la autorización, usuarios, sus roles y los grupos a los que están asignados.
+    </p>
+    <p>
+        Los módulos mismos gestionan las reglas de permisos para recursos. En la práctica, esto significa mover las tablas <code>access_rules</code>
+        al <code>Módulo A</code> y al <code>Módulo B</code>.
+    </p>
+    <p>
+        El resultado sería una arquitectura similar a la siguiente:
+    </p>
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/separation.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/separation.png') }}" alt="Los Lados Oscuros de la Modularización - Separación" />
+        </a>
+    </div>
+    <p>
+        Ninguno de los módulos necesita hacer viajes a <code>IAM</code> para obtener una lista de recursos disponibles
+        para un usuario seleccionado.
+    </p>
+    <p>
+        Sí tenemos algo de duplicación - básicamente necesitamos repetir la lógica de permisos para cada módulo existente
+        e integrarla en los mecanismos de módulo existentes.
+    </p>
+    <div class="notice">
+        <p>
+            <strong>Nota:</strong> Aquí podrías sentir la tentación de crear un componente.
+            A menos que tengas personas en tus equipos con experiencia en la construcción de bibliotecas/componentes, es mejor comenzar
+            con duplicación. A largo plazo, la duplicación duele mucho menos que la abstracción incorrecta.
+        </p>
+    </div>
+    <p>
+        ¿Pero es eso suficiente?
+    </p>
+    <p>
+        No del todo. Si miramos la tabla de permisos, notaremos que los permisos pueden otorgarse directamente
+        a un usuario o a un grupo al que pertenece el usuario.
+    </p>
+    <p>
+        Esto significa que en el <code>Módulo A</code>, otorgamos permisos a un recurso para el grupo <code>Grupo 01</code>, que incluye
+        al <code>Usuario 01</code> y al <code>Usuario 02</code>.<br/>
+        Gracias a esto, ambos usuarios tienen acceso al recurso.
+    </p>
+    <p>
+        ¿Pero qué pasa si eliminamos un usuario del grupo seleccionado?
+    </p>
+    <p>
+        Podemos abordar esto de dos maneras:
+    </p>
+    <ol>
+        <li>Durante cada verificación de acceso, consultamos al módulo <code>IAM</code> por la lista de grupos del usuario</li>
+        <li>Aceptamos la <code>consistencia eventual</code> y mantenemos los grupos de usuario en la sesión, refrescándola cada pocos/varios minutos</li>
+    </ol>
+
+    <p>
+        La primera solución es la más simple de implementar, no viola los límites de responsabilidad del módulo, pero podría
+        convertirse en un cuello de botella bastante rápido.
+    </p>
+    <p>
+        Por supuesto, esto no sucederá de inmediato. Además, debido a la naturaleza de los datos (más lecturas que escrituras), también podemos
+        descargar la base de datos a través de mecanismos de caché apropiados.
+    </p>
+    <p>
+        Para la solución número dos, necesitamos asegurarnos de que sea siquiera una solución aceptable desde la perspectiva del
+        negocio.
+    </p>
+    <a href="#projection"><h2 id="projection">Proyección</h2></a>
+    <p>
+        Otro enfoque para resolver el problema es mantener la estructura de permisos en el módulo <code>IAM</code>, pero
+        introducir mecanismos que permitan al <code>Módulo A</code> y al <code>Módulo B</code> sincronizar
+        la tabla de permisos con una proyección local.
+    </p>
+    <p>
+        Esta proyección no es más que una forma simplificada de la tabla <code>access_rules</code> replicada en un módulo específico.
+    </p>
+    <p>
+        Como resultado, todavía obtenemos algo de duplicación, pero el <code>Módulo A</code> y el <code>Módulo B</code>
+        no se centran en gestionar permisos - esa responsabilidad sigue delegada al módulo <code>IAM</code>.
+    </p>
+    <p>
+        Su responsabilidad se reduce a sincronizar permisos con el módulo de permisos.
+    </p>
+    <p>
+        Pero ¿cómo y cuándo realizamos esta sincronización? Cada vez que otorgamos permisos a un recurso.
+    </p>
+    <p>
+        El <code>Módulo A</code>, al otorgar permisos a un usuario o grupo para algún recurso, primero
+        se comunica con el módulo <code>IAM</code>.
+    </p>
+    <p>
+        Hacemos lo mismo al revocar el acceso a un recurso. Primero eliminamos la entrada en el módulo <code>IAM</code>, luego
+        eliminamos la entrada en la proyección local.
+    </p>
+    <p>
+        ¿Pero qué pasa si eliminamos un usuario de un grupo seleccionado?
+    </p>
+    <p>
+        Aquí básicamente volvemos al mismo problema que teníamos en el enfoque anterior. Podemos
+        obtener la lista de grupos del usuario del módulo <code>IAM</code> cada vez, o aceptar la consistencia eventual.
+    </p>
+    <p>
+        La diferencia entre separación y proyección es muy pequeña. Pero con proyecciones, podemos ir un paso más allá.
+    </p>
+    <a href="#events"><h2 id="events">Eventos</h2></a>
+    <p>
+        El módulo <code>IAM</code> también puede propagar eventos relacionados con:
+    </p>
+    <ul>
+        <li>Agregar un usuario a grupos</li>
+        <li>Eliminar un usuario de un grupo</li>
+        <li>Eliminar un grupo</li>
+    </ul>
+    <p>
+        Para mantener la estructura de dependencia adecuada, estos eventos no pueden publicarse "a un destinatario específico".
+        Necesitamos aplicar un enfoque Pub/Sub aquí, donde <code>IAM</code> publica eventos a un
+        <code>Topic</code> específico, al que los módulos interesados pueden suscribirse.
+    </p>
+    <p>
+        Gracias a esto, ambos módulos recibirán una copia del mismo evento, que pueden manejar independientemente.
+    </p>
+    <p>
+        Al construir una proyección, también podemos simplificar significativamente su estructura dividiendo grupos en listas de usuarios.
+    </p>
+    <p>
+        Si un grupo recibe permiso de <code>acceso</code> a algún recurso, en lugar de almacenar
+        una entrada en la proyección que represente al grupo, podemos crear una entrada para cada usuario del grupo.
+    </p>
+    <p>
+        Gracias a esto, durante la verificación de acceso, no necesitamos preguntar al módulo <code>IAM</code> por nada en absoluto. Solo necesitamos
+        responder apropiadamente a los eventos propagados por el módulo <code>IAM</code>:
+    </p>
+    <ul>
+        <li>Agregar un usuario a un grupo</li>
+        <li>Eliminar un usuario de un grupo</li>
+        <li>Eliminar un grupo</li>
+    </ul>
+    <p>
+        Básicamente, solo estos eventos nos importan. Agregar un grupo o usuario en realidad no afecta nada,
+        así que podemos ignorarlos/filtrarlos de forma segura.
+    </p>
+    <a href="#events-reliability"><h2 id="events-reliability">Fiabilidad de Eventos</h2></a>
+    <p>
+        Por supuesto, un enfoque basado en eventos conlleva ciertos riesgos. Uno de ellos es, por ejemplo, el orden de eventos interrumpido.<br/>
+        Por ejemplo, primero recibimos un evento de "usuario eliminado del grupo", y solo después el evento de "usuario agregado", cuando
+        en realidad estos eventos ocurrieron en el orden opuesto.
+    </p>
+    <p>
+        Sí, esto puede ser un problema, especialmente cuando el mensaje que contiene el evento también incluye
+        todos los detalles de ese evento.
+    </p>
+    <p>
+        Pero podemos lidiar con esto decidiendo usar eventos anémicos - es decir, eventos que básicamente
+        solo contienen identificadores de los recursos a los que conciernen, y para todo lo demás necesitas ir al módulo fuente.
+    </p>
+    <p>
+        Comparemos ambos enfoques usando el evento <code>UserRemovedFromGroup</code> como ejemplo:
+    </p>
+
+    <p><strong>Evento Rico (Rich Event)</strong></p>
+    <pre><code class="language-json" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/rich-event.json') | e('html') }}</code></pre>
+
+    <p><strong>Evento Anémico (Anemic Event)</strong></p>
+    <pre><code class="language-json" {{ stimulus_controller('syntax_highlight') }}>{{ source(template_folder ~ '/code-examples/anemic-event.json') | e('html') }}</code></pre>
+
+    <p>
+        La diferencia es fundamental. Con un evento rico, toda la información sobre el usuario, el grupo y los permisos
+        está contenida en el evento. Si el orden de los eventos se interrumpe, nuestra proyección puede terminar en un estado inconsistente.
+    </p>
+    <p>
+        Un evento anémico, por otro lado, solo contiene identificadores. Después de recibir tal evento, el consumidor debe
+        hacer una consulta adicional al módulo <code>IAM</code> para obtener el estado actual. Gracias a esto, independientemente del orden
+        en que se reciban los eventos, siempre obtendremos la versión más actualizada de los datos.
+    </p>
+
+    <p><strong>Escenario Problemático para Eventos Ricos</strong></p>
+    <p>
+        Imaginemos la siguiente secuencia de eventos en el módulo <code>IAM</code>:
+    </p>
+    <ol>
+        <li><code>10:00:00</code> - Usuario agregado al grupo "Administrators"</li>
+        <li><code>10:00:05</code> - Usuario eliminado del grupo "Administrators"</li>
+    </ol>
+    <p>
+        El consumidor en el Módulo A recibe eventos en orden inverso:
+    </p>
+    <ol>
+        <li>Recibe <code>UserRemovedFromGroup</code> (con datos de 10:00:05)</li>
+        <li>Recibe <code>UserAddedToGroup</code> (con datos de 10:00:00)</li>
+    </ol>
+    <p>
+        Con <strong>eventos ricos</strong>, la proyección en el Módulo A muestra que el usuario <strong>pertenece</strong>
+        al grupo (porque el último evento recibido fue "adición"), aunque en realidad ya ha sido eliminado de él.
+    </p>
+    <p>
+        Con <strong>eventos anémicos</strong>, independientemente del orden recibido, el Módulo A ejecutará una consulta a IAM
+        y obtendrá el estado actual - el usuario <strong>no pertenece</strong> al grupo.
+    </p>
+
+    <div class="notice">
+        <p>
+            Los eventos anémicos reducen el riesgo de inconsistencia, pero no lo eliminan por completo.
+            Todavía existe la posibilidad de que entre recibir el evento y consultar a IAM,
+            el estado cambie. Así que podrías considerar agregar un número de versión o marca de tiempo
+            a los eventos y verificarlos al actualizar la proyección. Aunque los mecanismos de protección
+            dependerán en gran medida del tráfico y la frecuencia de cambios.
+        </p>
+    </div>
+
+    <p>
+        Así es como se ve:
+    </p>
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/dark-sides-of-modularization/events.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/dark-sides-of-modularization/events.png') }}" alt="Los Lados Oscuros de la Modularización - Eventos" />
+        </a>
+    </div>
+    <p>
+        Cuando el consumidor del Módulo A recibe información, su trabajo es ir al módulo <code>IAM</code> y preguntarle
+        por todas las reglas para un grupo específico. El módulo <code>IAM</code> puede devolver registros de la tabla de permisos concernientes a
+        un grupo específico, y luego, si existen reglas, podemos preguntar por los usuarios de ese grupo y en
+        la proyección local del módulo construir una proyección de permisos para ellos.
+    </p>
+    <p>
+        También podemos facilitarnos un poco la vida y agregar al protocolo de comunicación con el módulo <code>IAM</code> la capacidad de
+        obtener una estructura plana de permisos, que devuelva no el grupo sino una lista de usuarios del grupo con permisos a
+        un recurso específico.
+    </p>
+    <div class="important">
+        <p>
+            <strong>Nota:</strong> Para proporcionar garantías adicionales de entrega de eventos, considera
+            implementar el patrón <strong>Outbox</strong>.
+        </p>
+    </div>
+    <p>
+        Espera, ¿pero no se convertirá el módulo <code>IAM</code> en un cuello de botella otra vez?
+    </p>
+    <p>
+        No del todo. Lo que importa aquí no es solo la consulta en sí, sino más bien su frecuencia. El control de permisos es
+        uno de esos procesos donde preguntamos sobre permisos con mucha más frecuencia de lo que los cambiamos.
+    </p>
+    <p>
+        Por supuesto, no me creas solo a mí - si tienes un sistema existente con control de permisos, vale la pena simplemente medirlo.
+    </p>
+    <p>
+        Pero volviendo al punto, al usar eventos anémicos, no tenemos que preocuparnos tanto por
+        el orden en que se reciben. No confiamos en el contenido del evento sino solo en el identificador del recurso que
+        concierne, lo que hace que construir proyecciones sea mucho más fácil.
+    </p>
+    <p>
+        Pero esto tiene su costo - ahora después de cada evento necesitamos ir a la fuente para
+        determinar el estado real.
+    </p>
+    <p>
+        Así que vale la pena analizar este enfoque desde una perspectiva de rendimiento.<br/>
+        Sin embargo, hay más técnicas para lidiar con eventos. Puedes encontrar una en <a href="https://event-driven.io/en/dealing_with_race_conditions_in_eda_using_read_models/" target="_blank">https://event-driven.io/</a>.
+    </p>
+    <a href="#duplication"><h2 id="duplication">Duplicación</h2></a>
+    <p>
+        En ambos enfoques, sin embargo, surge el problema de la duplicación. Aunque en este caso, "problema" es probablemente la palabra equivocada.
+        Es simplemente un costo de la modularización del que simplemente no se habla.
+    </p>
+    <p>
+        Independientemente de si decidimos la separación de responsabilidades o la construcción de proyecciones, los Módulos A y B
+        duplicarán la lógica relacionada con permisos en mayor o menor medida.
+    </p>
+    <p>
+        Así que independientemente de nuestro modelo de despliegue (monolito / microservicios) e independientemente de cómo separemos
+        los límites de módulos y sus responsabilidades, simplemente necesitamos prepararnos para este costo.
+    </p>
+    <p>
+        Mi consejo aquí es siempre comenzar con duplicación. Incluso si nuestras implementaciones no difieren en absoluto
+        entre módulos.
+    </p>
+    <p>
+        Es mucho más fácil extraer partes comunes de soluciones existentes que diseñar partes comunes para soluciones
+        que aún no existen.
+    </p>
+    <a href="#whats-better"><h2 id="whats-better">¿Qué es Mejor?</h2></a>
+    <p>
+        No hay una respuesta clara a esta pregunta. Pero podemos intentar analizar nuestra situación y elegir
+        una solución que nos permita extraer uno de los módulos y deshacernos del acoplamiento a nivel de base de datos.
+    </p>
+    <p>
+        Para el módulo que necesita ser extraído, sugeriría (si es posible) la separación de responsabilidades y
+        mover la gestión de permisos de recursos a ese módulo.
+    </p>
+    <p>
+        Ya que de todos modos tenemos que hacer algo de trabajo, ya que tenemos que separar físicamente este módulo de nuestro monolito,
+        también podríamos ir un paso más allá y reducir su dependencia de
+        <code>IAM</code> aún más a un costo relativamente bajo.
+    </p>
+    <p>
+        ¿Pero tiene sentido tal operación para los módulos existentes?
+    </p>
+    <p>
+        Para los módulos que no necesitan ser extraídos y continuarán viviendo dentro del monolito modular, sugeriría
+        un enfoque basado en proyección, pero no necesariamente con eventos.
+    </p>
+    <a href="#projections-without-events"><h2 id="projections-without-events">Proyecciones Sin Eventos</h2></a>
+    <div class="important">
+        <p>
+            Esta es una técnica que no funcionará en un enfoque de microservicios, pero puede ayudar como solución provisional.
+            No solo ayudar, sino también señalar el camino a seguir. Puedes implementarla a bajo costo, obteniendo
+            básicamente lo mismo que con un enfoque basado en eventos.
+        </p>
+    </div>
+    <p>
+        Mirémoslo desde un ángulo diferente. Pub/Sub es básicamente un mecanismo que nos permite una cierta forma de replicación.
+        Gracias a los eventos, sabemos que algo sucedió en algún momento en algún módulo.
+    </p>
+    <p>
+        ¿Qué tal si en lugar de publicar un evento a un <code>Topic</code>, usáramos <code>Vistas Materializadas</code>?
+    </p>
+    <p>
+        Sí, lo sé - mucha gente probablemente está viendo banderas rojas ahora mismo. Quiero decir, ¿vistas materializadas?
+        ¿Lógica en el lado de la base de datos en lugar de en el código?
+    </p>
+    <p>
+        Bueno, no es una solución ideal. Claro, nos deshacemos del acoplamiento a nivel SQL, pero a cambio
+        obtenemos un acoplamiento diferente - esta vez a nivel de base de datos.
+    </p>
+    <p>
+        Pero si abordamos esto pragmáticamente, básicamente solo estamos intercambiando el mecanismo de transporte.
+        En lugar de construir pub/sub, implementar el patrón Outbox, manejar errores de comunicación de red, reintentos, etc.,
+        podemos simplemente dejar que la base de datos maneje la replicación de datos.
+    </p>
+    <p>
+        Si por alguna razón esto deja de funcionarnos - como cuando actualizar la vista materializada
+        se vuelve demasiado costoso y comienza a cargar innecesariamente nuestra base de datos - nada nos impedirá
+        cambiar a proyecciones.
+    </p>
+    <p>
+        Pero antes de llegar a ese punto, también podemos intentar poner el proceso de actualización mismo en una cola en el módulo <code>IAM</code>
+        y ejecutarlo de forma asíncrona. Obtendremos un ligero retraso, aunque en este caso debería estar en un nivel aceptable.
+    </p>
+    <p>
+        Lo clave es entender que una <code>Vista Materializada</code> no es una solución mala ni buena - solo nos da
+        la capacidad de introducir una separación simplificada relativamente rápido sin tener que construir todo el mecanismo basado en eventos.
+    </p>
+    <p>
+        Pero cuando la separación completa/rendimiento/bloqueo de proveedor o cualquier otra cosa comience a molestarnos aquí, no debería haber problemas mayores
+        al cambiar a proyecciones.
+    </p>
+    <p>
+        Eso es exactamente lo que hace que <code>Vista Materializada</code> sea una solución interesante.
+    </p>
+    <a href="#ideal-solution"><h2 id="ideal-solution">La Solución Ideal</h2></a>
+    <p class="text-center">
+        <strong>No existe...</strong>
+    </p>
+    <p>
+        Y eso es probablemente lo más importante que quiero transmitir en este artículo.
+    </p>
+    <p>
+        Incluso si logramos reducir el problema puramente a tecnología, e incluso si por algún milagro
+        todos estamos de acuerdo en que el problema A debe resolverse con patrón/técnica/arquitectura B...
+    </p>
+    <p>
+        Nada de eso podría importar porque el negocio simplemente podría no aprobar una refactorización importante...<br/>
+        Y esto no tiene que ser mala fe o ignorancia - a veces simplemente no tenemos los recursos.
+    </p>
+    <p>
+        Es difícil justificar por qué deberíamos pasar tiempo moviendo la gestión de permisos a módulos
+        cuando todo funciona y genera ganancias.
+    </p>
+    <p>
+        Tan difícil como será argumentar por qué de repente, con un requisito de extraer un módulo, tenemos que arreglar
+        todos los demás, agregando comunicación asíncrona, eventos, mecanismos de reintento, recuperación, etc.
+    </p>
+    <p>
+        Vale la pena aceptar que el mundo no es perfecto, no es blanco y negro, y a menudo tendremos que
+        elegir entre varias soluciones imperfectas.
+    </p>
+    <p>
+        Lo que podría parecer absolutamente incorrecto en un lugar podría ser aceptable en otro contexto,
+        o incluso deseable.
+    </p>
+    <a href="#help"><h2 id="help">Ayuda</h2></a>
+    <p>
+        Si estás luchando con problemas similares en tu proyecto y no estás muy seguro de cómo resolverlos,<br/>
+        <a href="{{ url('consulting') }}">ponte en contacto conmigo</a>, y juntos encontraremos una solución perfectamente adaptada a tus necesidades.
+    </p>
+    <p>
+        También te animo a visitar <a href="https://discord.gg/5dNXfQyACW" target="_blank">Discord - Flow PHP</a>, donde
+        podemos hablar directamente.
+    </p>
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/consulting_01.jpg') }}" alt="Consultoría" />
+    </div>
+{% endblock %}

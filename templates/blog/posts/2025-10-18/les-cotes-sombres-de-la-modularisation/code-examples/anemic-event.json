@@ -1,0 +1,9 @@
+{
+  "eventId": "550e8400-e29b-41d4-a716-446655440000",
+  "eventType": "UserRemovedFromGroup",
+  "occurredAt": "2025-10-18T10:30:00Z",
+  "payload": {
+    "userId": 123,
+    "groupId": 456
+  }
+}

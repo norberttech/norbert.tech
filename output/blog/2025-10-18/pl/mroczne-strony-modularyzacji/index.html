@@ -100,7 +100,32 @@
             <li>
                 <a href="/blog" class="text-sm sm:text-base text-blue-500 hover:underline px-2 py-1 rounded">Go Back</a>
             </li>
-                    </ul>
+                                                                <li>
+                        <a href="/blog/2025-10-18/dark-sides-of-modularization"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="English">🇺🇸 English</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-10-18/de/die-dunklen-seiten-der-modularisierung"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Deutsch">🇩🇪 Deutsch</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-10-18/es/los-lados-oscuros-de-la-modularizacion"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Spanish">🇪🇸 Spanish</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-10-18/fr/les-cotes-sombres-de-la-modularisation"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="French">🇫🇷 French</a>
+                    </li>
+                                                                                <li>
+                        <a href="/blog/2025-10-18/it/i-lati-oscuri-della-modularizzazione"
+                           class="text-sm sm:text-lg px-2 py-1 rounded hover:opacity-80"
+                           title="Italian">🇮🇹 Italian</a>
+                    </li>
+                                    </ul>
 
             </div>
     <article class="blog-post">
@@ -137,19 +162,10 @@
         z wielkim, skomplikowanym i zagmatwanym problemem, dzielimy go na mniejsze problemy, co znacznie ułatwia
         ich rozwiązywanie.
     </p>
-    
+
     <p>
         Wiele osób słysząc "modularyzacja" myśli "mikroserwisy", dlatego zanim przejdziemy dalej, ustalmy jedną kwestię.
         Mikroserwisy to tylko jeden ze sposobów na implementację modularyzacji, tak samo jak modularny monolit.
-    </p>
-    <p>
-        Mikroserwisy od modularnego monolitu różnią się w zasadzie tylko tym, że każdy moduł jest deployowany oddzielnie,
-        a protokół komunikacji między nimi opiera się najczęściej na HTTP lub komunikacji asynchronicznej (np. kolejki).
-    </p>
-    <p>
-        Modularny monolit z kolei deployowany jest jako jedna całość. Do komunikacji między modułami zamiast protokołu
-        HTTP możemy wykorzystać bezpośrednie wywołania metod z innych modułów (ukryte oczywiście za odpowiednią warstwą abstrakcji).
-        Możemy również z powodzeniem wykorzystać systemy kolejkowe do komunikacji asynchronicznej.
     </p>
 
     <a href="#current-state"><h2 id="current-state">Stan Aktualny</h2></a>
@@ -170,8 +186,8 @@
     </ul>
 
     <div class="img-wide">
-        <a href="https://norbert.tech/assets/images/blog/dark-sides-of-modularization/problem-77aff41e3852fa637b5dad5c89a9ba5d.png" target="_blank">
-            <img src="https://norbert.tech/assets/images/blog/dark-sides-of-modularization/problem-77aff41e3852fa637b5dad5c89a9ba5d.png" alt="Mroczne Strony Modularyzacji - problem" />
+        <a href="https://norbert.tech/assets/images/blog/dark-sides-of-modularization/problem-2933ef78ce8a272ce5278e05d2779739.png" target="_blank">
+            <img src="https://norbert.tech/assets/images/blog/dark-sides-of-modularization/problem-2933ef78ce8a272ce5278e05d2779739.png" alt="Mroczne Strony Modularyzacji - problem" />
         </a>
     </div>
 
@@ -228,6 +244,13 @@
         Powyższe wymagania znacznie utrudniają implementację, gdyby nie filtrowanie/stronicowanie, moglibyśmy uderzyć
         bezpośrednio do modułu <code>IAM</code> z żądaniem zwrócenia zasobów dla danego użytkownika.
     </p>
+    <div class="important">
+        <p>
+            Cechy zasobów to wszystkie ich parametry i atrybuty, które mają sens i znaczenie głównie w obrębie swojego
+            kontekstu. Przykładowymi cechami zasobu mogą być jego nazwa czy data utworzenia. Są to parametry, po których
+            użytkownik ma mieć możliwość sortowania lub filtrowania a które nie występują w module <code>IAM</code>
+        </p>
+    </div>
     <p>
         Jednak bez cech zasobów, po których możemy filtrować/sortować, moduł <code>IAM</code> może co najwyżej zwrócić nam wszystkie zasoby,
         a filtrowanie musielibyśmy zrobić po stronie modułu. Nie jest to jednak zbyt skalowalne rozwiązanie.
@@ -595,6 +618,13 @@
         podejście oparte o projekcję, jednak niekoniecznie o zdarzenia.
     </p>
     <a href="#projections-without-events"><h2 id="projections-without-events">Projekcje bez zdarzeń</h2></a>
+    <div class="important">
+        <p>
+            Jest to technika, która nie sprawdzi się w podejściu mikroserwisowym, ale może pomóc doraźnie.
+            Nie tylko pomóc, ale też nakreślić kierunek na przyszłość. Można ją zaimplementować niskim kosztem, otrzymując
+            w zasadzie to samo co przy podejściu opartym o zdarzenia.
+        </p>
+    </div>
     <p>
         Popatrzmy na to z innej perspektywy. Pub/Sub to w zasadzie mechanizm pozwalający nam na pewną formę replikacji.
         Dzięki zdarzeniom, posiadamy wiedzę, że coś miało miejsce w jakimś momencie w jakimś module.
