@@ -55,20 +55,10 @@ image/jpeg
         z wielkim, skomplikowanym i zagmatwanym problemem, dzielimy go na mniejsze problemy, co znacznie ułatwia
         ich rozwiązywanie.
     </p>
-    {# Tutaj Obrazek splatanych korzeni drzewa#}
 
     <p>
         Wiele osób słysząc "modularyzacja" myśli "mikroserwisy", dlatego zanim przejdziemy dalej, ustalmy jedną kwestię.
         Mikroserwisy to tylko jeden ze sposobów na implementację modularyzacji, tak samo jak modularny monolit.
-    </p>
-    <p>
-        Mikroserwisy od modularnego monolitu różnią się w zasadzie tylko tym, że każdy moduł jest deployowany oddzielnie,
-        a protokół komunikacji między nimi opiera się najczęściej na HTTP lub komunikacji asynchronicznej (np. kolejki).
-    </p>
-    <p>
-        Modularny monolit z kolei deployowany jest jako jedna całość. Do komunikacji między modułami zamiast protokołu
-        HTTP możemy wykorzystać bezpośrednie wywołania metod z innych modułów (ukryte oczywiście za odpowiednią warstwą abstrakcji).
-        Możemy również z powodzeniem wykorzystać systemy kolejkowe do komunikacji asynchronicznej.
     </p>
 
     <a href="#current-state"><h2 id="current-state">Stan Aktualny</h2></a>
@@ -147,6 +137,13 @@ image/jpeg
         Powyższe wymagania znacznie utrudniają implementację, gdyby nie filtrowanie/stronicowanie, moglibyśmy uderzyć
         bezpośrednio do modułu <code>IAM</code> z żądaniem zwrócenia zasobów dla danego użytkownika.
     </p>
+    <div class="important">
+        <p>
+            Cechy zasobów to wszystkie ich parametry i atrybuty, które mają sens i znaczenie głównie w obrębie swojego
+            kontekstu. Przykładowymi cechami zasobu mogą być jego nazwa czy data utworzenia. Są to parametry, po których
+            użytkownik ma mieć możliwość sortowania lub filtrowania a które nie występują w module <code>IAM</code>
+        </p>
+    </div>
     <p>
         Jednak bez cech zasobów, po których możemy filtrować/sortować, moduł <code>IAM</code> może co najwyżej zwrócić nam wszystkie zasoby,
         a filtrowanie musielibyśmy zrobić po stronie modułu. Nie jest to jednak zbyt skalowalne rozwiązanie.
@@ -488,6 +485,13 @@ image/jpeg
         podejście oparte o projekcję, jednak niekoniecznie o zdarzenia.
     </p>
     <a href="#projections-without-events"><h2 id="projections-without-events">Projekcje bez zdarzeń</h2></a>
+    <div class="important">
+        <p>
+            Jest to technika, która nie sprawdzi się w podejściu mikroserwisowym, ale może pomóc doraźnie.
+            Nie tylko pomóc, ale też nakreślić kierunek na przyszłość. Można ją zaimplementować niskim kosztem, otrzymując
+            w zasadzie to samo co przy podejściu opartym o zdarzenia.
+        </p>
+    </div>
     <p>
         Popatrzmy na to z innej perspektywy. Pub/Sub to w zasadzie mechanizm pozwalający nam na pewną formę replikacji.
         Dzięki zdarzeniom, posiadamy wiedzę, że coś miało miejsce w jakimś momencie w jakimś module.

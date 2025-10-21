@@ -252,6 +252,7 @@ final class Posts
             'slug' => 'mroczne-strony-modularyzacji',
             'language' => 'pl',
             'date' => '2025-10-18',
+            'translations_ids' => [],
         ],
     ];
 
