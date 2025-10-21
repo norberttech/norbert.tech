@@ -437,6 +437,14 @@ image/jpeg
         kolejnością ich otrzymywania. Nie opieramy się bowiem na treści zdarzenia, a jedynie na identyfikatorze zasobu, którego
         dotyczy, co znacznie ułatwia budowanie projekcji.
     </p>
+    <p>
+        Ma to jednak swój koszt, koszt polegający na tym, że teraz po każdym zdarzeniu musimy udać się do źródła w celu
+        ustalenia stanu faktycznego.
+    </p>
+    <p>
+        Warto więc przeanalizować to podejście pod kątem wydajności.<br/>
+        Technik radzenia sobie ze zdarzeniami jest jednak więcej, jedną z nich znajdziecie na <a href="https://event-driven.io/en/dealing_with_race_conditions_in_eda_using_read_models/" target="_blank">https://event-driven.io/</a>.
+    </p>
     <a href="#duplication"><h2 id="duplication">Duplikacja</h2></a>
     <p>
         W obydwu podejściach pojawia się jednak problem duplikacji. Chociaż w tym wypadku "problem" to chyba złe słowo.
@@ -520,4 +528,47 @@ image/jpeg
     <p>
         Właśnie to czyni <code>Materialized View</code> interesującym rozwiązaniem.
     </p>
+    <a href="#ideal-solution"><h2 id="ideal-solution">Rozwiązanie idealne</h2></a>
+    <p class="text-center">
+        <strong>Nie istnieje...</strong>
+    </p>
+    <p>
+        I to chyba najważniejsze co chciałbym przekazać w tym artykule.
+    </p>
+    <p>
+        Nawet jeżeli uda się nam zredukować problem tylko i wyłącznie do technologii i nawet jeżeli jakimś cudem
+        wszyscy zgodzilibyśmy się, że problem A należy rozwiązać wzorcem/techniką/architekturą B. <br/>
+    </p>
+    <p>
+        Nic z tego może nie mieć znaczenia, biznes najzwyczajniej w świecie może nie wyrazić zgody na większy refactoring...<br/>
+        I nie musi to być zła wola lub ignorancja, czasami po prostu nie mamy zasobów. <br/>
+    </p>
+    <p>
+        Ciężko jest uzasadnić, dlaczego mielibyśmy poświęcić czas na to, aby zarządzanie uprawnieniami przenieść do modułów,
+        kiedy wszystko działa i generuje zyski.
+    </p>
+    <p>
+        Tak samo ciężko będzie uargumentować, dlaczego nagle, mając wymaganie wydzielenia jednego modułu, musimy poprawić
+        wszystkie pozostałe, dodając do nich komunikację asynchroniczną, zdarzenia, mechanizmy retry, recovery itp.
+    </p>
+    <p>
+        Warto pogodzić się z faktem, że świat nie jest idealny, nie jest czarno-biały i często będziemy musieli
+        wybierać pomiędzy kilkoma niedoskonałymi rozwiązaniami.
+    </p>
+    <p>
+        To, co w jednym miejscu może wydawać się absolutnie niepoprawne, w innym kontekście może być już akceptowalne,
+        albo wręcz pożądane.
+    </p>
+    <a href="#help"><h2 id="help">Pomoc</h2></a>
+    <p>
+        A gdybyś zmagał się podobnymi problemami w swoim projekcie i nie bardzo wiedział, jak je rozwiązać.<br/>
+        <a href="{{ url('consulting') }}">Skontaktuj się ze mną</a>, a wspólnie znajdziemy rozwiązanie, które będzie idealnie dopasowane do Twoich potrzeb.
+    </p>
+    <p>
+        Zachęcam również do odwiedzenia serwera <a href="https://discord.gg/5dNXfQyACW" target="_blank">Discord - Flow PHP</a>, na którym
+        możemy porozmawiać bezpośrednio.
+    </p>
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/analytics-in-transactional-distributed-systems/consulting_01.jpg') }}" alt="Konsultacje" />
+    </div>
 {% endblock %}
