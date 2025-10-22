@@ -21,6 +21,7 @@ final class Post
      * @param string $slug
      * @param string $language
      * @param array<int> $translationsIds
+     * @param string|null $heroImgSrc
      */
     public function __construct(
         public readonly string $title,
@@ -31,6 +32,7 @@ final class Post
         public readonly string $language = 'en',
         public readonly array $translationsIds = [],
         public readonly bool $translated = false,
+        public readonly ?string $heroImgSrc = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -48,6 +50,7 @@ final class Post
                 'language' => type_string(),
                 'translations_ids' => type_list(type_integer()),
                 'translated' => type_boolean(),
+                'hero_img_src' => type_optional(type_string()),
             ],
         )->assert($data);
 
@@ -60,6 +63,7 @@ final class Post
             $data['language'] ?? 'en',
             $data['translations_ids'] ?? [],
             $data['translated'] ?? false,
+            $data['hero_img_src'] ?? null,
         );
     }
 }

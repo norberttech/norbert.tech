@@ -45,6 +45,7 @@ final class Posts
             'slug' => 'analiza-danych-w-rozproszonych-systemach-transakcyjnych',
             'language' => 'pl',
             'translations_ids' => [5, 6, 7, 8, 10],
+            'hero_img_src' => 'images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg',
         ],
         [
             'id' => 5,
@@ -56,6 +57,7 @@ final class Posts
             'language' => 'en',
             'translations_ids' => [4, 6, 7, 8, 10],
             'translated' => true,
+            'hero_img_src' => 'images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg',
         ],
         [
             'id' => 6,
@@ -73,6 +75,7 @@ final class Posts
             'language' => 'fr',
             'translations_ids' => [4, 5, 7, 8, 10],
             'translated' => true,
+            'hero_img_src' => 'images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg',
         ],
         [
             'id' => 7,
@@ -84,6 +87,7 @@ final class Posts
             'language' => 'de',
             'translations_ids' => [4, 5, 6, 8, 10],
             'translated' => true,
+            'hero_img_src' => 'images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg',
         ],
         [
             'id' => 8,
@@ -101,6 +105,7 @@ final class Posts
             'language' => 'es',
             'translations_ids' => [4, 5, 6, 7, 10],
             'translated' => true,
+            'hero_img_src' => 'images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg',
         ],
         [
             'id' => 10,
@@ -118,6 +123,7 @@ final class Posts
             'language' => 'it',
             'translations_ids' => [4, 5, 6, 7, 8],
             'translated' => true,
+            'hero_img_src' => 'images/blog/analytics-in-transactional-distributed-systems/analytics_01.jpg',
         ],
         [
             'id' => 9,
@@ -138,6 +144,7 @@ final class Posts
             'language' => 'pl',
             'date' => '2025-09-20',
             'translations_ids' => [11, 12, 13, 14, 15],
+            'hero_img_src' => 'images/blog/parquet-introduction/parquet.jpg',
         ],
         [
             'id' => 11,
@@ -159,6 +166,7 @@ final class Posts
             'date' => '2025-09-20',
             'translations_ids' => [9, 12, 13, 14, 15],
             'translated' => true,
+            'hero_img_src' => 'images/blog/parquet-introduction/parquet.jpg',
         ],
         [
             'id' => 12,
@@ -180,6 +188,7 @@ final class Posts
             'date' => '2025-09-20',
             'translations_ids' => [9, 11, 13, 14, 15],
             'translated' => true,
+            'hero_img_src' => 'images/blog/parquet-introduction/parquet.jpg',
         ],
         [
             'id' => 13,
@@ -201,6 +210,7 @@ final class Posts
             'date' => '2025-09-20',
             'translations_ids' => [9, 11, 12, 14, 15],
             'translated' => true,
+            'hero_img_src' => 'images/blog/parquet-introduction/parquet.jpg',
         ],
         [
             'id' => 14,
@@ -222,6 +232,7 @@ final class Posts
             'date' => '2025-09-20',
             'translations_ids' => [9, 11, 12, 13, 15],
             'translated' => true,
+            'hero_img_src' => 'images/blog/parquet-introduction/parquet.jpg',
         ],
         [
             'id' => 15,
@@ -243,6 +254,7 @@ final class Posts
             'date' => '2025-09-20',
             'translations_ids' => [9, 11, 12, 13, 14],
             'translated' => true,
+            'hero_img_src' => 'images/blog/parquet-introduction/parquet.jpg',
         ],
         [
             'id' => 16,
@@ -253,6 +265,7 @@ final class Posts
             'language' => 'pl',
             'date' => '2025-10-18',
             'translations_ids' => [17, 18, 19, 20, 21],
+            'hero_img_src' => 'images/blog/dark-sides-of-modularization/roots.jpg',
         ],
         [
             'id' => 17,
@@ -264,6 +277,7 @@ final class Posts
             'date' => '2025-10-18',
             'translations_ids' => [16, 18, 19, 20, 21],
             'translated' => true,
+            'hero_img_src' => 'images/blog/dark-sides-of-modularization/roots.jpg',
         ],
         [
             'id' => 18,
@@ -275,6 +289,7 @@ final class Posts
             'date' => '2025-10-18',
             'translations_ids' => [16, 17, 19, 20, 21],
             'translated' => true,
+            'hero_img_src' => 'images/blog/dark-sides-of-modularization/roots.jpg',
         ],
         [
             'id' => 19,
@@ -286,6 +301,7 @@ final class Posts
             'date' => '2025-10-18',
             'translations_ids' => [16, 17, 18, 20, 21],
             'translated' => true,
+            'hero_img_src' => 'images/blog/dark-sides-of-modularization/roots.jpg',
         ],
         [
             'id' => 20,
@@ -297,6 +313,7 @@ final class Posts
             'date' => '2025-10-18',
             'translations_ids' => [16, 17, 18, 19, 21],
             'translated' => true,
+            'hero_img_src' => 'images/blog/dark-sides-of-modularization/roots.jpg',
         ],
         [
             'id' => 21,
@@ -308,6 +325,7 @@ final class Posts
             'date' => '2025-10-18',
             'translations_ids' => [16, 17, 18, 19, 20],
             'translated' => true,
+            'hero_img_src' => 'images/blog/dark-sides-of-modularization/roots.jpg',
         ],
     ];
 
