@@ -32,7 +32,7 @@ final class Post
         public readonly string $language = 'en',
         public readonly array $translationsIds = [],
         public readonly bool $translated = false,
-        public readonly ?string $heroImgSrc = null,
+        public readonly null|string $heroImgSrc = null,
     ) {}
 
     public static function fromArray(array $data): self

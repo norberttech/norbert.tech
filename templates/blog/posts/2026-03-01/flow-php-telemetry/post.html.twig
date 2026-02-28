@@ -1,0 +1,298 @@
+{% extends 'blog/post.html.twig' %}
+
+{%- block title -%}
+    {{ post.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {{ post.description }}
+{%- endblock -%}
+
+{%- block og_img -%}
+    {{ asset('images/blog/php-telemetry/pipes.jpg') }}
+{%- endblock -%}
+
+{%- block og_img_type -%}
+    image/jpeg
+{%- endblock -%}
+
+{%- block og_img_alt -%}
+    {{ post.title }}
+{%- endblock -%}
+
+
+{% block article %}
+    <div class="img-wide">
+        <img src="{{ asset('images/blog/php-telemetry/pipes.jpg') }}" alt="{{ post.title }}"/>
+    </div>
+
+    <a href="#flow-php-telemetry"><h2 id="flow-php-telemetry">Flow PHP - Telemetry</h2></a>
+    <p>
+        Obserwowalność - czyli sposób na monitorowanie zachowania na podstawie emitowanych przez system sygnałów.
+    </p>
+    <p>
+        Od kilku lat na rynku dominuje jeden standard, który zyskuje coraz szerszą adaptację w usługach typu APM,
+        jest nim <a href="https://opentelemetry.io/docs/specs/otlp/" target="_blank">Open Telemetry</a>.
+    </p>
+    <p>
+        OpenTelemetry dostarcza nie tylko specyfikację, protokóły czy konwencje nazewnictwa. To także zbiór bibliotek
+        i SDK pozwalający na "łatwą" adaptację w niemalże każdym systemie.
+    </p>
+    <p>
+        Dlaczego więc postanowiłem napisać własną bibliotekę, zamiast skorzystać z gotowych rozwiązań?
+    </p>
+    <p>
+        Wszystko zaczęło się od tego, że chciałem zintegrować DataFrame z Flow PHP (oraz kilka bibliotek jak np
+        postgresql czy filesystem) z OpenTelemetry.
+    </p>
+    <p>
+        Pierwszym problemem, na który trafiłem to zależności, SDK OpenTelemetry
+    </p>
+    <ul>
+        <li><code>php: ^8.1</code></li>
+        <li><code>ext-json: *</code></li>
+        <li><code>nyholm/psr7-server: ^1.1</code></li>
+        <li><code>open-telemetry/api: ^1.7</code></li>
+        <li><code>open-telemetry/context: ^1.4</code></li>
+        <li><code>open-telemetry/sem-conv: ^1.0</code></li>
+        <li><code>php-http/discovery: ^1.14</code></li>
+        <li><code>psr/http-client: ^1.0</code></li>
+        <li><code>psr/http-client-implementation: ^1.0</code></li>
+        <li><code>psr/http-factory-implementation: ^1.0</code></li>
+        <li><code>psr/http-message: ^1.0.1|^2.0</code></li>
+        <li><code>psr/log: ^1.1|^2.0|^3.0</code></li>
+        <li><code>ramsey/uuid: ^3.0 || ^4.0</code></li>
+        <li><code>symfony/polyfill-mbstring: ^1.23</code></li>
+        <li><code>symfony/polyfill-php82: ^1.26</code></li>
+        <li><code>tbachert/spi: ^1.0.5</code></li>
+    </ul>
+
+    <p>
+        Biorąc pod uwagę, że obecnie Flow PHP (w bazowej wersji) wymaga tylko:
+    </p>
+    <ul>
+        <li><code>php: ~8.3.0 || ~8.4.0 || ~8.5.0</code></li>
+        <li><code>composer-runtime-api: ^2.0</code></li>
+        <li><code>ext-json: *</code></li>
+        <li><code>brick/math: ^0.14.2</code></li>
+        <li><code>flow-php/array-dot: 0.32.0</code></li>
+        <li><code>flow-php/filesystem: 0.32.0</code></li>
+        <li><code>flow-php/types: 0.32.0</code></li>
+        <li><code>psr/clock: ^1.0</code></li>
+        <li><code>psr/simple-cache: ^1.0 || ^2.0 || ^3.0</code></li>
+        <li><code>symfony/string: ^6.4 || ^7.3 || ^8.0</code></li>
+        <li><code>webmozart/glob: ^3.0 || ^4.0</code></li>
+    </ul>
+
+    <p>
+        Ilość zależności praktycznie by się podwoiła, co w przypadku frameworka, który użytkownicy muszą
+        dodawać do listy zależności swoich systemów staje się odrobinę problematyczne ze względu na potencjalne
+        konflikty
+        wersji.
+    </p>
+    <p>
+        Teoretycznie mógłbym uzależnić Flow jedynie od <code>open-telemetry/api</code> a sdk dorzucić jako zależność
+        opcjonalną. Jednak kiedy zacząłem głębiej przyglądać się jak zbudowane jest API stwierdziłem, że nie jest
+        ono kompatybilne z architekturą, którą przyjąłem w Flow.
+    </p>
+    <p>
+        Głównym problemem były dla mnie wszelkiego rodzaju globalne stany, singletony i inne mechanizmy mające w teorii
+        ułatwić auto instrumentacje.
+        <a href="https://github.com/opentelemetry-php/api/blob/main/Globals.php" target="_blank">Przykład OpenTelemetry
+            Globals</a>.
+    </p>
+    <p>
+        Mógłbym pewnie próbować obejść Globals, jednak patrząc na implementacje instrumentacji oparte o OpenTelemetry
+        bardzo szybko trafiłbym na problemy związane z tym, że SDK jest bardzo ściśle powiązane z API, a API jest bardzo
+        ściśle powiązane z globalnym stanem.
+    </p>
+    <p>
+        Tutaj musiałem stanąć przed wyborem. Separować kod Flow za pomocą dodatkowej abstrakcji, lub zbudować własne API
+        będące jednocześnie abstrakcją dla telemetrii.
+    </p>
+    <p>
+        Biorąc pod uwagę, że samo API nie jest aż tak rozbudowane, podjąłem decyzję o zbudowaniu niezależnego API oraz
+        warstwy
+        transportu, które są zgodne z protokołem OTLP. Tak oto powstała malutka biblioteczka o nazwie
+        <a href="https://packagist.org/packages/flow-php/telemetry" target="_blank"><code>flow-php/telemetry</code></a>
+    </p>
+    <p>
+        Samo API <code>flow-php/telemetry</code> jest bardzo nieinwazyjne, nie opiera się o stany globalne, polega
+        głównie na kontraktach, oraz dostarcza bardzo lekkie implementacje <code>InMemory</code> or <code>Void</code>
+        użyteczne w testach.
+    </p>
+    <p>
+        API nie jest jednak wystarczające, aby wysłać gdziekolwiek sygnały.
+        Potrzebujemy do tego serializera oraz transportu (do tego służy SDK OpenTelemetry).
+    </p>
+    <p>
+        Flow dostarcza coś bardzo podobnego,
+        <a href="https://packagist.org/packages/flow-php/telemetry-otlp-bridge" target="_blank"><code>flow-php/telemetry-otlp-bridge</code></a>.<br/>
+        Zadaniem tej biblioteki jest:
+    </p>
+    <ul>
+        <li>Serializacja sygnałów zgodnie z protokołem OTLP</li>
+        <li>Przesyłanie sygnałów do <a href="https://opentelemetry.io/docs/collector/" target="_blank">OpenTelemetry
+                Collector</a></li>
+    </ul>
+    <p>
+        <code>flow-php/telemetry-otlp-bridge</code> pozwala serializować sygnały do:
+    </p>
+    <ul>
+        <li>json</li>
+        <li>protobuf - wymaga rozszerzenia protobuf</li>
+    </ul>
+    <p>
+        Sygnały natomiast mogą być przesyłane poprzez:
+    </p>
+    <ul>
+        <li>curl - wbudowany w pełni asynchroniczny transport</li>
+        <li>grcp - wymaga rozszerzenia grcp</li>
+        <li>http - wymaga implementacji <code>psr/http-client</code> oraz <code>psr/http-factory</code></li>
+    </ul>
+    <a href="#signals"><h2 id="signals">Sygnały</h2></a>
+    <p>
+        Czym są sygnały? <br/>
+    </p>
+    <p>
+        <strong>Metryki</strong> - liczbowe dane o stanie systemu, np. liczba żądań na sekundę, średni czas odpowiedzi, itp.<br/>
+    </p>
+    <p>
+        <strong>Ślady (Traces / Spans)</strong> - reprezentują pojedyncze operacje w systemie, wraz z ich atrybutami, czasem trwania, itp.<br/>
+        Pojedynczy Trace to tak naprawdę kolekcja Span'ów, które są ze sobą powiązane, tworząc drzewo operacji. <br/>
+        Ponad to, Trace może być powiązany z metrykami, logami, czy innymi Trace'ami, co pozwala na pełniejszy obraz tego, co dzieje się w systemie. <br/>
+    </p>
+    <p>
+        <strong>Logi</strong> - tekstowe dane o zdarzeniach w systemie, często zawierające dodatkowe atrybuty, takie jak poziom logowania, czy kontekst zdarzenia.<br/>
+    </p>
+
+    <a href="#auto-instrumentation"><h2 id="auto-instrumentation">Auto Instrumentacja</h2></a>
+    <p>
+        Jedną z głównych zalet korzystania z OpenTelemetry jest auto instrumentacja.
+    </p>
+    <p>
+        Zgodnie z założeniami, autorzy bibliotek (tacy jak ja) powinni integrować swoje narzędzia z API/SDK
+        OpenTelemetry.
+        Dzięki temu, jeżeli w systemie, który używa takich bibliotek skonfigurujemy serializacje oraz warstwę
+        transportu,
+        automatycznie, bez żadnego wysiłku dostaniemy podstawową telemetrię.
+    </p>
+    <p>
+        Gdyby społeczność PHP podzielała wizję twórców API/SDK - w niemalże każdym projekcie wystarczyłoby skonfigurować
+        SDK aby uzyskać wgląd w to jak działa system produkcyjnie.
+    </p>
+    <p>
+        Na ten moment, nie ma jednak ani jednej biblioteki, która byłaby natywnie zintegrowana z OpenTelemetry.
+    </p>
+    <p>
+        Nie wiem, dlaczego tak jest, środowiska takie jak Java czy .NET mają o wiele lepszą adaptację OpenTelemetry niż
+        PHP.
+    </p>
+    <p>
+        Być może gdyby SDK OpenTelemetry było bardziej popularne, nie zdecydowałbym się na pisanie własnej biblioteki.
+    </p>
+    <p>
+        Niemniej jednak, powoli ale skutecznie zacząłem integrować wszystkie biblioteki, które rozwijam z <code>flow-php/telemetry</code>.<br/>
+        Stworzyłem też kilka rozszerzeń do istniejących frameworków/bibliotek - co pozwala na równie skuteczną auto
+        instrumentację.
+    </p>
+
+    <p>
+        Biblioteki z natywną integracją:
+    </p>
+
+    <ul>
+        <li><code>flow-php/etl</code></li>
+        <li><code>flow-php/filesystem</code></li>
+        <li><code>flow-php/postgresql</code></li>
+    </ul>
+
+    <p>
+        Rozszerzenia do istniejących bibliotek
+    </p>
+
+    <ul>
+        <li><code>flow-php/psr7-telemetry-bridge</code></li>
+        <li><code>flow-php/psr18-telemetry-bridge</code></li>
+        <li><code>flow-php/monolog-telemetry-bridge</code></li>
+        <li><code>flow-php/symfony-http-foundation-telemetry-bridge</code></li>
+        <li><code>flow-php/symfony-telemetry-bundle</code></li>
+        <li><code>flow-php/phpunit-telemetry-bridge</code></li>
+    </ul>
+    <div class="notice">
+        <p>
+            <strong>Uwaga:</strong> Jeżeli rozwijasz swój projekt open source - odezwij się.<br/>
+            Wspólnie znajdziemy możliwie najprostszy sposób na integrację twojego narzędzia z telemetrią.
+            Możemy to zrobić poprzez natywną integrację lub rozszerzenie.
+        </p>
+    </div>
+    <a href="#otel-collector"><h2 id="otel-collector">OTEL Collector</h2></a>
+    <img src="https://opentelemetry.io/img/otel-diagram.svg" alt="OTEL Collector"/>
+    <p>
+        OTEL Collector to rewelacyjne narzędzie, służące jako centralny hub do otrzymywania / przetwarzania /
+        przesyłania
+        dalej sygnałów. <br/>
+        Stawiając collector pomiędzy systemem a APM'em (Application Performance Monitoring System) unikamy vendor
+        lockingu.
+    </p>
+    <p>
+        Unikamy również zbędnych, blokujących operacji I/O. Nasze sygnały są buforowane w pamięci, a w momencie
+        przepełnienia ustawionego bufora lub zakończenia skryptu są przesyłane do collectora.
+    </p>
+    <p>
+        Poniżej przykłady konfiguracji collectora z monorepozytorium Flow
+    </p>
+    <ul>
+        <li>
+            <a href="https://github.com/flow-php/flow/blob/1.x/compose.yml.dist#L86-L103" target="_blank">docker
+                compose</a>
+        </li>
+        <li>
+            <a href="https://github.com/flow-php/flow/blob/1.x/docker/otel-collector-config.yaml" target="_blank">collector
+                config</a>
+        </li>
+    </ul>
+    <a href="#apm"><h2 id="apm">APM</h2></a>
+    <p>
+        Na rynku istnieje bardzo dużo popularnych rozwiązań pozwalających na monitorowanie systemów kompatybilnych z
+        protokołem OTLP. <br/>
+        Są to narzędzia zarówno płatne, jak i w pełni darmowe, dostępne jako usługi lub open source.
+        Zanim jednak wybierzemy właściwy APM warto zaprzyjaźnić się z samym protokołem OTLP.
+    </p>
+    <p>
+        Oczywiście większość APM'ów dostarcza swoje biblioteki, pozwalające na monitorowanie systemów, jednak
+        korzystając
+        z nich, wiążemy się bardzo mocno z konkretnym dostawcą.
+    </p>
+    <p>
+        Moim (przynajmniej na razie) preferowanym rozwiązaniem do lokalnego developmentu jest
+        <a href="https://aspire.dev/" target="_blank">Aspire</a>
+    </p>
+    <p>
+        Aspire jest też skonfigurowany jako APM w monorepozytorium Flow, przykład konfiguracji znajduje się
+        <a href="https://github.com/flow-php/flow/blob/1.x/compose.yml.dist#L75-L85" target="_blank">tutaj</a>.
+    </p>
+    <a href="#demo"><h2 id="demo">Demo</h2></a>
+    <p>
+        Przykłady kodu <code>flow-php/telemetry</code> znajdziecie na
+        <a href="https://flow-php.com/telemetry/tracer/#example" target="_blank">https://flow-php.com</a>.<br/>
+        Każdy z nich można uruchomić w przeglądarce za pomocą Playgroundu Flow.
+    </p>
+    <p>
+        Nie ma jednak lepszej formy poznania narzędzia niż dotknięcie go, dlatego każdego zainteresowanego zachęcam do
+        postawienia lokalnie <code>Aspire</code>, <code>OTEL Collectora</code>, dodanie <code>flow-php/telemetry</code>
+        oraz <code>flow-php/telemetry-otlp-bridge</code>.
+    </p>
+    <p>
+        Potem pozostaje już tylko zacząć emitować sygnały!
+    </p>
+    <p>
+        Poniżej zrzut ekranu z lokalnego Aspire pokazujący telemetrię zebraną podczas wykonywania testów całego
+        monorepozytorium Flow.
+    </p>
+    <div class="img-wide">
+        <a href="{{ asset('images/blog/php-telemetry/phpunit_telemetry.png') }}" target="_blank">
+            <img src="{{ asset('images/blog/php-telemetry/phpunit_telemetry.png') }}" alt="PHPUnit Telemetry"/>
+        </a>
+    </div>
+{% endblock %}
