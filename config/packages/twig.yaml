@@ -3,4 +3,6 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        umami_id: '%env(UMAMI_ID)%'
+        posthog_key: '%env(POSTHOG_KEY)%'
+        posthog_api_host: '%env(POSTHOG_API_HOST)%'
+        posthog_ui_host: '%env(POSTHOG_UI_HOST)%'
