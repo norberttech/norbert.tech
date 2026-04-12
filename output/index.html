@@ -181,7 +181,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
     <h5 id="flow-php" class="text-lg font-bold mb-2">
-        <a href="#flow-php" class="text-black"># Flow PHP - ETL</a> <small><span class="badge badge-success">Open Source</span></small>
+        <a href="#flow-php" class="text-black"># Flow PHP - DataFrame</a> <small><span class="badge badge-success">Open Source</span></small>
     </h5>
     <p class="mb-2">
         <small><span class="badge badge-secondary">PHP</span></small>
@@ -193,21 +193,180 @@
         <a href="https://github.com/flow-php" target="_blank"><i class="fab fa-github"></i> flow-php</a>
     </p>
     <p class="mb-2">
-        <a href="https://github.com/flow-php" target="_blank">Flow</a> is the most advanced PHP, strongly typed, data processing framework.
+        <a href="https://flow-php.com" target="_blank">Flow</a> is the most advanced PHP, strongly typed, data processing framework with over 40 built-in components.
     </p>
     <div class="mb-2">
-        <span class="font-bold">Adapter:</span> CSV, Json, XML, Text, Parquet, Rest API, Doctrine, Elasticsearch / Meilisearch, and more...
+        <span class="font-bold">Adapters:</span> CSV, JSON, XML, Text, Parquet, Rest API, Doctrine, Elasticsearch / Meilisearch, and more...
     </div>
-    <p class="mb-2">
-        Flow is more than just a data processing library, it's an entire framework with almost 40 built-in components.
-    </p>
-    <p class="mb-2">
-        Dedicated <a href="https://flow-php.com/documentation/components/libs/filesystem/" target="_blank"><strong>filesystem</strong></a> library provides a consistent and memory-efficient way of reading and writing data to local or remote filesystems.
-    </p>
     <p>
         Read more at <a href="https://flow-php.com" target="_blank">https://flow-php.com</a>
     </p>
 </div>
+    <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <h5 id="flow-parquet" class="text-lg font-bold mb-2">
+        <a href="#flow-parquet" class="text-black"># Flow PHP - Parquet</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">Library</span></small>
+    </p>
+
+    <p class="mb-2">
+        <a href="https://github.com/flow-php/parquet" target="_blank"><i class="fab fa-github"></i> flow-php/parquet</a>
+    </p>
+    <p class="mb-2">
+        Standalone, pure PHP Apache Parquet reader and writer. Supports a pluggable engine system with a pure PHP engine and an optional Arrow engine for native Rust-powered performance.
+    </p>
+    <div class="mb-2">
+        <span class="font-bold">Features:</span> Column projection, multiple compression codecs (Snappy, Gzip, Zstd, LZ4, Brotli), nested types (List, Struct, Map), configurable row group size
+    </div>
+    <p>
+        Read more at <a href="https://flow-php.com/documentation/components/libs/parquet/" target="_blank">flow-php.com</a>
+    </p>
+</div>
+
+    <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <h5 id="flow-arrow-ext" class="text-lg font-bold mb-2">
+        <a href="#flow-arrow-ext" class="text-black"># Flow PHP - Arrow Extension</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">Rust</span></small>
+        <small><span class="badge badge-secondary">Extension</span></small>
+    </p>
+
+    <p class="mb-2">
+        <a href="https://github.com/flow-php/arrow-ext" target="_blank"><i class="fab fa-github"></i> flow-php/arrow-ext</a>
+    </p>
+    <p class="mb-2">
+        Apache Arrow Rust bindings for PHP via ext-php-rs. Once installed, it is automatically picked up by flow-php/parquet as the Arrow engine, making Parquet operations in PHP faster than PyArrow.
+    </p>
+    <div class="mb-2">
+        <span class="font-bold">Features:</span> Flat and nested type support, all major compression codecs, column projection, columnar batch I/O for maximum throughput
+    </div>
+    <p>
+        Read more at <a href="https://flow-php.com/documentation/components/extensions/arrow-ext/" target="_blank">flow-php.com</a>
+    </p>
+</div>
+
+    <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <h5 id="flow-postgresql" class="text-lg font-bold mb-2">
+        <a href="#flow-postgresql" class="text-black"># Flow PHP - PostgreSQL</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">Library</span></small>
+    </p>
+
+    <p class="mb-2">
+        <a href="https://github.com/flow-php/postgresql" target="_blank"><i class="fab fa-github"></i> flow-php/postgresql</a>
+    </p>
+    <p class="mb-2">
+        Three-in-one PostgreSQL library built on ext-pgsql and ext-pg_query (a PHP extension providing the real PostgreSQL parser/deparser from libpg_query).
+    </p>
+    <div class="mb-2">
+        <span class="font-bold">Features:</span> SQL Parser (parse, analyze, modify queries), fluent type-safe Query Builder, Client with automatic type conversion and object mapping
+    </div>
+    <p>
+        Read more at <a href="https://flow-php.com/documentation/components/libs/postgresql/" target="_blank">flow-php.com</a>
+    </p>
+</div>
+
+    <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <h5 id="flow-filesystem" class="text-lg font-bold mb-2">
+        <a href="#flow-filesystem" class="text-black"># Flow PHP - Filesystem</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">Library</span></small>
+    </p>
+
+    <p class="mb-2">
+        <a href="https://github.com/flow-php/filesystem" target="_blank"><i class="fab fa-github"></i> flow-php/filesystem</a>
+    </p>
+    <p class="mb-2">
+        Unified filesystem abstraction designed to leverage byte range headers for efficient reads and upload data to remote filesystems in chunks (blocks).
+    </p>
+    <div class="mb-2">
+        <span class="font-bold">Backends:</span> Native Local, Memory, StdOut, Azure Blob Storage, AWS S3
+    </div>
+    <p>
+        Read more at <a href="https://flow-php.com/documentation/components/libs/filesystem/" target="_blank">flow-php.com</a>
+    </p>
+</div>
+
+    <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <h5 id="flow-types" class="text-lg font-bold mb-2">
+        <a href="#flow-types" class="text-black"># Flow PHP - Types</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">Library</span></small>
+    </p>
+
+    <p class="mb-2">
+        <a href="https://github.com/flow-php/types" target="_blank"><i class="fab fa-github"></i> flow-php/types</a>
+    </p>
+    <p class="mb-2">
+        Type system library for PHP designed to work with static analysis tools like PHPStan and Psalm. Simplifies type checking, type casting, and type assertion with a clean, fluent API.
+    </p>
+    <div class="mb-2">
+        <span class="font-bold">Features:</span> Type narrowing (isValid, assert), type casting, complex types with nullability, PHPStan extension for full static analysis support
+    </div>
+    <p>
+        Read more at <a href="https://flow-php.com/documentation/components/libs/types/" target="_blank">flow-php.com</a>
+    </p>
+</div>
+
+    <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <h5 id="flow-telemetry" class="text-lg font-bold mb-2">
+        <a href="#flow-telemetry" class="text-black"># Flow PHP - Telemetry</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">Library</span></small>
+    </p>
+
+    <p class="mb-2">
+        <a href="https://github.com/flow-php/telemetry" target="_blank"><i class="fab fa-github"></i> flow-php/telemetry</a>
+    </p>
+    <p class="mb-2">
+        Lightweight OpenTelemetry-compatible observability library for PHP. Provides a unified API for distributed tracing, metrics collection, and structured logging with minimal dependencies and zero magic.
+    </p>
+    <div class="mb-2">
+        <span class="font-bold">Signals:</span> Traces, Metrics, Logs. Combined with <a href="https://github.com/flow-php/telemetry-otlp-bridge" target="_blank">telemetry-otlp-bridge</a> provides full OTLP compatibility (Curl, HTTP, gRPC transports)
+    </div>
+    <p>
+        Read more at <a href="https://flow-php.com/documentation/components/libs/telemetry/" target="_blank">flow-php.com</a>
+    </p>
+</div>
+
+    <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <h5 id="flow-symfony-bundles" class="text-lg font-bold mb-2">
+        <a href="#flow-symfony-bundles" class="text-black"># Flow PHP - Symfony Bundles</a> <small><span class="badge badge-success">Open Source</span></small>
+    </h5>
+    <p class="mb-2">
+        <small><span class="badge badge-secondary">PHP</span></small>
+        <small><span class="badge badge-secondary">Symfony</span></small>
+        <small><span class="badge badge-secondary">Bridge</span></small>
+    </p>
+
+    <p class="mb-2">
+        <a href="https://github.com/flow-php/symfony-postgresql-bundle" target="_blank"><i class="fab fa-github"></i> symfony-postgresql-bundle</a>
+        &middot;
+        <a href="https://github.com/flow-php/symfony-telemetry-bundle" target="_blank"><i class="fab fa-github"></i> symfony-telemetry-bundle</a>
+    </p>
+    <p class="mb-2">
+        <strong>PostgreSQL Bundle</strong> &mdash; integrates Flow's PostgreSQL library with Symfony. Provides multiple connections, migration framework with schema diffing, rollback support, and telemetry integration.
+    </p>
+    <p class="mb-2">
+        <strong>Telemetry Bundle</strong> &mdash; automatic telemetry for Symfony apps with 8 auto-instrumentations (HTTP kernel, console, messenger, Twig, HTTP client, Doctrine DBAL, cache) and W3C context propagation.
+    </p>
+    <p>
+        Read more at <a href="https://flow-php.com/documentation/components/bridges/symfony-postgresql-bundle/" target="_blank">flow-php.com</a>
+    </p>
+</div>
+
     <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
     <h5 id="aeon-php" class="text-lg font-bold mb-2">
         <a href="#aeon-php" class="text-black"># Aeon PHP</a> <small><span class="badge badge-success">Open Source</span></small>
